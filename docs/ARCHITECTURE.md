@@ -74,7 +74,7 @@ order. No actor, signal, or GLib timer may survive `disable()`.
 ## Compatibility
 
 GNOME Shell code is compiled against GNOME 50 type definitions and supports
-Shell 45 through 50, under X11 and Wayland alike. The package uses the ES module
+Shell 45 through 51, under X11 and Wayland alike. The package uses the ES module
 extension API introduced in Shell 45. Compatibility-sensitive code uses APIs
 available in every declared release, and each of them must be verified with
 `pnpm verify:shell` before publication.

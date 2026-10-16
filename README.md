@@ -19,7 +19,7 @@ It displays remaining capacity for:
 
 ## Status
 
-The project is at `0.3.1` and targets GNOME Shell 45 through 50, under X11
+The project is at `0.3.1` and targets GNOME Shell 45 through 51, under X11
 and Wayland alike. Compatibility is checked against GNOME Shell 50 type
 definitions, and every declared release is exercised by a runtime verification
 run against a real headless Shell.
@@ -38,7 +38,7 @@ directly:
 
 ## Requirements
 
-- any distribution using GNOME Shell 45 through 50;
+- any distribution using GNOME Shell 45 through 51;
 - an X11 or a Wayland session; both are supported;
 - Claude Code installed and available as `claude` in `PATH`;
 - a Claude subscription authenticated through Claude Code;

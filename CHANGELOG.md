@@ -6,6 +6,10 @@ the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- GNOME Shell 51 compatibility metadata and a Fedora 45 verification container.
+
 ## [0.3.1] - 2026-09-28
 
 ### Changed
