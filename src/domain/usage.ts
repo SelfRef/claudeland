@@ -165,17 +165,31 @@ export function localizedLimitLabel(
   return translate(limit.label);
 }
 
-export function compactLimitLabel(limit: UsageLimit): string {
-  if (limit.id === 'five_hour') {
-    return '5h';
-  }
-  if (limit.id === 'seven_day') {
-    return '7g';
-  }
-  if (limit.scopeModel) {
-    return limit.scopeModel.slice(0, 1).toUpperCase();
-  }
-  return limit.label.slice(0, 3);
+export function selectPanelLimit(limits: readonly UsageLimit[], choice: string): UsageLimit | null {
+  const candidates =
+    choice === 'lowest'
+      ? limits
+      : choice === 'model'
+        ? limits.filter((limit) => limit.scopeModel)
+        : limits.filter((limit) => limit.id === choice);
+  return candidates.reduce<UsageLimit | null>(
+    (lowest, limit) =>
+      !lowest || limit.remainingPercent < lowest.remainingPercent ? limit : lowest,
+    null,
+  );
+}
+
+export function formatPanelPercents(
+  limits: readonly UsageLimit[],
+  choices: readonly string[],
+): string {
+  return choices
+    .filter((choice) => choice && choice !== 'none')
+    .map((choice) => {
+      const limit = selectPanelLimit(limits, choice);
+      return limit ? formatPercent(limit.remainingPercent) : '--';
+    })
+    .join('/');
 }
 
 export function formatPlanLabel(

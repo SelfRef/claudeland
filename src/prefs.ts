@@ -8,6 +8,7 @@ import {
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 const POSITIONS = ['top-right', 'top-left', 'bottom-right', 'bottom-left'] as const;
+const PANEL_LIMITS = ['five_hour', 'seven_day', 'model', 'lowest', 'none'] as const;
 
 export default class ClaudelandPreferences extends ExtensionPreferences {
   async fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
@@ -32,12 +33,31 @@ export default class ClaudelandPreferences extends ExtensionPreferences {
         _('Show percentages in the GNOME top bar.'),
       ),
     );
+    const panelLimitLabels = [
+      _('Current session'),
+      _('Weekly · all models'),
+      _('Most constrained model limit'),
+      _('Most constrained limit'),
+      _('None'),
+    ];
     appearance.add(
-      boundSwitch(
+      boundCombo(
         settings,
-        'compact-panel',
-        _('Compact panel'),
-        _('Show only the limit with the least remaining capacity.'),
+        'panel-primary',
+        _('First panel value'),
+        _('Remaining capacity shown first in the top bar.'),
+        PANEL_LIMITS.slice(0, -1),
+        panelLimitLabels.slice(0, -1),
+      ),
+    );
+    appearance.add(
+      boundCombo(
+        settings,
+        'panel-secondary',
+        _('Second panel value'),
+        _('Shown after a slash, or None for a single value.'),
+        PANEL_LIMITS,
+        panelLimitLabels,
       ),
     );
     appearance.add(
@@ -149,6 +169,22 @@ function boundSwitch(
 ): Adw.ActionRow {
   const row = new Adw.SwitchRow({ title, subtitle });
   settings.bind(key, row, 'active', Gio.SettingsBindFlags.DEFAULT);
+  return row;
+}
+
+function boundCombo(
+  settings: Gio.Settings,
+  key: string,
+  title: string,
+  subtitle: string,
+  values: readonly string[],
+  labels: string[],
+): Adw.ComboRow {
+  const row = new Adw.ComboRow({ title, subtitle, model: Gtk.StringList.new(labels) });
+  row.selected = Math.max(0, values.indexOf(settings.get_string(key)));
+  row.connect('notify::selected', () => {
+    settings.set_string(key, values[row.selected] ?? values[0]);
+  });
   return row;
 }
 

@@ -9,6 +9,13 @@ the project follows [Semantic Versioning](https://semver.org/).
 ### Added
 
 - GNOME Shell 51 compatibility metadata and a Fedora 45 verification container.
+- Choose one or two remaining percentages for the top bar, shown as `n%/m%`:
+  current session, weekly for all models, the most constrained model limit, or
+  the most constrained limit overall. Defaults to session and weekly.
+
+### Removed
+
+- The compact panel switch, replaced by the panel value choices.
 
 ## [0.3.1] - 2026-09-28
 

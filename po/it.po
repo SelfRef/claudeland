@@ -59,9 +59,6 @@ msgstr "Piano Claude"
 msgid "Claudeland"
 msgstr "Claudeland"
 
-msgid "Compact panel"
-msgstr "Pannello compatto"
-
 msgid "Corner of the primary monitor."
 msgstr "Angolo del monitor principale."
 
@@ -83,6 +80,9 @@ msgstr "Card sul desktop"
 msgid "Extra usage"
 msgstr "Utilizzo extra"
 
+msgid "First panel value"
+msgstr "Primo valore del pannello"
+
 msgid "Install Claude Code to authenticate."
 msgstr "Installa Claude Code per autenticarti."
 
@@ -95,8 +95,17 @@ msgstr "Caricamento…"
 msgid "Minutes between usage requests."
 msgstr "Minuti tra una richiesta e la successiva."
 
+msgid "Most constrained limit"
+msgstr "Limite più vincolato"
+
+msgid "Most constrained model limit"
+msgstr "Limite di modello più vincolato"
+
 msgid "No compatible terminal was found to start Claude sign-in."
 msgstr "Nessun terminale compatibile trovato per avviare il login Claude."
+
+msgid "None"
+msgstr "Nessuno"
 
 msgid "Open Claude browser sign-in through Claude Code."
 msgstr "Apre il login Claude nel browser tramite Claude Code."
@@ -112,6 +121,9 @@ msgstr "Intervallo di aggiornamento"
 
 msgid "Refresh now"
 msgstr "Aggiorna ora"
+
+msgid "Remaining capacity shown first in the top bar."
+msgstr "Capacità residua mostrata per prima nella barra superiore."
 
 msgid "Remaining capacity warning"
 msgstr "Avviso capacità rimanente"
@@ -134,14 +146,17 @@ msgstr "reset tra %dh %dm"
 msgid "resets in %dm"
 msgstr "reset tra %dm"
 
+msgid "Second panel value"
+msgstr "Secondo valore del pannello"
+
 msgid "Show a non-interactive card below application windows."
 msgstr "Mostra una card non interattiva sotto le finestre."
 
-msgid "Show only the limit with the least remaining capacity."
-msgstr "Mostra soltanto il limite con meno capacità rimanente."
-
 msgid "Show percentages in the GNOME top bar."
 msgstr "Mostra le percentuali nella barra superiore di GNOME."
+
+msgid "Shown after a slash, or None for a single value."
+msgstr "Mostrato dopo una barra, oppure Nessuno per un solo valore."
 
 msgid "Sign in"
 msgstr "Accedi"

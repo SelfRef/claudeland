@@ -233,13 +233,13 @@ export default class ClaudelandUiCheck extends Extension {
       Main.panel.addToStatusArea(ROLE, indicator);
       card = new DesktopCard(controller, settings);
 
-      for (const compact of [false, true]) {
-        settings.set_boolean('compact-panel', compact);
+      for (const secondary of ['seven_day', 'none']) {
+        settings.set_string('panel-secondary', secondary);
         for (const state of STATES) {
           try {
             controller.emit(state.patch);
           } catch (error) {
-            failures.push(`${state.name} (compact=${compact}): ${error}`);
+            failures.push(`${state.name} (secondary=${secondary}): ${error}`);
           }
         }
       }
@@ -266,7 +266,7 @@ export default class ClaudelandUiCheck extends Extension {
       } catch (error) {
         failures.push(`teardown: ${error}`);
       }
-      settings.reset('compact-panel');
+      settings.reset('panel-secondary');
 
       if (failures.length > 0) {
         console.error(`CLAUDELAND UI CHECK FAILED: ${failures.join(' | ')}`);

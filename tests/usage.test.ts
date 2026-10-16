@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   InvalidUsagePayloadError,
-  compactLimitLabel,
+  formatPanelPercents,
   formatPlanLabel,
   formatPercent,
   formatTimeRemaining,
@@ -92,21 +92,35 @@ describe('formatting', () => {
     expect(formatTimeRemaining(null, now)).toBe('reset unavailable');
   });
 
-  it('assigns severity and compact labels', () => {
+  it('assigns severity', () => {
     expect(severityFor(10)).toBe('critical');
     expect(severityFor(25)).toBe('warning');
     expect(severityFor(26)).toBe('ok');
-    expect(
-      compactLimitLabel({
-        id: 'seven_day_fable',
-        label: 'Weekly · Fable',
-        consumedPercent: 5,
-        remainingPercent: 95,
-        resetsAt: null,
-        scopeModel: 'Fable',
-        severity: 'ok',
-      }),
-    ).toBe('F');
+  });
+
+  it('formats one or two panel percentages from the selected limits', () => {
+    const limit = (id: string, remainingPercent: number, scopeModel: string | null = null) => ({
+      id,
+      label: id,
+      consumedPercent: 100 - remainingPercent,
+      remainingPercent,
+      resetsAt: null,
+      scopeModel,
+      severity: 'ok' as const,
+    });
+    const limits = [
+      limit('five_hour', 80),
+      limit('seven_day', 60),
+      limit('seven_day_fable', 40, 'Fable'),
+      limit('seven_day_opus', 70, 'Opus'),
+    ];
+    expect(formatPanelPercents(limits, ['five_hour', 'seven_day'])).toBe('80%/60%');
+    expect(formatPanelPercents(limits, ['seven_day', 'none'])).toBe('60%');
+    expect(formatPanelPercents(limits, ['model', 'lowest'])).toBe('40%/40%');
+    expect(formatPanelPercents([limit('five_hour', 80)], ['five_hour', 'seven_day'])).toBe(
+      '80%/--',
+    );
+    expect(formatPanelPercents(limits, ['bogus'])).toBe('--');
   });
 
   it('supports injected system translations without coupling the domain to GNOME', () => {

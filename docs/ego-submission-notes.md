@@ -104,7 +104,7 @@ that the extension:
 - opens its preferences dialog, which runs in a separate GTK process against a
   different library stack;
 - renders every panel and card state — loading, renewing, failed renewal, stale
-  data, and a full snapshot, in both the compact and full panel layouts —
+  data, and a full snapshot, with one and two panel values —
   through a throwaway probe extension.
 
 The containers have no network access and mock logind on a private bus, so the

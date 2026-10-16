@@ -58,9 +58,6 @@ msgstr ""
 msgid "Claudeland"
 msgstr ""
 
-msgid "Compact panel"
-msgstr ""
-
 msgid "Corner of the primary monitor."
 msgstr ""
 
@@ -82,6 +79,9 @@ msgstr ""
 msgid "Extra usage"
 msgstr ""
 
+msgid "First panel value"
+msgstr ""
+
 msgid "Install Claude Code to authenticate."
 msgstr ""
 
@@ -94,7 +94,16 @@ msgstr ""
 msgid "Minutes between usage requests."
 msgstr ""
 
+msgid "Most constrained limit"
+msgstr ""
+
+msgid "Most constrained model limit"
+msgstr ""
+
 msgid "No compatible terminal was found to start Claude sign-in."
+msgstr ""
+
+msgid "None"
 msgstr ""
 
 msgid "Open Claude browser sign-in through Claude Code."
@@ -110,6 +119,9 @@ msgid "Refresh interval"
 msgstr ""
 
 msgid "Refresh now"
+msgstr ""
+
+msgid "Remaining capacity shown first in the top bar."
 msgstr ""
 
 msgid "Remaining capacity warning"
@@ -133,13 +145,16 @@ msgstr ""
 msgid "resets in %dm"
 msgstr ""
 
+msgid "Second panel value"
+msgstr ""
+
 msgid "Show a non-interactive card below application windows."
 msgstr ""
 
-msgid "Show only the limit with the least remaining capacity."
+msgid "Show percentages in the GNOME top bar."
 msgstr ""
 
-msgid "Show percentages in the GNOME top bar."
+msgid "Shown after a slash, or None for a single value."
 msgstr ""
 
 msgid "Sign in"

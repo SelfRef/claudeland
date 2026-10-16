@@ -25,7 +25,12 @@ export default class ClaudelandExtension extends Extension {
       this,
     );
     this.settings.connectObject(
-      'changed::compact-panel',
+      'changed::panel-primary',
+      () => void this.controller?.refresh(),
+      this,
+    );
+    this.settings.connectObject(
+      'changed::panel-secondary',
       () => void this.controller?.refresh(),
       this,
     );

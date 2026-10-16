@@ -5,9 +5,26 @@
       <default>true</default>
       <summary>Show the GNOME panel indicator</summary>
     </key>
-    <key name="compact-panel" type="b">
-      <default>false</default>
-      <summary>Show only the most constrained limit in the panel</summary>
+    <key name="panel-primary" type="s">
+      <choices>
+        <choice value="five_hour"/>
+        <choice value="seven_day"/>
+        <choice value="model"/>
+        <choice value="lowest"/>
+      </choices>
+      <default>'five_hour'</default>
+      <summary>First remaining percentage shown in the panel</summary>
+    </key>
+    <key name="panel-secondary" type="s">
+      <choices>
+        <choice value="five_hour"/>
+        <choice value="seven_day"/>
+        <choice value="model"/>
+        <choice value="lowest"/>
+        <choice value="none"/>
+      </choices>
+      <default>'seven_day'</default>
+      <summary>Second remaining percentage shown in the panel, or none</summary>
     </key>
     <key name="show-desktop-widget" type="b">
       <default>false</default>

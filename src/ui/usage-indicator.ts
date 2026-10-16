@@ -8,7 +8,7 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {
-  compactLimitLabel,
+  formatPanelPercents,
   formatPercent,
   formatTimeRemaining,
   localizedLimitLabel,
@@ -112,18 +112,11 @@ class UsageIndicatorImpl extends PanelMenu.Button {
     }
 
     const suffix = state.stale ? ' *' : '';
-    if (this.settings.get_boolean('compact-panel')) {
-      const worst = [...state.snapshot.limits].sort(
-        (left, right) => left.remainingPercent - right.remainingPercent,
-      )[0];
-      this.panelLabel.text = `Claude ${formatPercent(worst.remainingPercent)}${suffix}`;
-      return;
-    }
-
     this.panelLabel.text =
-      state.snapshot.limits
-        .map((limit) => `${compactLimitLabel(limit)} ${formatPercent(limit.remainingPercent)}`)
-        .join(' · ') + suffix;
+      formatPanelPercents(state.snapshot.limits, [
+        this.settings.get_string('panel-primary'),
+        this.settings.get_string('panel-secondary'),
+      ]) + suffix;
   }
 
   private renderMenu(state: Readonly<UsageState>): void {
