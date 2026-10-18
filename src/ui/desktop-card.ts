@@ -8,8 +8,9 @@ import St from 'gi://St';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import { formatMessage, formatPercent, localizedLimitLabel } from '../domain/usage.js';
+import { formatMessage } from '../domain/usage.js';
 import type { UsageController, UsageState } from '../services/usage-controller.js';
+import { createLimitContent } from './limit-content.js';
 import { formatClockTime, localizedError } from './localization.js';
 
 export class DesktopCard {
@@ -117,21 +118,7 @@ export class DesktopCard {
 		}
 
 		for (const limit of state.snapshot.limits) {
-			const row = new St.BoxLayout({ style_class: 'vibecheck-desktop-row' });
-			row.add_child(
-				new St.Label({
-					text: localizedLimitLabel(limit, _),
-					x_expand: true,
-					style_class: 'vibecheck-desktop-label',
-				}),
-			);
-			row.add_child(
-				new St.Label({
-					text: formatPercent(limit.remainingPercent),
-					style_class: `vibecheck-desktop-value vibecheck-${limit.severity}`,
-				}),
-			);
-			this.content.add_child(row);
+			this.content.add_child(createLimitContent(limit));
 		}
 		this.queuePosition();
 	}

@@ -82,20 +82,17 @@
 }
 
 .vibecheck-desktop-content {
-	spacing: 7px;
+	spacing: 14px;
 }
 
-.vibecheck-desktop-row {
-	spacing: 12px;
+/* The card is always dark, unlike the menu, which follows the Shell style. */
+.vibecheck-desktop-card .vibecheck-limit-content {
+	width: 264px;
 }
 
-.vibecheck-desktop-label {
+.vibecheck-desktop-card .vibecheck-limit-label,
+.vibecheck-desktop-card .vibecheck-reset-label {
 	color: #ece9e4;
-}
-
-.vibecheck-desktop-value {
-	font-feature-settings: 'tnum';
-	font-weight: 800;
 }
 
 .vibecheck-desktop-empty {

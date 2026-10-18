@@ -44,11 +44,13 @@ function actorsWithStyle(root, styleClass) {
 	return matches;
 }
 
-function checkProgressBars(indicator) {
+function checkProgressBars(name, root) {
 	const expectedFractions = SNAPSHOT.limits.map((limit) => limit.remainingPercent / 100);
-	const tracks = actorsWithStyle(indicator.menu.box, 'vibecheck-progress-track');
+	const tracks = root ? actorsWithStyle(root, 'vibecheck-progress-track') : [];
 	if (tracks.length !== expectedFractions.length) {
-		return [`expected ${expectedFractions.length} progress tracks, found ${tracks.length}`];
+		return [
+			`${name}: expected ${expectedFractions.length} progress tracks, found ${tracks.length}`,
+		];
 	}
 
 	const failures = [];
@@ -60,7 +62,7 @@ function checkProgressBars(indicator) {
 			Math.abs(actualFraction - expectedFractions[index]) > 0.01
 		) {
 			failures.push(
-				`progress ${index} is ${fill?.width ?? 'missing'}/${track.width}px, expected ${expectedFractions[index] * 100}%`,
+				`${name}: progress ${index} is ${fill?.width ?? 'missing'}/${track.width}px, expected ${expectedFractions[index] * 100}%`,
 			);
 		}
 	}
@@ -130,25 +132,28 @@ const SNAPSHOT = {
 			consumedPercent: 20,
 			remainingPercent: 80,
 			resetsAt: new Date(Date.now() + 3 * 3600 * 1000).toISOString(),
-			scopeModel: null,
+			group: 'session',
+			scope: null,
 			severity: 'ok',
 		},
 		{
 			id: 'seven_day',
-			label: 'Weekly limit',
+			label: 'Weekly · all models',
 			consumedPercent: 82,
 			remainingPercent: 18,
 			resetsAt: new Date(Date.now() + 4 * 24 * 3600 * 1000).toISOString(),
-			scopeModel: null,
+			group: 'weekly',
+			scope: null,
 			severity: 'warning',
 		},
 		{
-			id: 'seven_day:some-model',
-			label: 'Weekly limit',
+			id: 'seven_day_some_model',
+			label: 'Weekly · some-model',
 			consumedPercent: 95,
 			remainingPercent: 5,
 			resetsAt: null,
-			scopeModel: 'some-model',
+			group: 'weekly',
+			scope: 'some-model',
 			severity: 'critical',
 		},
 	],
@@ -232,6 +237,9 @@ export default class VibecheckUiCheck extends Extension {
 			indicator = new UsageIndicator(controller, settings, this.path, () => {});
 			Main.panel.addToStatusArea(ROLE, indicator);
 			card = new DesktopCard(controller, settings);
+			// The shell starts in the overview, which hides the desktop. The card is
+			// only laid out, and its meters sized, once the desktop is showing.
+			Main.overview.hide();
 
 			for (const [secondary, icon] of [
 				['seven_day', 'color'],
@@ -252,7 +260,7 @@ export default class VibecheckUiCheck extends Extension {
 			indicator.menu.open();
 			this._progressTimeoutId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1, () => {
 				this._progressTimeoutId = null;
-				failures.push(...checkProgressBars(indicator));
+				failures.push(...checkProgressBars('menu', indicator.menu.box));
 				indicator.menu.close();
 				return GLib.SOURCE_REMOVE;
 			});
@@ -265,6 +273,8 @@ export default class VibecheckUiCheck extends Extension {
 		this._timeoutId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, STACKING_DELAY, () => {
 			this._timeoutId = null;
 			failures.push(...checkStacking());
+			const cardActor = actorsWithStyle(global.window_group, 'vibecheck-desktop-card')[0];
+			failures.push(...checkProgressBars('desktop card', cardActor));
 			try {
 				card?.destroy();
 				indicator?.destroy();

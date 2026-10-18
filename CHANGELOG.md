@@ -16,6 +16,7 @@ the project follows [Semantic Versioning](https://semver.org/).
   the panel color, or not at all.
 - The top bar shows the time until the first panel value resets, as
   `n%/m% · 2h 10m`. On by default.
+- The desktop card shows a meter and reset time for each limit, like the menu.
 
 ### Changed
 
