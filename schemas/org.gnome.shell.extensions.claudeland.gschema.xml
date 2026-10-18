@@ -26,6 +26,10 @@
       <default>'seven_day'</default>
       <summary>Second remaining percentage shown in the panel, or none</summary>
     </key>
+    <key name="show-panel-reset" type="b">
+      <default>true</default>
+      <summary>Show the time until the first panel value resets</summary>
+    </key>
     <key name="panel-icon" type="s">
       <choices>
         <choice value="none"/>

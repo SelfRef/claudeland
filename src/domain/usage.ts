@@ -121,25 +121,15 @@ export function formatTimeRemaining(
   now = new Date(),
   translate: Translator = identity,
 ): string {
-  if (!resetsAt) {
+  const remaining = splitRemaining(resetsAt, now);
+  if (!remaining) {
     return translate('reset unavailable');
   }
 
-  const resetTime = Date.parse(resetsAt);
-  if (!Number.isFinite(resetTime)) {
-    return translate('reset unavailable');
-  }
-
-  const milliseconds = Math.max(0, resetTime - now.getTime());
-  const totalMinutes = Math.ceil(milliseconds / 60_000);
-  if (totalMinutes === 0) {
+  const [days, hours, minutes] = remaining;
+  if (days === 0 && hours === 0 && minutes === 0) {
     return translate('reset imminent');
   }
-
-  const days = Math.floor(totalMinutes / 1_440);
-  const hours = Math.floor((totalMinutes % 1_440) / 60);
-  const minutes = totalMinutes % 60;
-
   if (days > 0) {
     return formatTemplate(translate('resets in %dd %dh'), days, hours);
   }
@@ -147,6 +137,28 @@ export function formatTimeRemaining(
     return formatTemplate(translate('resets in %dh %dm'), hours, minutes);
   }
   return formatTemplate(translate('resets in %dm'), minutes);
+}
+
+/** Compact countdown for the top bar, or an empty string without a reset. */
+export function formatPanelReset(
+  limits: readonly UsageLimit[],
+  choice: string,
+  now = new Date(),
+  translate: Translator = identity,
+): string {
+  const remaining = splitRemaining(selectPanelLimit(limits, choice)?.resetsAt ?? null, now);
+  if (!remaining) {
+    return '';
+  }
+
+  const [days, hours, minutes] = remaining;
+  if (days > 0) {
+    return formatTemplate(translate('%dd %dh'), days, hours);
+  }
+  if (hours > 0) {
+    return formatTemplate(translate('%dh %dm'), hours, minutes);
+  }
+  return formatTemplate(translate('%dm'), minutes);
 }
 
 export function localizedLimitLabel(
@@ -318,6 +330,20 @@ function readScopeModel(candidate: UnknownRecord): string | null {
 function readReset(candidate: UnknownRecord): string | null {
   const reset = firstString(candidate.resets_at, candidate.resetsAt, candidate.reset_at);
   return reset && Number.isFinite(Date.parse(reset)) ? reset : null;
+}
+
+function splitRemaining(resetsAt: string | null, now: Date): [number, number, number] | null {
+  const resetTime = resetsAt ? Date.parse(resetsAt) : NaN;
+  if (!Number.isFinite(resetTime)) {
+    return null;
+  }
+
+  const totalMinutes = Math.ceil(Math.max(0, resetTime - now.getTime()) / 60_000);
+  return [
+    Math.floor(totalMinutes / 1_440),
+    Math.floor((totalMinutes % 1_440) / 60),
+    totalMinutes % 60,
+  ];
 }
 
 function compareLimits(left: UsageLimit, right: UsageLimit): number {

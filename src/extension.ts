@@ -30,6 +30,7 @@ export default class ClaudelandExtension extends Extension {
     for (const key of [
       'panel-primary',
       'panel-secondary',
+      'show-panel-reset',
       'panel-icon',
       'warning-remaining',
       'critical-remaining',

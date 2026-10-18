@@ -9,6 +9,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {
   formatPanelPercents,
+  formatPanelReset,
   formatPercent,
   formatTimeRemaining,
   localizedLimitLabel,
@@ -117,12 +118,19 @@ class UsageIndicatorImpl extends PanelMenu.Button {
       return;
     }
 
+    const primary = this.settings.get_string('panel-primary');
+    // The countdown advances with each poll rather than every minute.
+    const reset = this.settings.get_boolean('show-panel-reset')
+      ? formatPanelReset(state.snapshot.limits, primary, new Date(), _)
+      : '';
     const suffix = state.stale ? ' *' : '';
     this.panelLabel.text =
       formatPanelPercents(state.snapshot.limits, [
-        this.settings.get_string('panel-primary'),
+        primary,
         this.settings.get_string('panel-secondary'),
-      ]) + suffix;
+      ]) +
+      (reset ? ` · ${reset}` : '') +
+      suffix;
   }
 
   private renderMenu(state: Readonly<UsageState>): void {

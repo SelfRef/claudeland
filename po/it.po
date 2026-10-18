@@ -8,6 +8,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "%dd %dh"
+msgstr "%dg %dh"
+
+msgid "%dh %dm"
+msgstr "%dh %dm"
+
+msgid "%dm"
+msgstr "%dm"
+
 msgid "%s remaining"
 msgstr "%s rimasto"
 
@@ -161,6 +170,9 @@ msgstr "Mostra una card non interattiva sotto le finestre."
 msgid "Show percentages in the GNOME top bar."
 msgstr "Mostra le percentuali nella barra superiore di GNOME."
 
+msgid "Show when the first panel value resets."
+msgstr "Mostra tra quanto si azzera il primo valore del pannello."
+
 msgid "Shown after a slash, or None for a single value."
 msgstr "Mostrato dopo una barra, oppure Nessuno per un solo valore."
 
@@ -205,6 +217,9 @@ msgstr "La sessione Claude non è più valida. Accedi nuovamente."
 
 msgid "The desktop card is unavailable on this GNOME version."
 msgstr "La card desktop non è disponibile su questa versione di GNOME."
+
+msgid "Time until reset"
+msgstr "Tempo al reset"
 
 msgid "Too many requests. Claudeland will try again later."
 msgstr "Troppe richieste. Claudeland riproverà più tardi."

@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 import {
   InvalidUsagePayloadError,
   formatPanelPercents,
+  formatPanelReset,
   formatPlanLabel,
   formatPercent,
   formatTimeRemaining,
@@ -121,6 +122,31 @@ describe('formatting', () => {
       '80%/--',
     );
     expect(formatPanelPercents(limits, ['bogus'])).toBe('--');
+  });
+
+  it('formats a compact panel countdown for the selected limit', () => {
+    const now = new Date('2030-01-01T10:00:00Z');
+    const limit = (id: string, resetsAt: string | null) => ({
+      id,
+      label: id,
+      consumedPercent: 50,
+      remainingPercent: 50,
+      resetsAt,
+      scopeModel: null,
+      severity: 'ok' as const,
+    });
+    const limits = [
+      limit('five_hour', '2030-01-01T12:10:00Z'),
+      limit('seven_day', '2030-01-03T12:30:00Z'),
+      limit('seven_day_opus', null),
+    ];
+    expect(formatPanelReset(limits, 'five_hour', now)).toBe('2h 10m');
+    expect(formatPanelReset(limits, 'seven_day', now)).toBe('2d 2h');
+    expect(formatPanelReset([limit('five_hour', '2030-01-01T10:05:00Z')], 'five_hour', now)).toBe(
+      '5m',
+    );
+    expect(formatPanelReset(limits, 'model', now)).toBe('');
+    expect(formatPanelReset([limit('five_hour', null)], 'five_hour', now)).toBe('');
   });
 
   it('supports injected system translations without coupling the domain to GNOME', () => {

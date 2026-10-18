@@ -7,6 +7,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "%dd %dh"
+msgstr ""
+
+msgid "%dh %dm"
+msgstr ""
+
+msgid "%dm"
+msgstr ""
+
 msgid "%s remaining"
 msgstr ""
 
@@ -160,6 +169,9 @@ msgstr ""
 msgid "Show percentages in the GNOME top bar."
 msgstr ""
 
+msgid "Show when the first panel value resets."
+msgstr ""
+
 msgid "Shown after a slash, or None for a single value."
 msgstr ""
 
@@ -203,6 +215,9 @@ msgid "The Claude session is no longer valid. Sign in again."
 msgstr ""
 
 msgid "The desktop card is unavailable on this GNOME version."
+msgstr ""
+
+msgid "Time until reset"
 msgstr ""
 
 msgid "Too many requests. Claudeland will try again later."

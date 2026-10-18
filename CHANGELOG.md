@@ -14,6 +14,8 @@ the project follows [Semantic Versioning](https://semver.org/).
   the most constrained limit overall. Defaults to session and weekly.
 - The top bar shows the Claude icon in color (default), symbolic so it follows
   the panel color, or not at all.
+- The top bar shows the time until the first panel value resets, as
+  `n%/m% · 2h 10m`. On by default.
 
 ### Fixed
 

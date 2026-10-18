@@ -62,6 +62,14 @@ export default class ClaudelandPreferences extends ExtensionPreferences {
       ),
     );
     appearance.add(
+      boundSwitch(
+        settings,
+        'show-panel-reset',
+        _('Time until reset'),
+        _('Show when the first panel value resets.'),
+      ),
+    );
+    appearance.add(
       boundCombo(
         settings,
         'panel-icon',
