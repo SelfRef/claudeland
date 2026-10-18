@@ -77,13 +77,6 @@ describe('normalizeUsage', () => {
 		expect(snapshot.limits[1]).toMatchObject({ remainingPercent: 100, severity: 'ok' });
 	});
 
-	it('accepts an object-shaped limits wrapper', () => {
-		const snapshot = normalizeUsage({
-			limits: { five_hour: { utilization: 50 } },
-		});
-		expect(snapshot.limits[0].remainingPercent).toBe(50);
-	});
-
 	it('rejects payloads with no usable limits', () => {
 		expect(() => normalizeUsage({ limits: [] })).toThrow(InvalidUsagePayloadError);
 		expect(() => normalizeUsage(null)).toThrow('not an object');

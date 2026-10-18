@@ -32,14 +32,6 @@ export class InvalidUsagePayloadError extends Error {
 
 type UnknownRecord = Record<string, unknown>;
 
-const IGNORED_TOP_LEVEL_KEYS = new Set([
-	'limits',
-	'quotas',
-	'organization',
-	'subscription',
-	'rate_limit_tier',
-]);
-
 const PRIORITY: Record<string, number> = {
 	five_hour: 0,
 	seven_day: 1,
@@ -62,19 +54,13 @@ export function normalizeUsage(payload: unknown, options: NormalizeOptions = {})
 			continue;
 		}
 
-		const utilization = firstNumber(
-			candidate.utilization,
-			candidate.percent,
-			candidate.percentage,
-			candidate.usage,
-		);
-
+		const utilization = firstNumber(candidate.utilization, candidate.percent);
 		if (utilization === null) {
 			continue;
 		}
 
 		const scopeModel = readScopeModel(candidate);
-		const id = canonicalId(sourceKey, candidate, scopeModel);
+		const id = canonicalId(sourceKey, scopeModel);
 		if (!id || limits.has(id)) {
 			continue;
 		}
@@ -242,61 +228,37 @@ export function formatPlanLabel(
 function collectCandidates(payload: UnknownRecord): Array<[string, UnknownRecord]> {
 	const candidates: Array<[string, UnknownRecord]> = [];
 
+	// The legacy shape keys each limit at the top level; the newer one lists
+	// them in a `limits` array, identified by `kind`.
 	for (const [key, value] of Object.entries(payload)) {
-		if (!IGNORED_TOP_LEVEL_KEYS.has(key) && isRecord(value)) {
+		if (isRecord(value)) {
 			candidates.push([key, value]);
 		}
 	}
-
-	collectNested(payload.limits, candidates);
-	collectNested(payload.quotas, candidates);
+	if (Array.isArray(payload.limits)) {
+		for (const entry of payload.limits) {
+			if (isRecord(entry)) {
+				candidates.push([firstString(entry.kind) ?? 'unknown', entry]);
+			}
+		}
+	}
 	return candidates;
 }
 
-function collectNested(value: unknown, candidates: Array<[string, UnknownRecord]>): void {
-	if (Array.isArray(value)) {
-		for (const entry of value) {
-			if (isRecord(entry)) {
-				const key = firstString(entry.id, entry.kind, entry.type) ?? 'unknown';
-				candidates.push([key, entry]);
-			}
-		}
-		return;
-	}
-
-	if (isRecord(value)) {
-		for (const [key, entry] of Object.entries(value)) {
-			if (isRecord(entry)) {
-				candidates.push([key, entry]);
-			}
-		}
-	}
-}
-
-function canonicalId(
-	sourceKey: string,
-	candidate: UnknownRecord,
-	scopeModel: string | null,
-): string | null {
-	const rawKind = (firstString(candidate.kind, candidate.type, candidate.id) ?? sourceKey)
-		.toLowerCase()
-		.replaceAll('-', '_');
-
+function canonicalId(sourceKey: string, scopeModel: string | null): string | null {
 	if (scopeModel) {
 		return `seven_day_${slugify(scopeModel)}`;
 	}
-	if (['session', 'five_hour', 'fivehour'].includes(rawKind)) {
+	if (sourceKey === 'session') {
 		return 'five_hour';
 	}
-	if (['weekly', 'weekly_all', 'week', 'seven_day', 'sevenday'].includes(rawKind)) {
+	if (sourceKey === 'weekly_all') {
 		return 'seven_day';
 	}
-	if (rawKind === 'spend') {
+	if (sourceKey === 'spend') {
 		return 'extra_usage';
 	}
-
-	const slug = slugify(rawKind);
-	return slug || null;
+	return slugify(sourceKey) || null;
 }
 
 function limitLabel(id: string, scopeModel: string | null): string {
@@ -325,15 +287,11 @@ function readScopeModel(candidate: UnknownRecord): string | null {
 		return null;
 	}
 
-	return firstString(
-		candidate.scope.model.display_name,
-		candidate.scope.model.name,
-		candidate.scope.model.id,
-	);
+	return firstString(candidate.scope.model.display_name, candidate.scope.model.id);
 }
 
 function readReset(candidate: UnknownRecord): string | null {
-	const reset = firstString(candidate.resets_at, candidate.resetsAt, candidate.reset_at);
+	const reset = firstString(candidate.resets_at);
 	return reset && Number.isFinite(Date.parse(reset)) ? reset : null;
 }
 
