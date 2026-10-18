@@ -19,6 +19,7 @@ import { setBoxLayoutVertical } from './compat.js';
 import { formatMessage, localizedError, translate as _ } from './localization.js';
 
 class UsageIndicatorImpl extends PanelMenu.Button {
+  private readonly panelIcon: St.Icon;
   private readonly panelLabel: St.Label;
   private readonly statusItem: PopupMenu.PopupMenuItem;
   private readonly limitsSection: PopupMenu.PopupMenuSection;
@@ -29,6 +30,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
   constructor(
     private readonly controller: UsageController,
     private readonly settings: Gio.Settings,
+    private readonly extensionPath: string,
     openPreferences: () => void,
   ) {
     super(0, 'Claudeland', false);
@@ -38,12 +40,8 @@ class UsageIndicatorImpl extends PanelMenu.Button {
       style_class: 'panel-status-menu-box claudeland-panel',
       y_align: Clutter.ActorAlign.CENTER,
     });
-    box.add_child(
-      new St.Icon({
-        icon_name: 'network-transmit-receive-symbolic',
-        style_class: 'system-status-icon claudeland-panel-icon',
-      }),
-    );
+    this.panelIcon = new St.Icon({ style_class: 'system-status-icon claudeland-panel-icon' });
+    box.add_child(this.panelIcon);
     this.panelLabel = new St.Label({
       text: formatMessage(_('Claude %s'), '--'),
       y_align: Clutter.ActorAlign.CENTER,
@@ -106,6 +104,14 @@ class UsageIndicatorImpl extends PanelMenu.Button {
   }
 
   private renderPanel(state: Readonly<UsageState>): void {
+    const icon = this.settings.get_string('panel-icon');
+    this.panelIcon.visible = icon !== 'none';
+    if (this.panelIcon.visible) {
+      // St recolors file icons whose name ends in -symbolic with the panel foreground.
+      const name = icon === 'symbolic' ? 'claudeland-symbolic.svg' : 'claudeland.svg';
+      this.panelIcon.gicon = Gio.icon_new_for_string(`${this.extensionPath}/icons/${name}`);
+    }
+
     if (!state.snapshot) {
       this.panelLabel.text = formatMessage(_('Claude %s'), state.loading ? '…' : '--');
       return;

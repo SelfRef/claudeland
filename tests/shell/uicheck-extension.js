@@ -229,17 +229,22 @@ export default class ClaudelandUiCheck extends Extension {
     let indicator = null;
     let card = null;
     try {
-      indicator = new UsageIndicator(controller, settings, () => {});
+      indicator = new UsageIndicator(controller, settings, this.path, () => {});
       Main.panel.addToStatusArea(ROLE, indicator);
       card = new DesktopCard(controller, settings);
 
-      for (const secondary of ['seven_day', 'none']) {
+      for (const [secondary, icon] of [
+        ['seven_day', 'color'],
+        ['none', 'symbolic'],
+        ['seven_day', 'none'],
+      ]) {
         settings.set_string('panel-secondary', secondary);
+        settings.set_string('panel-icon', icon);
         for (const state of STATES) {
           try {
             controller.emit(state.patch);
           } catch (error) {
-            failures.push(`${state.name} (secondary=${secondary}): ${error}`);
+            failures.push(`${state.name} (secondary=${secondary}, icon=${icon}): ${error}`);
           }
         }
       }
@@ -267,6 +272,7 @@ export default class ClaudelandUiCheck extends Extension {
         failures.push(`teardown: ${error}`);
       }
       settings.reset('panel-secondary');
+      settings.reset('panel-icon');
 
       if (failures.length > 0) {
         console.error(`CLAUDELAND UI CHECK FAILED: ${failures.join(' | ')}`);

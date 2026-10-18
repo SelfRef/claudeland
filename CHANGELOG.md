@@ -12,6 +12,8 @@ the project follows [Semantic Versioning](https://semver.org/).
 - Choose one or two remaining percentages for the top bar, shown as `n%/m%`:
   current session, weekly for all models, the most constrained model limit, or
   the most constrained limit overall. Defaults to session and weekly.
+- The top bar shows the Claude icon in color (default), symbolic so it follows
+  the panel color, or not at all.
 
 ### Fixed
 

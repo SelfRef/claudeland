@@ -8,6 +8,7 @@ import {
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 const POSITIONS = ['top-right', 'top-left', 'bottom-right', 'bottom-left'] as const;
+const PANEL_ICONS = ['none', 'color', 'symbolic'] as const;
 const PANEL_LIMITS = ['five_hour', 'seven_day', 'model', 'lowest', 'none'] as const;
 
 export default class ClaudelandPreferences extends ExtensionPreferences {
@@ -58,6 +59,16 @@ export default class ClaudelandPreferences extends ExtensionPreferences {
         _('Shown after a slash, or None for a single value.'),
         PANEL_LIMITS,
         panelLimitLabels,
+      ),
+    );
+    appearance.add(
+      boundCombo(
+        settings,
+        'panel-icon',
+        _('Panel icon'),
+        _('Symbolic follows the top bar color.'),
+        PANEL_ICONS,
+        [_('None'), _('Color'), _('Symbolic')],
       ),
     );
     appearance.add(

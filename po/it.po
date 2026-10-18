@@ -59,6 +59,9 @@ msgstr "Piano Claude"
 msgid "Claudeland"
 msgstr "Claudeland"
 
+msgid "Color"
+msgstr "A colori"
+
 msgid "Corner of the primary monitor."
 msgstr "Angolo del monitor principale."
 
@@ -109,6 +112,9 @@ msgstr "Nessuno"
 
 msgid "Open Claude browser sign-in through Claude Code."
 msgstr "Apre il login Claude nel browser tramite Claude Code."
+
+msgid "Panel icon"
+msgstr "Icona del pannello"
 
 msgid "Panel indicator"
 msgstr "Indicatore nel pannello"
@@ -178,6 +184,12 @@ msgstr "Codice sorgente e segnalazioni"
 
 msgid "Stale data · %s"
 msgstr "Dati non aggiornati · %s"
+
+msgid "Symbolic"
+msgstr "Simbolica"
+
+msgid "Symbolic follows the top bar color."
+msgstr "Simbolica segue il colore della barra superiore."
 
 msgid "The Claude Code credentials file is invalid."
 msgstr "Il file credenziali di Claude Code non è valido."

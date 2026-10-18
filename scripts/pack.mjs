@@ -27,7 +27,9 @@ run('gnome-extensions', [
   '--force',
   '--out-dir',
   staging,
-  ...['LICENSE', 'domain', 'locale', 'services', 'ui'].map((source) => `--extra-source=${source}`),
+  ...['LICENSE', 'domain', 'icons', 'locale', 'services', 'ui'].map(
+    (source) => `--extra-source=${source}`,
+  ),
   resolve(root, 'dist'),
 ]);
 

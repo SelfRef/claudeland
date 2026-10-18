@@ -30,6 +30,7 @@ export default class ClaudelandExtension extends Extension {
     for (const key of [
       'panel-primary',
       'panel-secondary',
+      'panel-icon',
       'warning-remaining',
       'critical-remaining',
     ]) {
@@ -59,7 +60,7 @@ export default class ClaudelandExtension extends Extension {
 
     const showPanel = this.settings.get_boolean('show-panel');
     if (showPanel && !this.indicator) {
-      this.indicator = new UsageIndicator(this.controller, this.settings, () =>
+      this.indicator = new UsageIndicator(this.controller, this.settings, this.path, () =>
         this.openPreferences(),
       );
       Main.panel.addToStatusArea(this.uuid, this.indicator);
