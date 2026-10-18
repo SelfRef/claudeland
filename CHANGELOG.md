@@ -8,7 +8,7 @@ the project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- GNOME Shell 51 compatibility metadata and a Fedora 45 verification container.
+- GNOME Shell 51 support and a Fedora 45 verification container.
 - Choose one or two remaining percentages for the top bar, shown as `n%/m%`:
   current session, weekly for all models, the most constrained model limit, or
   the most constrained limit overall. Defaults to session and weekly.
@@ -16,6 +16,14 @@ the project follows [Semantic Versioning](https://semver.org/).
   the panel color, or not at all.
 - The top bar shows the time until the first panel value resets, as
   `n%/m% · 2h 10m`. On by default.
+
+### Changed
+
+- The project is renamed to Vibecheck, with the extension UUID
+  `vibecheck@selfref.dev` and settings schema
+  `org.gnome.shell.extensions.vibecheck`. Settings from Claudeland do not carry
+  over.
+- Only maintained GNOME Shell releases are supported: 50 and 51.
 
 ### Fixed
 
@@ -135,9 +143,3 @@ the project follows [Semantic Versioning](https://semver.org/).
 ### Fixed
 
 - Keep the usage popup open when selecting “Refresh now”.
-
-[Unreleased]: https://github.com/SelfRef/vibecheck/compare/v0.3.1...HEAD
-[0.3.1]: https://github.com/SelfRef/vibecheck/compare/v0.3.0...v0.3.1
-[0.3.0]: https://github.com/SelfRef/vibecheck/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/SelfRef/vibecheck/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/SelfRef/vibecheck/releases/tag/v0.1.0
