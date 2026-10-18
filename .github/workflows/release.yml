@@ -43,4 +43,4 @@ jobs:
         run: >-
           gh release create "v$VERSION"
           build/*.shell-extension.zip build/*.shell-extension.zip.sha256
-          --title "$VERSION" --notes-file "$RUNNER_TEMP/notes.md"
+          --title "v$VERSION" --notes-file "$RUNNER_TEMP/notes.md"

@@ -6,17 +6,6 @@ the project follows [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
-### Changed
-
-- The desktop card is shown by default.
-
-### Fixed
-
-- Polling no longer stops for good when `claude auth status` hangs; the check
-  now gives up after 15 seconds.
-
-## 1.0.0 - 2026-10-18
-
 ### Added
 
 - GNOME Shell 51 support and a Fedora 45 verification container.
@@ -50,6 +39,7 @@ the project follows [Semantic Versioning](https://semver.org/).
   over.
 - Only maintained GNOME Shell releases are supported: 50 and 51.
 - Refresh now closes the menu like every other menu item.
+- The desktop card is shown by default.
 
 ### Fixed
 
@@ -66,6 +56,8 @@ the project follows [Semantic Versioning](https://semver.org/).
   on the session window or a surface limit such as Cowork gets its own row
   instead of being labelled weekly or dropped.
 - Team Premium seats are labelled "Team Premium" instead of "Max (5x)".
+- Polling no longer stops for good when `claude auth status` hangs; the check
+  now gives up after 15 seconds.
 
 ### Removed
 
