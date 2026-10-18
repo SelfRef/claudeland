@@ -30,7 +30,7 @@ interpolation, and no value that a network response or a setting can influence.
 
 Runs only when the credential file is missing or unparsable, to tell "Claude
 Code is not installed" apart from "Claude Code is installed but signed out".
-Its output is parsed as JSON and only three fields are read. Ordinary polling
+Its output is parsed as JSON and only `loggedIn` is read. Ordinary polling
 never reaches this path.
 
 ### 2. `claude auth login --claudeai` (non-interactive renewal)
