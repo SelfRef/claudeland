@@ -56,7 +56,7 @@
 		</key>
 		<key name="show-desktop-widget" type="b">
 			<default>false</default>
-			<summary>Show a non-interactive desktop card</summary>
+			<summary>Show a desktop card</summary>
 		</key>
 		<key name="desktop-position" type="s">
 			<default>'top-right'</default>

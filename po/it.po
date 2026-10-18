@@ -200,8 +200,8 @@ msgstr "Secondo valore del pannello"
 msgid "Session · %s"
 msgstr "Sessione · %s"
 
-msgid "Show a non-interactive card below application windows."
-msgstr "Mostra una card non interattiva sotto le finestre."
+msgid "Show a card below application windows. Right-click it to refresh."
+msgstr "Mostra una card sotto le finestre. Fai clic destro per aggiornarla."
 
 msgid "Show percentages in the GNOME top bar."
 msgstr "Mostra le percentuali nella barra superiore di GNOME."

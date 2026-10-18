@@ -6,7 +6,9 @@ import Pango from 'gi://Pango';
 import St from 'gi://St';
 
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
+import * as BoxPointer from 'resource:///org/gnome/shell/ui/boxpointer.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import { formatMessage } from '../domain/usage.js';
 import type { UsageController, UsageState } from '../services/usage-controller.js';
@@ -18,6 +20,7 @@ export class DesktopCard {
 	private readonly actor: St.BoxLayout;
 	private readonly title: St.Label;
 	private readonly content: St.BoxLayout;
+	private readonly menu: PopupMenu.PopupMenu;
 	private readonly unsubscribe: () => void;
 	private positionSourceId: number | null = null;
 	private backgroundGroup: Meta.BackgroundGroup | null = null;
@@ -25,9 +28,12 @@ export class DesktopCard {
 	constructor(
 		controller: UsageController,
 		private readonly settings: Gio.Settings,
+		openPreferences: () => void,
 	) {
 		this.actor = new St.BoxLayout({
-			reactive: false,
+			// Reactive only for its context menu. Below every window, it can only be
+			// clicked where the desktop shows.
+			reactive: true,
 			can_focus: false,
 			width: 300,
 			orientation: Clutter.Orientation.VERTICAL,
@@ -71,11 +77,44 @@ export class DesktopCard {
 			},
 			this.actor,
 		);
+
+		// The same pattern as the desktop's own menu: anchored to the layout
+		// manager's dummy cursor, which is moved to wherever the click landed.
+		this.menu = new PopupMenu.PopupMenu(Main.layoutManager.dummyCursor, 0, St.Side.TOP);
+		const refreshItem = new PopupMenu.PopupMenuItem(_('Refresh now'));
+		refreshItem.connectObject('activate', () => void controller.refresh(), this.actor);
+		this.menu.addMenuItem(refreshItem);
+		const preferencesItem = new PopupMenu.PopupMenuItem(_('Preferences'));
+		preferencesItem.connectObject('activate', openPreferences, this.actor);
+		this.menu.addMenuItem(preferencesItem);
+		Main.layoutManager.uiGroup.add_child(this.menu.actor);
+		this.menu.actor.hide();
+		new PopupMenu.PopupMenuManager(this.actor).addMenu(this.menu);
+		this.actor.connectObject(
+			'button-release-event',
+			(_actor: St.BoxLayout, event: Clutter.Event) => {
+				if (event.get_button() !== Clutter.BUTTON_SECONDARY) {
+					return Clutter.EVENT_PROPAGATE;
+				}
+				const [x, y] = event.get_coords();
+				this.openMenu(x, y);
+				return Clutter.EVENT_STOP;
+			},
+			this.actor,
+		);
+
 		this.unsubscribe = controller.subscribe((state) => this.render(state));
+	}
+
+	/** Opens the card's menu at a stage position, as a right-click does. */
+	openMenu(x: number, y: number): void {
+		Main.layoutManager.setDummyCursorGeometry(x, y, 0, 0);
+		this.menu.open(BoxPointer.PopupAnimation.FULL);
 	}
 
 	destroy(): void {
 		this.unsubscribe();
+		this.menu.destroy();
 		Main.layoutManager.disconnectObject(this.actor);
 		this.backgroundGroup = null;
 		if (this.positionSourceId !== null) {

@@ -199,7 +199,7 @@ msgstr ""
 msgid "Session · %s"
 msgstr ""
 
-msgid "Show a non-interactive card below application windows."
+msgid "Show a card below application windows. Right-click it to refresh."
 msgstr ""
 
 msgid "Show percentages in the GNOME top bar."

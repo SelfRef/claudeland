@@ -100,7 +100,7 @@ export default class VibecheckPreferences extends ExtensionPreferences {
 				settings,
 				'show-desktop-widget',
 				_('Desktop card'),
-				_('Show a non-interactive card below application windows.'),
+				_('Show a card below application windows. Right-click it to refresh.'),
 			),
 		);
 

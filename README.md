@@ -33,8 +33,9 @@ application on stock GNOME. Vibecheck therefore integrates with GNOME Shell
 directly:
 
 - the panel indicator is the stable default;
-- the optional desktop card is placed in GNOME's background actor group and is
-  non-interactive, so it does not cover application windows or steal input.
+- the optional desktop card is placed in GNOME's background actor group, so it
+  stays below application windows and only receives clicks where the desktop
+  shows; right-click it to refresh or open the preferences.
 
 ## Requirements
 

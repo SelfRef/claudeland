@@ -17,6 +17,7 @@ the project follows [Semantic Versioning](https://semver.org/).
 - The top bar shows the time until the current session resets, the weekly
   limit resets, or both, as `n%/m% · 2h 10m/3d 4h`. Session by default.
 - The desktop card shows a meter and reset time for each limit, like the menu.
+- Right-click the desktop card to refresh or open the preferences.
 - What contributed to usage on this machine over the last day and week, from
   Claude Code's `/usage` report: request and session counts, behaviors such as
   long context or subagent-heavy sessions, and top subagents and MCP servers.

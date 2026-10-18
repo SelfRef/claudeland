@@ -9,9 +9,11 @@
 //
 // It is test-only: it is never packaged and never installed on a real session.
 
+import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { DesktopCard } from './ui/desktop-card.js';
@@ -288,9 +290,48 @@ class ProbeController {
 		}
 	}
 
-	refresh() {}
+	refreshes = 0;
+
+	refresh() {
+		this.refreshes += 1;
+	}
 
 	launchLogin() {}
+}
+
+/**
+ * Opens the card's menu as a right-click would and activates each item. The
+ * click routing itself needs a real pointer, which the headless Shell lacks.
+ */
+function checkCardMenu(card, controller, preferences) {
+	const failures = [];
+	const items = () =>
+		card.menu.box.get_children().filter((child) => child instanceof PopupMenu.PopupMenuItem);
+	const labels = items().map((item) => item.label.text);
+	if (labels.join(',') !== 'Refresh now,Preferences') {
+		return [`the card menu holds ${labels.join(',') || 'nothing'}`];
+	}
+
+	for (const [index, counter, name] of [
+		[0, () => controller.refreshes, 'refresh'],
+		[1, () => preferences.opened, 'preferences'],
+	]) {
+		card.openMenu(200, 200);
+		if (!card.menu.isOpen) {
+			failures.push('the card menu did not open');
+			break;
+		}
+		const before = counter();
+		items()[index].activate(Clutter.get_current_event());
+		if (counter() !== before + 1) {
+			failures.push(`the card menu ${name} item did nothing`);
+		}
+		if (card.menu.isOpen) {
+			failures.push(`the card menu stayed open after ${name}`);
+			card.menu.close();
+		}
+	}
+	return failures;
 }
 
 export default class VibecheckUiCheck extends Extension {
@@ -302,13 +343,16 @@ export default class VibecheckUiCheck extends Extension {
 		const failures = [];
 		const settings = this.getSettings();
 		const controller = new ProbeController();
+		const preferences = { opened: 0 };
 
 		let indicator = null;
 		let card = null;
 		try {
 			indicator = new UsageIndicator(controller, settings, this.path, () => {});
 			Main.panel.addToStatusArea(ROLE, indicator);
-			card = new DesktopCard(controller, settings);
+			card = new DesktopCard(controller, settings, () => {
+				preferences.opened += 1;
+			});
 			// The shell starts in the overview, which hides the desktop. The card is
 			// only laid out, and its meters sized, once the desktop is showing.
 			Main.overview.hide();
@@ -350,6 +394,9 @@ export default class VibecheckUiCheck extends Extension {
 			failures.push(...checkStacking());
 			const cardActor = actorsWithStyle(global.window_group, 'vibecheck-desktop-card')[0];
 			failures.push(...checkProgressBars('desktop card', cardActor));
+			if (card) {
+				failures.push(...checkCardMenu(card, controller, preferences));
+			}
 			try {
 				card?.destroy();
 				indicator?.destroy();

@@ -88,7 +88,9 @@ export default class VibecheckExtension extends Extension {
 		const showDesktop = this.settings.get_boolean('show-desktop-widget');
 		if (showDesktop && !this.desktopCard) {
 			try {
-				this.desktopCard = new DesktopCard(this.controller, this.settings);
+				this.desktopCard = new DesktopCard(this.controller, this.settings, () =>
+					this.openPreferences(),
+				);
 			} catch (error) {
 				logError(
 					error instanceof Error ? error : new Error(String(error)),

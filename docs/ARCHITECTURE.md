@@ -63,7 +63,8 @@ minutes and only while it is shown.
 ### UI
 
 `UsageIndicator` owns the panel button, menu, polling lifecycle, error state,
-and user actions. `DesktopCard` is a read-only mirror of the latest snapshot.
+and user actions. `DesktopCard` mirrors the latest snapshot, with a right-click menu to refresh or
+open the preferences.
 It is parented into the `Meta.BackgroundGroup` found among
 `global.window_group`'s children, which puts it above the wallpaper and below
 application windows without touching private shell fields. It belongs inside
