@@ -54,6 +54,16 @@ describe('normalizeUsage', () => {
     });
   });
 
+  it('keeps extra usage only while it is enabled', () => {
+    const ids = (enabled: boolean) =>
+      normalizeUsage({
+        five_hour: { utilization: 10 },
+        spend: { percent: 40, enabled },
+      }).limits.map((limit) => limit.id);
+    expect(ids(true)).toEqual(['five_hour', 'extra_usage']);
+    expect(ids(false)).toEqual(['five_hour']);
+  });
+
   it('clamps malformed percentages and honors remaining thresholds', () => {
     const snapshot = normalizeUsage(
       {

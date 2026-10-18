@@ -57,6 +57,11 @@ export function normalizeUsage(payload: unknown, options: NormalizeOptions = {})
   const limits = new Map<string, UsageLimit>();
 
   for (const [sourceKey, candidate] of candidates) {
+    // A switched-off feature such as extra usage still reports 0% used.
+    if (candidate.enabled === false || candidate.is_enabled === false) {
+      continue;
+    }
+
     const utilization = firstNumber(
       candidate.utilization,
       candidate.percent,
@@ -283,7 +288,7 @@ function canonicalId(
   if (['session', 'five_hour', 'fivehour'].includes(rawKind)) {
     return 'five_hour';
   }
-  if (['weekly', 'week', 'seven_day', 'sevenday'].includes(rawKind)) {
+  if (['weekly', 'weekly_all', 'week', 'seven_day', 'sevenday'].includes(rawKind)) {
     return 'seven_day';
   }
   if (rawKind === 'spend') {

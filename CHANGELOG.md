@@ -22,6 +22,8 @@ the project follows [Semantic Versioning](https://semver.org/).
 - Changing a display setting redraws the cached usage instead of requesting it
   again, so adjusting preferences no longer runs into the rate limit.
 - The "updated" time follows the GNOME 12h/24h clock setting.
+- Extra usage is hidden while it is switched off, instead of showing as 100%
+  remaining, and the weekly limit no longer appears twice.
 
 ### Removed
 

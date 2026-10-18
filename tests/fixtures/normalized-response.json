@@ -7,6 +7,15 @@
     "utilization": 51,
     "resets_at": "2030-06-20T15:59:59.814040+00:00"
   },
+  "extra_usage": {
+    "is_enabled": false,
+    "utilization": null
+  },
+  "spend": {
+    "used": { "amount_minor": 0, "currency": "USD", "exponent": 2 },
+    "percent": 0,
+    "enabled": false
+  },
   "limits": [
     {
       "kind": "session",
@@ -14,7 +23,7 @@
       "resets_at": "2030-06-17T06:09:59.814020+00:00"
     },
     {
-      "kind": "weekly",
+      "kind": "weekly_all",
       "percent": 51,
       "resets_at": "2030-06-20T15:59:59.814040+00:00"
     },
