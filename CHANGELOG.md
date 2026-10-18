@@ -10,6 +10,11 @@ the project follows [Semantic Versioning](https://semver.org/).
 
 - The desktop card is shown by default.
 
+### Fixed
+
+- Polling no longer stops for good when `claude auth status` hangs; the check
+  now gives up after 15 seconds.
+
 ## [1.0.0] - 2026-10-18
 
 ### Added

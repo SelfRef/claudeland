@@ -2,6 +2,7 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
 import type { ClaudeCredential } from '../domain/credential.js';
+import { ChildProcess } from './child-process.js';
 import { VibecheckError } from './errors.js';
 
 export interface ClaudeAuthStatus {
@@ -20,32 +21,40 @@ const FALLBACK_SCOPES = [
 	'user:mcp_servers',
 ];
 
+/** A status check that has not finished by then is treated as signed out. */
+const STATUS_TIMEOUT_SECONDS = 15;
+
 /** A renewal that has not finished by then is treated as failed. */
 const RENEW_TIMEOUT_SECONDS = 45;
 
 export class ClaudeAuth {
-	private process: Gio.Subprocess | null = null;
+	private statusProcess: ChildProcess | null = null;
 	private renewal: Promise<boolean> | null = null;
-	private renewalProcess: Gio.Subprocess | null = null;
+	private renewalProcess: ChildProcess | null = null;
 
 	async status(): Promise<ClaudeAuthStatus> {
 		if (!GLib.find_program_in_path('claude')) {
 			return { installed: false, loggedIn: false };
 		}
 
+		let child: ChildProcess | null = null;
 		try {
-			const process = Gio.Subprocess.new(
-				['claude', 'auth', 'status', '--json'],
-				Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_SILENCE,
+			child = new ChildProcess(
+				Gio.Subprocess.new(
+					['claude', 'auth', 'status', '--json'],
+					Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_SILENCE,
+				),
+				STATUS_TIMEOUT_SECONDS,
 			);
-			this.process = process;
-			const [, stdout] = await communicateUtf8(process);
-			const parsed = JSON.parse(stdout ?? '{}') as { loggedIn?: unknown };
+			this.statusProcess = child;
+			const parsed = JSON.parse((await child.output()) || '{}') as { loggedIn?: unknown };
 			return { installed: true, loggedIn: parsed.loggedIn === true };
 		} catch {
 			return { installed: true, loggedIn: false };
 		} finally {
-			this.process = null;
+			if (this.statusProcess === child) {
+				this.statusProcess = null;
+			}
 		}
 	}
 
@@ -81,19 +90,16 @@ export class ClaudeAuth {
 	}
 
 	destroy(): void {
-		this.process?.force_exit();
-		this.process = null;
-		this.renewalProcess?.force_exit();
+		this.statusProcess?.cancel();
+		this.statusProcess = null;
+		this.renewalProcess?.cancel();
 		this.renewalProcess = null;
 		this.renewal = null;
 	}
 
-	private async spawnRenewal(refreshToken: string, scopes: string): Promise<boolean> {
-		let launcher: Gio.SubprocessLauncher;
-		let process: Gio.Subprocess;
-
+	private spawnRenewal(refreshToken: string, scopes: string): Promise<boolean> {
 		try {
-			launcher = new Gio.SubprocessLauncher({
+			const launcher = new Gio.SubprocessLauncher({
 				flags: Gio.SubprocessFlags.STDOUT_SILENCE | Gio.SubprocessFlags.STDERR_SILENCE,
 			});
 			// Never through argv: process arguments are world-readable.
@@ -101,29 +107,15 @@ export class ClaudeAuth {
 			launcher.setenv('CLAUDE_CODE_OAUTH_SCOPES', scopes, true);
 			// The CLI must never block on a prompt inherited from GNOME Shell.
 			launcher.set_stdin_file_path('/dev/null');
-			process = launcher.spawnv(['claude', 'auth', 'login', '--claudeai']);
+			this.renewalProcess = new ChildProcess(
+				launcher.spawnv(['claude', 'auth', 'login', '--claudeai']),
+				RENEW_TIMEOUT_SECONDS,
+			);
 		} catch {
-			return false;
+			return Promise.resolve(false);
 		}
-
-		this.renewalProcess = process;
-		let timeoutId: number | null = GLib.timeout_add_seconds(
-			GLib.PRIORITY_DEFAULT,
-			RENEW_TIMEOUT_SECONDS,
-			() => {
-				timeoutId = null;
-				process.force_exit();
-				return GLib.SOURCE_REMOVE;
-			},
-		);
-
-		try {
-			return await waitCheck(process);
-		} finally {
-			if (timeoutId !== null) {
-				GLib.Source.remove(timeoutId);
-			}
-		}
+		// A non-zero exit is how the CLI reports a failed renewal.
+		return this.renewalProcess.succeeded();
 	}
 }
 
@@ -151,31 +143,4 @@ export function launchLogin(): void {
 	}
 
 	throw new VibecheckError('terminal-missing');
-}
-
-function waitCheck(process: Gio.Subprocess): Promise<boolean> {
-	return new Promise((resolve) => {
-		process.wait_check_async(null, (source, result) => {
-			try {
-				// Throws on a non-zero exit, which the CLI uses for a failed renewal.
-				resolve(source!.wait_check_finish(result));
-			} catch {
-				resolve(false);
-			}
-		});
-	});
-}
-
-export function communicateUtf8(
-	process: Gio.Subprocess,
-): Promise<[boolean, string | null, string | null]> {
-	return new Promise((resolve, reject) => {
-		process.communicate_utf8_async(null, null, (source, result) => {
-			try {
-				resolve(source!.communicate_utf8_finish(result));
-			} catch (error) {
-				reject(error);
-			}
-		});
-	});
 }

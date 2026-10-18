@@ -2,7 +2,7 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
 import { parseUsageCommandStream, type CliUsageReport } from '../domain/usage-insights.js';
-import { communicateUtf8 } from './claude-auth.js';
+import { ChildProcess } from './child-process.js';
 
 /** A report that has not finished by then is abandoned. */
 const TIMEOUT_SECONDS = 30;
@@ -19,7 +19,7 @@ const TIMEOUT_SECONDS = 30;
  * itself to the transcripts it reports on.
  */
 export class ClaudeCliUsage {
-	private process: Gio.Subprocess | null = null;
+	private process: ChildProcess | null = null;
 
 	static isInstalled(): boolean {
 		return GLib.find_program_in_path('claude') !== null;
@@ -31,7 +31,7 @@ export class ClaudeCliUsage {
 			return null;
 		}
 
-		let process: Gio.Subprocess;
+		let child: ChildProcess;
 		try {
 			const launcher = new Gio.SubprocessLauncher({
 				flags: Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_SILENCE,
@@ -39,49 +39,38 @@ export class ClaudeCliUsage {
 			// The CLI must never block on a prompt inherited from GNOME Shell.
 			launcher.set_stdin_file_path('/dev/null');
 			launcher.set_cwd(GLib.get_home_dir());
-			process = launcher.spawnv([
-				'claude',
-				'-p',
-				'/usage',
-				'--setting-sources',
-				'',
-				'--no-session-persistence',
-				'--output-format',
-				'stream-json',
-				'--verbose',
-			]);
+			child = new ChildProcess(
+				launcher.spawnv([
+					'claude',
+					'-p',
+					'/usage',
+					'--setting-sources',
+					'',
+					'--no-session-persistence',
+					'--output-format',
+					'stream-json',
+					'--verbose',
+				]),
+				TIMEOUT_SECONDS,
+			);
 		} catch {
 			return null;
 		}
 
-		this.process = process;
-		let timeoutId: number | null = GLib.timeout_add_seconds(
-			GLib.PRIORITY_DEFAULT,
-			TIMEOUT_SECONDS,
-			() => {
-				timeoutId = null;
-				process.force_exit();
-				return GLib.SOURCE_REMOVE;
-			},
-		);
-
+		this.process = child;
 		try {
-			const [, stdout] = await communicateUtf8(process);
-			return parseUsageCommandStream(stdout ?? '');
+			return parseUsageCommandStream(await child.output());
 		} catch {
 			return null;
 		} finally {
-			if (timeoutId !== null) {
-				GLib.Source.remove(timeoutId);
-			}
-			if (this.process === process) {
+			if (this.process === child) {
 				this.process = null;
 			}
 		}
 	}
 
 	destroy(): void {
-		this.process?.force_exit();
+		this.process?.cancel();
 		this.process = null;
 	}
 }
