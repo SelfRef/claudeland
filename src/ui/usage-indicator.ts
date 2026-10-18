@@ -17,6 +17,7 @@ import {
 import { VibecheckError } from '../services/errors.js';
 import type { UsageController, UsageState } from '../services/usage-controller.js';
 import { createLimitContent } from './limit-content.js';
+import { createInsightsContent } from './insights-content.js';
 import { formatClockTime, localizedError } from './localization.js';
 
 class UsageIndicatorImpl extends PanelMenu.Button {
@@ -24,6 +25,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 	private readonly panelLabel: St.Label;
 	private readonly statusItem: PopupMenu.PopupMenuItem;
 	private readonly limitsSection: PopupMenu.PopupMenuSection;
+	private readonly insightsSection: PopupMenu.PopupMenuSection;
 	private readonly loginItem: PopupMenu.PopupMenuItem;
 	private readonly unsubscribe: () => void;
 
@@ -58,6 +60,8 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 
 		this.limitsSection = new PopupMenu.PopupMenuSection();
 		menu.addMenuItem(this.limitsSection);
+		this.insightsSection = new PopupMenu.PopupMenuSection();
+		menu.addMenuItem(this.insightsSection);
 		menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
 		this.loginItem = new PopupMenu.PopupMenuItem(_('Sign in / renew session'));
@@ -129,6 +133,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 
 	private renderMenu(state: Readonly<UsageState>): void {
 		this.limitsSection.removeAll();
+		this.insightsSection.removeAll();
 
 		if (state.renewing) {
 			this.statusItem.label.text = _('Renewing the Claude session…');
@@ -151,6 +156,15 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 			for (const limit of state.snapshot.limits) {
 				this.limitsSection.addMenuItem(createLimitRow(limit));
 			}
+		}
+
+		const insights = this.settings.get_string('show-insights');
+		if (state.insights?.length && (insights === 'both' || insights === 'menu')) {
+			this.insightsSection.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+			const item = new PopupMenu.PopupBaseMenuItem({ reactive: false, can_focus: false });
+			item.add_style_class_name('vibecheck-limit-item');
+			item.add_child(createInsightsContent(state.insights));
+			this.insightsSection.addMenuItem(item);
 		}
 
 		const needsLogin =

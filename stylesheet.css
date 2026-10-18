@@ -46,6 +46,28 @@
 	font-size: 0.85em;
 }
 
+.vibecheck-insights {
+	width: 280px;
+	spacing: 8px;
+}
+
+.vibecheck-insights-heading {
+	font-weight: 600;
+}
+
+.vibecheck-insight-period {
+	spacing: 2px;
+}
+
+.vibecheck-insight-title,
+.vibecheck-insight-line {
+	font-size: 0.85em;
+}
+
+.vibecheck-insight-title {
+	font-weight: 600;
+}
+
 .vibecheck-warning {
 	color: #e5c07b;
 }
@@ -86,12 +108,16 @@
 }
 
 /* The card is always dark, unlike the menu, which follows the Shell style. */
-.vibecheck-desktop-card .vibecheck-limit-content {
+.vibecheck-desktop-card .vibecheck-limit-content,
+.vibecheck-desktop-card .vibecheck-insights {
 	width: 264px;
 }
 
 .vibecheck-desktop-card .vibecheck-limit-label,
-.vibecheck-desktop-card .vibecheck-reset-label {
+.vibecheck-desktop-card .vibecheck-reset-label,
+.vibecheck-desktop-card .vibecheck-insights-heading,
+.vibecheck-desktop-card .vibecheck-insight-title,
+.vibecheck-desktop-card .vibecheck-insight-line {
 	color: #ece9e4;
 }
 

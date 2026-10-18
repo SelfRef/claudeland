@@ -40,6 +40,9 @@ msgstr ""
 msgid "Bottom right"
 msgstr ""
 
+msgid "Card only"
+msgstr ""
+
 msgid "Card position"
 msgstr ""
 
@@ -62,6 +65,9 @@ msgid "Vibecheck"
 msgstr ""
 
 msgid "Color"
+msgstr ""
+
+msgid "Contributing to usage on this machine"
 msgstr ""
 
 msgid "Corner of the primary monitor."
@@ -88,6 +94,9 @@ msgstr ""
 msgid "First panel value"
 msgstr ""
 
+msgid "Hidden"
+msgstr ""
+
 msgid "Install Claude Code to authenticate."
 msgstr ""
 
@@ -98,6 +107,12 @@ msgid "Loading…"
 msgstr ""
 
 msgid "Lowest remaining"
+msgstr ""
+
+msgid "Menu and card"
+msgstr ""
+
+msgid "Menu only"
 msgstr ""
 
 msgid "Minutes between usage requests."
@@ -223,6 +238,9 @@ msgstr ""
 msgid "Updates and thresholds"
 msgstr ""
 
+msgid "Usage contributors"
+msgstr ""
+
 msgid "Use the critical color below this percentage."
 msgstr ""
 
@@ -233,4 +251,7 @@ msgid "Weekly · %s"
 msgstr ""
 
 msgid "Weekly · all models"
+msgstr ""
+
+msgid "What drove usage on this machine over the last day and week, from Claude Code."
 msgstr ""

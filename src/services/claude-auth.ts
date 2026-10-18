@@ -166,7 +166,7 @@ function waitCheck(process: Gio.Subprocess): Promise<boolean> {
 	});
 }
 
-function communicateUtf8(
+export function communicateUtf8(
 	process: Gio.Subprocess,
 ): Promise<[boolean, string | null, string | null]> {
 	return new Promise((resolve, reject) => {

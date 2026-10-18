@@ -3,10 +3,12 @@ import GLib from 'gi://GLib';
 
 import type { ClaudeCredential } from '../domain/credential.js';
 import { canRenew, evaluateSession, isAccessTokenUsable } from '../domain/session.js';
+import type { UsageInsightPeriod } from '../domain/usage-insights.js';
 import { severityFor, type UsageSnapshot } from '../domain/usage.js';
 import { ClaudeAuth, launchLogin } from './claude-auth.js';
 import { ClaudeCredentials } from './claude-credentials.js';
 import { ClaudeUsageClient } from './claude-usage-client.js';
+import { ClaudeUsageInsights } from './claude-usage-insights.js';
 import { VibecheckError } from './errors.js';
 
 export interface UsageState {
@@ -16,6 +18,8 @@ export interface UsageState {
 	stale: boolean;
 	errorCode: VibecheckError['code'] | null;
 	planLabel: string | null;
+	/** What contributes to usage on this machine, or null before the first report. */
+	insights: UsageInsightPeriod[] | null;
 }
 
 type StateListener = (state: Readonly<UsageState>) => void;
@@ -23,11 +27,13 @@ type StateListener = (state: Readonly<UsageState>) => void;
 type UsageClient = Pick<ClaudeUsageClient, 'fetch' | 'destroy'>;
 type UsageAuth = Pick<ClaudeAuth, 'status' | 'renew' | 'destroy'>;
 type UsageCredentials = Pick<ClaudeCredentials, 'read'>;
+type UsageInsights = Pick<ClaudeUsageInsights, 'fetch' | 'destroy'>;
 
 export interface UsageControllerDependencies {
 	client?: UsageClient;
 	auth?: UsageAuth;
 	credentials?: UsageCredentials;
+	insights?: UsageInsights;
 }
 
 /**
@@ -36,13 +42,21 @@ export interface UsageControllerDependencies {
  */
 const RENEWAL_COOLDOWN_MS = 15 * 60 * 1000;
 
+/**
+ * The contributing-usage report covers the last day and week, so it changes
+ * slowly, and each report is a CLI run that also queries the usage endpoint.
+ */
+const INSIGHTS_INTERVAL_MS = 15 * 60 * 1000;
+
 export class UsageController {
 	private readonly listeners = new Set<StateListener>();
 	private client: UsageClient | null;
 	private auth: UsageAuth | null;
 	private credentials: UsageCredentials | null;
+	private insights: UsageInsights | null;
 	private timeoutId: number | null = null;
 	private renewalBlockedUntil = 0;
+	private insightsRequestedAt = 0;
 	private state: UsageState = {
 		snapshot: null,
 		loading: false,
@@ -50,6 +64,7 @@ export class UsageController {
 		stale: false,
 		errorCode: null,
 		planLabel: null,
+		insights: null,
 	};
 
 	constructor(
@@ -59,6 +74,7 @@ export class UsageController {
 		this.client = dependencies.client ?? new ClaudeUsageClient();
 		this.auth = dependencies.auth ?? new ClaudeAuth();
 		this.credentials = dependencies.credentials ?? new ClaudeCredentials();
+		this.insights = dependencies.insights ?? new ClaudeUsageInsights();
 	}
 
 	start(): void {
@@ -152,6 +168,7 @@ export class UsageController {
 				stale: false,
 				errorCode: null,
 			});
+			void this.refreshInsights();
 		} catch (error) {
 			if (this.client !== client) {
 				return;
@@ -172,6 +189,27 @@ export class UsageController {
 		}
 	}
 
+	/**
+	 * Asks Claude Code for its contributing-usage report while the report is
+	 * shown somewhere, at most once per interval whether or not it succeeds.
+	 */
+	async refreshInsights(): Promise<void> {
+		const insights = this.insights;
+		if (
+			!insights ||
+			this.settings.get_string('show-insights') === 'none' ||
+			Date.now() - this.insightsRequestedAt < INSIGHTS_INTERVAL_MS
+		) {
+			return;
+		}
+
+		this.insightsRequestedAt = Date.now();
+		const periods = await insights.fetch();
+		if (this.insights === insights && periods !== null) {
+			this.setState({ insights: periods });
+		}
+	}
+
 	launchLogin(): void {
 		// A manual sign-in is an explicit fresh start for automatic renewal too.
 		this.renewalBlockedUntil = 0;
@@ -181,9 +219,11 @@ export class UsageController {
 	destroy(): void {
 		const client = this.client;
 		const auth = this.auth;
+		const insights = this.insights;
 		this.client = null;
 		this.auth = null;
 		this.credentials = null;
+		this.insights = null;
 		if (this.timeoutId !== null) {
 			GLib.Source.remove(this.timeoutId);
 			this.timeoutId = null;
@@ -191,6 +231,7 @@ export class UsageController {
 		this.listeners.clear();
 		auth?.destroy();
 		client?.destroy();
+		insights?.destroy();
 	}
 
 	/**

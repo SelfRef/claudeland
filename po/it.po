@@ -41,6 +41,9 @@ msgstr "In basso a sinistra"
 msgid "Bottom right"
 msgstr "In basso a destra"
 
+msgid "Card only"
+msgstr "Solo card"
+
 msgid "Card position"
 msgstr "Posizione della card"
 
@@ -64,6 +67,9 @@ msgstr "Vibecheck"
 
 msgid "Color"
 msgstr "A colori"
+
+msgid "Contributing to usage on this machine"
+msgstr "Cosa incide sull'utilizzo su questo computer"
 
 msgid "Corner of the primary monitor."
 msgstr "Angolo del monitor principale."
@@ -89,6 +95,9 @@ msgstr "Utilizzo extra"
 msgid "First panel value"
 msgstr "Primo valore del pannello"
 
+msgid "Hidden"
+msgstr "Nascosto"
+
 msgid "Install Claude Code to authenticate."
 msgstr "Installa Claude Code per autenticarti."
 
@@ -100,6 +109,12 @@ msgstr "Caricamento…"
 
 msgid "Lowest remaining"
 msgstr "Residuo più basso"
+
+msgid "Menu and card"
+msgstr "Menu e card"
+
+msgid "Menu only"
+msgstr "Solo menu"
 
 msgid "Minutes between usage requests."
 msgstr "Minuti tra una richiesta e la successiva."
@@ -224,6 +239,9 @@ msgstr "In alto a destra"
 msgid "Updates and thresholds"
 msgstr "Aggiornamento e soglie"
 
+msgid "Usage contributors"
+msgstr "Cosa incide sull'utilizzo"
+
 msgid "Use the critical color below this percentage."
 msgstr "Usa il colore critico sotto questa percentuale."
 
@@ -235,3 +253,6 @@ msgstr "Settimanale · %s"
 
 msgid "Weekly · all models"
 msgstr "Settimanale · tutti i modelli"
+
+msgid "What drove usage on this machine over the last day and week, from Claude Code."
+msgstr "Cosa ha inciso sull'utilizzo su questo computer nell'ultimo giorno e nell'ultima settimana, secondo Claude Code."

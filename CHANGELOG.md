@@ -17,6 +17,11 @@ the project follows [Semantic Versioning](https://semver.org/).
 - The top bar shows the time until the first panel value resets, as
   `n%/m% · 2h 10m`. On by default.
 - The desktop card shows a meter and reset time for each limit, like the menu.
+- What contributed to usage on this machine over the last day and week, from
+  Claude Code's `/usage` report: request and session counts, behaviors such as
+  long context or subagent-heavy sessions, and top subagents and MCP servers.
+  Shown in the menu and on the card by default; a setting limits it to one of
+  them or hides it. Refreshed at most every 15 minutes.
 
 ### Changed
 

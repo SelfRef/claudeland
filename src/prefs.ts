@@ -13,6 +13,7 @@ import { VibecheckError } from './services/errors.js';
 const POSITIONS = ['top-right', 'top-left', 'bottom-right', 'bottom-left'] as const;
 const PANEL_ICONS = ['none', 'color', 'symbolic'] as const;
 const PANEL_LIMITS = ['five_hour', 'seven_day', 'lowest', 'none'] as const;
+const INSIGHT_PLACES = ['both', 'menu', 'card', 'none'] as const;
 
 export default class VibecheckPreferences extends ExtensionPreferences {
 	async fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
@@ -79,6 +80,16 @@ export default class VibecheckPreferences extends ExtensionPreferences {
 				_('Symbolic follows the top bar color.'),
 				PANEL_ICONS,
 				[_('None'), _('Color'), _('Symbolic')],
+			),
+		);
+		appearance.add(
+			boundCombo(
+				settings,
+				'show-insights',
+				_('Usage contributors'),
+				_('What drove usage on this machine over the last day and week, from Claude Code.'),
+				INSIGHT_PLACES,
+				[_('Menu and card'), _('Menu only'), _('Card only'), _('Hidden')],
 			),
 		);
 		appearance.add(

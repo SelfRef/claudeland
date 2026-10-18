@@ -23,6 +23,11 @@ windows appear without code changes. Legacy top-level keys fill any gaps.
 truly expired. Keeping that decision pure is what makes the difference between
 "the access token expired" and "the user must sign in again" testable.
 
+`src/domain/usage-insights.ts` reads the "What's contributing to your limits
+usage?" section from the text of Claude Code's `/usage` command. It relies on
+the layout, not the wording: each period is a title line and its indented
+findings, shown as Claude Code words them.
+
 These modules have no GJS imports and run in both GNOME Shell and Node tests.
 
 ### Services
@@ -40,10 +45,17 @@ header. It performs one request with the credential it is given, converts
 transport failures into typed errors, and hands untrusted JSON to the domain
 normalizer.
 
+`ClaudeUsageInsights` runs `claude -p /usage` for the contributing-usage
+report, which Claude Code builds from local transcripts and only prints as
+text. The command makes no model request; it loads no settings, so user hooks
+and plugins stay idle, and saves no session, so it is not counted in its own
+report.
+
 `UsageController` owns the polling loop and the session state machine: read the
 credential, renew it when the access token is expired or expiring, request
-usage, and retry once after a renewal triggered by an HTTP 401. The happy path
-spawns no subprocess.
+usage, and retry once after a renewal triggered by an HTTP 401. Usage polling
+spawns no subprocess. The contributing-usage report is requested after a
+successful poll, at most every 15 minutes, and only while it is shown.
 
 ### UI
 

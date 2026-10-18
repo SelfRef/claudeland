@@ -159,6 +159,46 @@ const SNAPSHOT = {
 	],
 };
 
+const INSIGHTS = [
+	{
+		title: 'Last 24h · 387 requests · 10 sessions',
+		lines: ['32% of your usage was at >150k context', 'Top subagents: general-purpose 5%'],
+	},
+	{
+		title: 'Last 7d · 2682 requests · 27 sessions',
+		lines: ['41% of your usage came from sessions active for 8+ hours'],
+	},
+];
+
+/** Renders the report under each placement setting and counts the periods shown. */
+function checkInsights(controller, settings) {
+	const failures = [];
+	for (const [place, inMenu, onCard] of [
+		['both', true, true],
+		['menu', true, false],
+		['card', false, true],
+		['none', false, false],
+	]) {
+		settings.set_string('show-insights', place);
+		controller.emit({ snapshot: SNAPSHOT, planLabel: 'Claude Max 5x', insights: INSIGHTS });
+		const card = actorsWithStyle(global.window_group, 'vibecheck-desktop-card')[0];
+		for (const [name, root, shown] of [
+			['menu', Main.panel.statusArea[ROLE]?.menu.box, inMenu],
+			['desktop card', card, onCard],
+		]) {
+			const expected = shown ? INSIGHTS.length : 0;
+			const found = root ? actorsWithStyle(root, 'vibecheck-insight-period').length : -1;
+			if (found !== expected) {
+				failures.push(
+					`${name} shows ${found} usage periods with show-insights=${place}, expected ${expected}`,
+				);
+			}
+		}
+	}
+	settings.reset('show-insights');
+	return failures;
+}
+
 const STATES = [
 	{ name: 'loading', patch: { loading: true } },
 	{ name: 'renewing', patch: { loading: true, renewing: true } },
@@ -194,6 +234,7 @@ function emptyState() {
 		error: null,
 		errorCode: null,
 		planLabel: null,
+		insights: null,
 	};
 }
 
@@ -256,6 +297,8 @@ export default class VibecheckUiCheck extends Extension {
 					}
 				}
 			}
+			failures.push(...checkInsights(controller, settings));
+			controller.emit({ snapshot: SNAPSHOT, planLabel: 'Claude Max 5x' });
 
 			indicator.menu.open();
 			this._progressTimeoutId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1, () => {

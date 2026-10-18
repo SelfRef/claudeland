@@ -10,6 +10,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import { formatMessage } from '../domain/usage.js';
 import type { UsageController, UsageState } from '../services/usage-controller.js';
+import { createInsightsContent } from './insights-content.js';
 import { createLimitContent } from './limit-content.js';
 import { formatClockTime, localizedError } from './localization.js';
 
@@ -119,6 +120,10 @@ export class DesktopCard {
 
 		for (const limit of state.snapshot.limits) {
 			this.content.add_child(createLimitContent(limit));
+		}
+		const insights = this.settings.get_string('show-insights');
+		if (state.insights?.length && (insights === 'both' || insights === 'card')) {
+			this.content.add_child(createInsightsContent(state.insights));
 		}
 		this.queuePosition();
 	}

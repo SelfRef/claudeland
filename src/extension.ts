@@ -37,6 +37,15 @@ export default class VibecheckExtension extends Extension {
 		]) {
 			this.settings.connectObject(`changed::${key}`, () => this.controller?.redraw(), this);
 		}
+		this.settings.connectObject(
+			'changed::show-insights',
+			() => {
+				this.controller?.redraw();
+				// Hidden reports are not requested, so showing one may need a first run.
+				void this.controller?.refreshInsights();
+			},
+			this,
+		);
 
 		this.syncSurfaces();
 		this.controller.start();

@@ -37,6 +37,16 @@
 			<default>'color'</default>
 			<summary>Claude icon style in the panel</summary>
 		</key>
+		<key name="show-insights" type="s">
+			<choices>
+				<choice value="both"/>
+				<choice value="menu"/>
+				<choice value="card"/>
+				<choice value="none"/>
+			</choices>
+			<default>'both'</default>
+			<summary>Where to show what contributes to usage over the last day and week</summary>
+		</key>
 		<key name="show-desktop-widget" type="b">
 			<default>false</default>
 			<summary>Show a non-interactive desktop card</summary>

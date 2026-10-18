@@ -174,6 +174,7 @@ async function main(): Promise<void> {
 	const controller = new UsageController(
 		{
 			get_uint: (key: string) => (key === 'refresh-interval' ? 5 : 20),
+			get_string: () => 'both',
 		} as unknown as Gio.Settings,
 		{
 			credentials: {
@@ -205,6 +206,10 @@ async function main(): Promise<void> {
 						planLabel: 'Claude Max 5x',
 					};
 				},
+				destroy() {},
+			},
+			insights: {
+				fetch: async () => null,
 				destroy() {},
 			},
 		},
