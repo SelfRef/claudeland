@@ -65,7 +65,7 @@ Open them from the top bar menu, the desktop card's right-click menu, or
 - an X11 or a Wayland session; both are supported;
 - Claude Code installed and available as `claude` in `PATH`;
 - a Claude subscription authenticated through Claude Code;
-- Git, Node.js 20.19+, and pnpm 9+ when installing from source.
+- Git, Node.js 22.12+, and pnpm 9+ when installing from source.
 
 Check authentication with:
 

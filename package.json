@@ -7,7 +7,7 @@
 	"license": "MIT",
 	"author": "SelfRef",
 	"engines": {
-		"node": ">=20.19",
+		"node": ">=22.12",
 		"pnpm": ">=9"
 	},
 	"packageManager": "pnpm@10.15.0",
@@ -30,18 +30,18 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
-		"@girs/adw-1": "4.2.0",
-		"@girs/gjs": "4.2.0",
+		"@girs/adw-1": "4.9.0",
+		"@girs/gjs": "4.9.0",
 		"@girs/gnome-shell": "50.0.4",
-		"@girs/gobject-2.0": "4.2.0",
-		"@girs/gtk-4.0": "4.2.0",
-		"@girs/soup-3.0": "4.2.0",
-		"@types/node": "^24.3.0",
-		"eslint": "^10.9.1",
+		"@girs/gobject-2.0": "4.9.0",
+		"@girs/gtk-4.0": "4.9.0",
+		"@girs/soup-3.0": "4.9.0",
+		"@types/node": "^24.19.2",
+		"eslint": "^10.13.0",
 		"gettext-parser": "^9.1.1",
-		"prettier": "^3.9.6",
-		"typescript": "^5.9.2",
-		"typescript-eslint": "^8.42.0",
-		"vitest": "^4.1.11"
+		"prettier": "^3.9.10",
+		"typescript": "~6.0.3",
+		"typescript-eslint": "^8.71.2",
+		"vitest": "^5.0.5"
 	}
 }
