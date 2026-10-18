@@ -37,6 +37,9 @@ the project follows [Semantic Versioning](https://semver.org/).
   instead of doing nothing.
 - Menu text and the progress track follow the Shell style instead of assuming
   a dark menu.
+- Limits are read from the window and scope Claude reports, so a model limit
+  on the session window or a surface limit such as Cowork gets its own row
+  instead of being labelled weekly or dropped.
 - Team Premium seats are labelled "Team Premium" instead of "Max (5x)".
 
 ### Removed

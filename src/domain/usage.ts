@@ -6,7 +6,10 @@ export interface UsageLimit {
 	consumedPercent: number;
 	remainingPercent: number;
 	resetsAt: string | null;
-	scopeModel: string | null;
+	/** Reset window reported by Claude, such as `session` or `weekly`. */
+	group: string | null;
+	/** Model or surface the limit is restricted to, or null for all usage. */
+	scope: string | null;
 	severity: UsageSeverity;
 }
 
@@ -48,7 +51,7 @@ export function normalizeUsage(payload: unknown, options: NormalizeOptions = {})
 	const candidates = collectCandidates(payload);
 	const limits = new Map<string, UsageLimit>();
 
-	for (const [sourceKey, candidate] of candidates) {
+	for (const { key, group, scope, candidate } of candidates) {
 		// A switched-off feature such as extra usage still reports 0% used.
 		if (candidate.enabled === false || candidate.is_enabled === false) {
 			continue;
@@ -59,8 +62,7 @@ export function normalizeUsage(payload: unknown, options: NormalizeOptions = {})
 			continue;
 		}
 
-		const scopeModel = readScopeModel(candidate);
-		const id = canonicalId(sourceKey, scopeModel);
+		const id = canonicalId(key, group, scope);
 		if (!id || limits.has(id)) {
 			continue;
 		}
@@ -69,11 +71,12 @@ export function normalizeUsage(payload: unknown, options: NormalizeOptions = {})
 		const remainingPercent = round(100 - consumedPercent, 1);
 		limits.set(id, {
 			id,
-			label: limitLabel(id, scopeModel),
+			label: limitLabel(id, group, scope),
 			consumedPercent,
 			remainingPercent,
 			resetsAt: readReset(candidate),
-			scopeModel,
+			group,
+			scope,
 			severity: severityFor(remainingPercent, warningRemaining, criticalRemaining),
 		});
 	}
@@ -153,7 +156,7 @@ export function formatPanelReset(
 }
 
 export function localizedLimitLabel(
-	limit: Pick<UsageLimit, 'id' | 'label' | 'scopeModel'>,
+	limit: Pick<UsageLimit, 'id' | 'label' | 'group' | 'scope'>,
 	translate: Translator = identity,
 ): string {
 	if (limit.id === 'five_hour') {
@@ -162,13 +165,16 @@ export function localizedLimitLabel(
 	if (limit.id === 'seven_day') {
 		return translate('Weekly · all models');
 	}
-	if (limit.scopeModel) {
-		return formatMessage(translate('Weekly · %s'), limit.scopeModel);
+	if (limit.scope && limit.group === 'weekly') {
+		return formatMessage(translate('Weekly · %s'), limit.scope);
+	}
+	if (limit.scope && limit.group === 'session') {
+		return formatMessage(translate('Session · %s'), limit.scope);
 	}
 	if (limit.id === 'extra_usage') {
 		return translate('Extra usage');
 	}
-	// A limit kind this version does not know yet, labelled from its API key.
+	// A limit kind or window this version does not know yet, labelled from the API.
 	return limit.label;
 }
 
@@ -229,69 +235,113 @@ export function formatPlanLabel(
 	return subscriptionType?.trim() || 'Claude';
 }
 
-function collectCandidates(payload: UnknownRecord): Array<[string, UnknownRecord]> {
-	const candidates: Array<[string, UnknownRecord]> = [];
+interface Candidate {
+	key: string;
+	group: string | null;
+	scope: string | null;
+	candidate: UnknownRecord;
+}
 
-	// The legacy shape keys each limit at the top level; the newer one lists
-	// them in a `limits` array, identified by `kind`.
-	for (const [key, value] of Object.entries(payload)) {
-		if (isRecord(value)) {
-			candidates.push([key, value]);
-		}
-	}
+/** Top-level keys for the session and weekly windows, by API group. */
+const GROUP_IDS: Record<string, string> = {
+	session: 'five_hour',
+	weekly: 'seven_day',
+};
+
+function collectCandidates(payload: UnknownRecord): Candidate[] {
+	const candidates: Candidate[] = [];
+
+	// The `limits` array describes each limit by kind, window group, and scope,
+	// so it comes first. The legacy top-level keys still back it up, and limits
+	// both shapes report are deduplicated by id.
 	if (Array.isArray(payload.limits)) {
 		for (const entry of payload.limits) {
-			if (isRecord(entry)) {
-				candidates.push([firstString(entry.kind) ?? 'unknown', entry]);
+			if (!isRecord(entry)) {
+				continue;
 			}
+			const key = firstString(entry.kind) ?? 'unknown';
+			candidates.push({
+				key,
+				group: firstString(entry.group) ?? key.split('_')[0] ?? null,
+				scope: readScope(entry),
+				candidate: entry,
+			});
+		}
+	}
+	for (const [key, value] of Object.entries(payload)) {
+		if (isRecord(value)) {
+			candidates.push({ key, ...legacyGroupAndScope(key), candidate: value });
 		}
 	}
 	return candidates;
 }
 
-function canonicalId(sourceKey: string, scopeModel: string | null): string | null {
-	if (scopeModel) {
-		return `seven_day_${slugify(scopeModel)}`;
+/** Splits a legacy key such as `seven_day_sonnet` into its window and scope. */
+function legacyGroupAndScope(key: string): { group: string | null; scope: string | null } {
+	for (const [group, prefix] of Object.entries(GROUP_IDS)) {
+		if (key === prefix) {
+			return { group, scope: null };
+		}
+		if (key.startsWith(`${prefix}_`)) {
+			return { group, scope: titleCase(key.slice(prefix.length + 1)) };
+		}
 	}
-	if (sourceKey === 'session') {
-		return 'five_hour';
-	}
-	if (sourceKey === 'weekly_all') {
-		return 'seven_day';
-	}
-	if (sourceKey === 'spend') {
-		return 'extra_usage';
-	}
-	return slugify(sourceKey) || null;
+	return { group: null, scope: null };
 }
 
-function limitLabel(id: string, scopeModel: string | null): string {
+function canonicalId(key: string, group: string | null, scope: string | null): string | null {
+	if (key === 'spend') {
+		return 'extra_usage';
+	}
+	if (!group) {
+		return slugify(key) || null;
+	}
+	const base = GROUP_IDS[group] ?? slugify(group);
+	if (scope) {
+		return `${base}_${slugify(scope)}`;
+	}
+	// `session` and `weekly_all` are the whole window; any other unscoped kind
+	// is a separate limit within it.
+	return key === group || key === `${group}_all` || key === base ? base : slugify(key) || null;
+}
+
+function limitLabel(id: string, group: string | null, scope: string | null): string {
 	if (id === 'five_hour') {
 		return 'Current session';
 	}
 	if (id === 'seven_day') {
 		return 'Weekly · all models';
 	}
-	if (scopeModel) {
-		return `Weekly · ${scopeModel}`;
-	}
 	if (id === 'extra_usage') {
 		return 'Extra usage';
 	}
+	if (scope && group) {
+		return `${titleCase(group)} · ${scope}`;
+	}
+	return titleCase(id);
+}
 
-	return id
+function readScope(candidate: UnknownRecord): string | null {
+	if (!isRecord(candidate.scope)) {
+		return null;
+	}
+	const { model, surface } = candidate.scope;
+	return readName(model) ?? readName(surface);
+}
+
+function readName(value: unknown): string | null {
+	if (isRecord(value)) {
+		return firstString(value.display_name, value.name, value.id);
+	}
+	return firstString(value);
+}
+
+function titleCase(value: string): string {
+	return value
 		.split('_')
 		.filter(Boolean)
 		.map((part) => part[0]?.toUpperCase() + part.slice(1))
 		.join(' ');
-}
-
-function readScopeModel(candidate: UnknownRecord): string | null {
-	if (!isRecord(candidate.scope) || !isRecord(candidate.scope.model)) {
-		return null;
-	}
-
-	return firstString(candidate.scope.model.display_name, candidate.scope.model.id);
 }
 
 function readReset(candidate: UnknownRecord): string | null {
@@ -314,8 +364,8 @@ function splitRemaining(resetsAt: string | null, now: Date): [number, number, nu
 }
 
 function compareLimits(left: UsageLimit, right: UsageLimit): number {
-	const leftPriority = PRIORITY[left.id] ?? (left.scopeModel ? 2 : 4);
-	const rightPriority = PRIORITY[right.id] ?? (right.scopeModel ? 2 : 4);
+	const leftPriority = PRIORITY[left.id] ?? (left.scope ? 2 : 4);
+	const rightPriority = PRIORITY[right.id] ?? (right.scope ? 2 : 4);
 	return leftPriority - rightPriority || left.label.localeCompare(right.label);
 }
 

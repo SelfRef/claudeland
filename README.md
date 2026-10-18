@@ -9,7 +9,7 @@ It displays remaining capacity for:
 
 - the current five-hour usage window;
 - the all-model weekly window;
-- model-scoped weekly limits discovered at runtime, such as Fable;
+- model- or surface-scoped limits discovered at runtime, such as Fable;
 - any compatible limits Anthropic adds to the response in the future.
 
 > [!WARNING]

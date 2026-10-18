@@ -13,8 +13,10 @@
 
 `src/domain/usage.ts` accepts unknown JSON and produces a stable
 `UsageSnapshot`. It clamps values, calculates remaining capacity, assigns
-severity, deduplicates legacy and normalized response shapes, and discovers
-model scopes dynamically.
+severity, and deduplicates legacy and normalized response shapes. Limits come
+from the response's `limits` array first: each entry's window `group` and
+model or surface `scope` set its id and label, so new models, surfaces, and
+windows appear without code changes. Legacy top-level keys fill any gaps.
 
 `src/domain/credential.ts` parses the Claude Code credential file, and
 `src/domain/session.ts` decides whether the session is usable, renewable, or

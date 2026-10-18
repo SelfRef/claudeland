@@ -154,6 +154,9 @@ msgstr ""
 msgid "Second panel value"
 msgstr ""
 
+msgid "Session · %s"
+msgstr ""
+
 msgid "Show a non-interactive card below application windows."
 msgstr ""
 

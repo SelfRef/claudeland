@@ -49,8 +49,33 @@ describe('normalizeUsage', () => {
 		]);
 		expect(snapshot.limits[2]).toMatchObject({
 			label: 'Weekly · Fable',
-			scopeModel: 'Fable',
+			group: 'weekly',
+			scope: 'Fable',
 			remainingPercent: 94,
+		});
+	});
+
+	it('labels limits by the window group and scope Claude reports', () => {
+		const snapshot = normalizeUsage(fixture('grouped-response.json'));
+
+		expect(snapshot.limits.map((limit) => [limit.id, limit.label])).toEqual([
+			['five_hour', 'Current session'],
+			['seven_day', 'Weekly · all models'],
+			['five_hour_fable', 'Session · Fable'],
+			['seven_day_cowork', 'Weekly · Cowork'],
+			['seven_day_fable', 'Weekly · Fable'],
+			['seven_day_sonnet', 'Weekly · Sonnet'],
+			['monthly', 'Monthly'],
+		]);
+	});
+
+	it('reads model limits from legacy keys', () => {
+		const snapshot = normalizeUsage(fixture('legacy-response.json'));
+
+		expect(snapshot.limits[2]).toMatchObject({
+			label: 'Weekly · Sonnet',
+			group: 'weekly',
+			scope: 'Sonnet',
 		});
 	});
 
@@ -103,13 +128,14 @@ describe('formatting', () => {
 	});
 
 	it('formats one or two panel percentages from the selected limits', () => {
-		const limit = (id: string, remainingPercent: number, scopeModel: string | null = null) => ({
+		const limit = (id: string, remainingPercent: number, scope: string | null = null) => ({
 			id,
 			label: id,
 			consumedPercent: 100 - remainingPercent,
 			remainingPercent,
 			resetsAt: null,
-			scopeModel,
+			group: null,
+			scope,
 			severity: 'ok' as const,
 		});
 		const limits = [
@@ -135,7 +161,8 @@ describe('formatting', () => {
 			consumedPercent: 50,
 			remainingPercent: 50,
 			resetsAt,
-			scopeModel: null,
+			group: null,
+			scope: null,
 			severity: 'ok' as const,
 		});
 		const limits = [
@@ -163,7 +190,8 @@ describe('formatting', () => {
 				{
 					id: 'seven_day_fable',
 					label: 'Weekly · Fable',
-					scopeModel: 'Fable',
+					group: 'weekly',
+					scope: 'Fable',
 				},
 				translate,
 			),
