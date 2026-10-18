@@ -1,71 +1,58 @@
 # AGENTS.md
 
-## Project
+Vibecheck is a GNOME Shell extension that shows the remaining Claude
+subscription capacity: the five-hour window, weekly limits, and model-scoped
+limits discovered at runtime.
 
-Vibecheck is a GNOME Shell extension. It runs on any distribution shipping a
-supported GNOME Shell, under X11 and Wayland alike, and shows the remaining
-Claude subscription capacity for the current five-hour window, weekly limits,
-and dynamically discovered model-scoped limits.
+## Workflow
 
-## Required workflow
+- Work and commit on `main`, the only branch.
+- Use `pnpm`. Run `pnpm check` before every commit.
+- UI or Shell changes: run `pnpm verify:shell`; try them by hand with
+  `pnpm dev:nested`.
+- Releases are cut by the manual Release workflow, which bumps the version and
+  moves the `Unreleased` changelog section under it. Add user-visible changes
+  to `CHANGELOG.md` under `Unreleased`.
 
-- Work on `develop`; release branches and `main` are protected integration
-  targets.
-- Use `pnpm` for dependency and script management.
-- Run `pnpm check` before committing.
-- Support GNOME Shell 45 and later with one ES module package. Resolve runtime
-  differences behind capability checks; never branch on a Shell version number.
-- Keep pure data normalization in `src/domain/`; it must remain runnable under
-  Node and covered by unit tests.
-- Keep GNOME-specific imports out of `src/domain/`.
-- Treat every response from the usage endpoint as untrusted input.
-- Never log, persist, commit, mock with, or expose a real OAuth access token,
-  refresh token, email address, or organization identifier.
-- Do not add browser-cookie scraping. Authentication must remain delegated to
-  the Claude Code CLI.
-- Do not implement the OAuth token protocol. Session renewal is delegated to
-  the Claude Code CLI, which owns the client identity, refresh-token rotation,
-  and the credential file format (ADR 003).
-- The refresh token may only be held in memory and handed to the CLI through
-  the child environment. Never place it in argv, GSettings, a log, or a file.
-- An expired access token is not an expired session. Prompt for sign-in only
-  when the refresh token is missing, expired, or rejected.
-- The OAuth usage endpoint is undocumented. Keep it isolated in
-  `src/services/claude-usage-client.ts` and tolerate compatible schema changes.
-- Do not hard-code Fable or other future models into the parser. Scoped limits
-  must be discovered dynamically.
-- Write source and fallback strings in English. Wrap every user-facing string
-  with gettext and update `po/vibecheck.pot`; never hard-code Italian in code.
-- Clean up every GNOME signal, timeout, file monitor, and actor in `disable()`
-  or `destroy()`.
-- Do not reach into underscore-prefixed GNOME Shell fields. Where a private
-  field looks necessary, find the same object through public API and fail
-  gracefully when it is absent.
-- Keep the desktop card parented inside the wallpaper's `Meta.BackgroundGroup`,
-  never beside it in `global.window_group`. Mutter reorders the window group's
-  own actors around any foreign sibling and floats the card above application
-  windows as soon as a window appears.
-- Avoid synchronous network or filesystem work on the GNOME Shell main loop.
+## GNOME support
 
-## Architecture boundaries
+- Target only maintained GNOME Shell releases (the current stable and the one
+  before it). When a new release ships, drop the oldest: update `metadata.json`
+  and the `tests/shell/Dockerfile.gnome*` containers together.
+- No version checks or compatibility shims for unmaintained releases.
 
-- `src/domain`: types, normalization, formatting, severity decisions.
-- `src/services`: credentials, Claude Code authentication, HTTP adapter.
-- `src/ui`: GNOME Shell actors and menu components.
-- `extension.ts`: composition root and lifecycle only.
-- `prefs.ts`: preferences process; never import Shell, St, or Clutter here.
+## Code layout
 
-## Review checklist
+- `src/domain/`: pure types, normalization, and formatting. No GNOME imports;
+  runs under Node and is covered by unit tests.
+- `src/services/`: credentials, Claude Code authentication, and the HTTP
+  adapter. The usage endpoint is undocumented: keep it isolated in
+  `claude-usage-client.ts` and treat every response as untrusted.
+- `src/ui/`: Shell actors and menus. `extension.ts` is lifecycle only;
+  `prefs.ts` must not import Shell, St, or Clutter.
+- Discover model-scoped limits dynamically; never hard-code model names.
+- New response shapes get a fixture and a parser test.
+- User-facing percentages are remaining capacity, not consumed.
+- Wrap user-facing strings in gettext and update `po/vibecheck.pot` and
+  `po/it.po`.
 
-- No secret values appear in code, fixtures, snapshots, errors, or logs.
-- A failed/expired login produces a recoverable UI state.
-- HTTP 401 and 429 have explicit behavior.
-- Automatic renewal is attempted at most once per request cycle and backs off
-  after a failure.
-- New response shapes have fixtures and parser tests.
-- GNOME Shell version metadata matches versions actually tested. Every release
-  declared in `metadata.json` passes `pnpm verify:shell`, and a newly declared
-  release has a container definition in `tests/shell/`.
-- A new GNOME or libadwaita API is guarded by a capability check when it
-  postdates the oldest declared Shell release.
-- User-facing percentages are remaining capacity, not consumed capacity.
+## GNOME Shell rules
+
+- Clean up every signal, timeout, and actor in `disable()` or `destroy()`.
+- No synchronous network or file I/O on the Shell main loop.
+- Use public API only; never touch underscore-prefixed Shell fields.
+- Keep the desktop card inside the wallpaper's `Meta.BackgroundGroup`. As a
+  sibling in `global.window_group` it floats above application windows.
+
+## Credentials and security
+
+- Never log, persist, commit, or use in fixtures a real token, email address,
+  or organization identifier.
+- Authentication and session renewal belong to the Claude Code CLI (ADR 002,
+  ADR 003). Do not implement the OAuth token protocol or scrape browser
+  cookies.
+- The refresh token stays in memory and reaches the CLI only through the child
+  environment, never argv, GSettings, logs, or files.
+- An expired access token is not an expired session: ask the user to sign in
+  only when the refresh token is missing, expired, or rejected. Renew at most
+  once per request cycle and back off after a failure.
