@@ -247,7 +247,7 @@ msgstr ""
 msgid "The Claude session is no longer valid. Sign in again."
 msgstr ""
 
-msgid "The desktop card is unavailable on this GNOME version."
+msgid "The desktop card could not be shown."
 msgstr ""
 
 msgid "Time until reset"

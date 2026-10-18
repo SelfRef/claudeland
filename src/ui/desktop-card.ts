@@ -21,15 +21,33 @@ export class DesktopCard {
 	private readonly title: St.Label;
 	private readonly content: St.BoxLayout;
 	private readonly menu: PopupMenu.PopupMenu;
+	private readonly menuManager: PopupMenu.PopupMenuManager;
 	private readonly unsubscribe: () => void;
 	private positionSourceId: number | null = null;
-	private backgroundGroup: Meta.BackgroundGroup | null = null;
+	private backgroundGroup: Meta.BackgroundGroup | null;
 
 	constructor(
 		controller: UsageController,
 		private readonly settings: Gio.Settings,
 		openPreferences: () => void,
 	) {
+		// The card belongs above the wallpaper and below every application window,
+		// so it lives inside the wallpaper's own container rather than beside it.
+		// Mutter restacks the window group itself on every stacking change and
+		// moves the actors it owns around any foreign sibling, which would float
+		// the card above the windows; it never reorders inside the background
+		// group. Locating that group by its public type keeps the same parent the
+		// shell uses without reaching for LayoutManager's private field. It is
+		// looked up first so a failure leaves nothing behind.
+		this.backgroundGroup =
+			global.window_group
+				?.get_children()
+				.find((child): child is Meta.BackgroundGroup => child instanceof Meta.BackgroundGroup) ??
+			null;
+		if (!this.backgroundGroup) {
+			throw new Error('The GNOME Shell background group is unavailable');
+		}
+
 		this.actor = new St.BoxLayout({
 			// Reactive only for its context menu. Below every window, it can only be
 			// clicked where the desktop shows.
@@ -49,22 +67,6 @@ export class DesktopCard {
 		});
 		this.actor.add_child(this.title);
 		this.actor.add_child(this.content);
-
-		// The card belongs above the wallpaper and below every application window,
-		// so it lives inside the wallpaper's own container rather than beside it.
-		// Mutter restacks the window group itself on every stacking change and
-		// moves the actors it owns around any foreign sibling, which would float
-		// the card above the windows; it never reorders inside the background
-		// group. Locating that group by its public type keeps the same parent the
-		// shell uses without reaching for LayoutManager's private field.
-		this.backgroundGroup =
-			global.window_group
-				?.get_children()
-				.find((child): child is Meta.BackgroundGroup => child instanceof Meta.BackgroundGroup) ??
-			null;
-		if (!this.backgroundGroup) {
-			throw new Error('The GNOME Shell background group is unavailable');
-		}
 		this.backgroundGroup.add_child(this.actor);
 		this.raiseAboveWallpaper();
 
@@ -89,7 +91,9 @@ export class DesktopCard {
 		this.menu.addMenuItem(preferencesItem);
 		Main.layoutManager.uiGroup.add_child(this.menu.actor);
 		this.menu.actor.hide();
-		new PopupMenu.PopupMenuManager(this.actor).addMenu(this.menu);
+		// The manager drops the menu by itself when the menu is destroyed.
+		this.menuManager = new PopupMenu.PopupMenuManager(this.actor);
+		this.menuManager.addMenu(this.menu);
 		this.actor.connectObject(
 			'button-release-event',
 			(_actor: St.BoxLayout, event: Clutter.Event) => {

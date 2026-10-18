@@ -96,10 +96,7 @@ export default class VibecheckExtension extends Extension {
 					error instanceof Error ? error : new Error(String(error)),
 					'Vibecheck could not create the desktop card',
 				);
-				Main.notifyError(
-					_('Vibecheck'),
-					_('The desktop card is unavailable on this GNOME version.'),
-				);
+				Main.notifyError(_('Vibecheck'), _('The desktop card could not be shown.'));
 			}
 		} else if (!showDesktop && this.desktopCard) {
 			this.desktopCard.destroy();
