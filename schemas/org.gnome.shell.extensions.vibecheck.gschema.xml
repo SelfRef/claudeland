@@ -10,9 +10,10 @@
 				<choice value="five_hour"/>
 				<choice value="seven_day"/>
 				<choice value="lowest"/>
+				<choice value="none"/>
 			</choices>
 			<default>'five_hour'</default>
-			<summary>First remaining percentage shown in the panel</summary>
+			<summary>First remaining percentage shown in the panel, or none</summary>
 		</key>
 		<key name="panel-secondary" type="s">
 			<choices>
@@ -24,9 +25,15 @@
 			<default>'seven_day'</default>
 			<summary>Second remaining percentage shown in the panel, or none</summary>
 		</key>
-		<key name="show-panel-reset" type="b">
-			<default>true</default>
-			<summary>Show the time until the first panel value resets</summary>
+		<key name="panel-reset" type="s">
+			<choices>
+				<choice value="five_hour"/>
+				<choice value="seven_day"/>
+				<choice value="both"/>
+				<choice value="none"/>
+			</choices>
+			<default>'five_hour'</default>
+			<summary>Time until reset shown in the panel: session, weekly, both, or none</summary>
 		</key>
 		<key name="panel-icon" type="s">
 			<choices>

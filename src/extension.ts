@@ -30,7 +30,7 @@ export default class VibecheckExtension extends Extension {
 		for (const key of [
 			'panel-primary',
 			'panel-secondary',
-			'show-panel-reset',
+			'panel-reset',
 			'panel-icon',
 			'warning-remaining',
 			'critical-remaining',

@@ -170,6 +170,37 @@ const INSIGHTS = [
 	},
 ];
 
+/**
+ * Renders the top bar under value, countdown, and icon combinations. Whatever
+ * is switched off, the indicator must keep something visible.
+ */
+function checkPanelLabel(controller, settings, indicator) {
+	const failures = [];
+	for (const [primary, secondary, reset, icon, pattern, iconShown] of [
+		['five_hour', 'seven_day', 'both', 'color', /^80%\/18% · \d+h \d+m\/\d+d \d+h$/, true],
+		['none', 'seven_day', 'none', 'color', /^18%$/, true],
+		['none', 'none', 'five_hour', 'none', /^\d+h \d+m$/, false],
+		['none', 'none', 'none', 'symbolic', null, true],
+		['none', 'none', 'none', 'none', null, true],
+	]) {
+		settings.set_string('panel-primary', primary);
+		settings.set_string('panel-secondary', secondary);
+		settings.set_string('panel-reset', reset);
+		settings.set_string('panel-icon', icon);
+		controller.emit({ snapshot: SNAPSHOT, planLabel: 'Claude Max 5x' });
+
+		const label = indicator.panelLabel;
+		const name = `${primary}/${secondary}, reset ${reset}, icon ${icon}`;
+		if (pattern ? !label.visible || !pattern.test(label.text) : label.visible) {
+			failures.push(`${name}: panel label is ${label.visible ? `"${label.text}"` : 'hidden'}`);
+		}
+		if (indicator.panelIcon.visible !== iconShown) {
+			failures.push(`${name}: panel icon is ${indicator.panelIcon.visible ? 'shown' : 'hidden'}`);
+		}
+	}
+	return failures;
+}
+
 /** Renders the report under each placement setting and counts the periods shown. */
 function checkInsights(controller, settings) {
 	const failures = [];
@@ -298,6 +329,7 @@ export default class VibecheckUiCheck extends Extension {
 				}
 			}
 			failures.push(...checkInsights(controller, settings));
+			failures.push(...checkPanelLabel(controller, settings, indicator));
 			controller.emit({ snapshot: SNAPSHOT, planLabel: 'Claude Max 5x' });
 
 			indicator.menu.open();
@@ -324,8 +356,9 @@ export default class VibecheckUiCheck extends Extension {
 			} catch (error) {
 				failures.push(`teardown: ${error}`);
 			}
-			settings.reset('panel-secondary');
-			settings.reset('panel-icon');
+			for (const key of ['panel-primary', 'panel-secondary', 'panel-reset', 'panel-icon']) {
+				settings.reset(key);
+			}
 
 			if (failures.length > 0) {
 				console.error(`VIBECHECK UI CHECK FAILED: ${failures.join(' | ')}`);

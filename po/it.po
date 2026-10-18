@@ -35,6 +35,9 @@ msgstr "Anthropic ha restituito una risposta non valida."
 msgid "Appearance"
 msgstr "Aspetto"
 
+msgid "Both"
+msgstr "Entrambi"
+
 msgid "Bottom left"
 msgstr "In basso a sinistra"
 
@@ -203,11 +206,11 @@ msgstr "Mostra una card non interattiva sotto le finestre."
 msgid "Show percentages in the GNOME top bar."
 msgstr "Mostra le percentuali nella barra superiore di GNOME."
 
-msgid "Show when the first panel value resets."
-msgstr "Mostra tra quanto si azzera il primo valore del pannello."
-
 msgid "Shown after a slash, or None for a single value."
 msgstr "Mostrato dopo una barra, oppure Nessuno per un solo valore."
+
+msgid "Shown after the percentages in the top bar."
+msgstr "Mostrato dopo le percentuali nella barra superiore."
 
 msgid "Sign in"
 msgstr "Accedi"

@@ -13,6 +13,7 @@ import { VibecheckError } from './services/errors.js';
 const POSITIONS = ['top-right', 'top-left', 'bottom-right', 'bottom-left'] as const;
 const PANEL_ICONS = ['none', 'color', 'symbolic'] as const;
 const PANEL_LIMITS = ['five_hour', 'seven_day', 'lowest', 'none'] as const;
+const PANEL_RESETS = ['five_hour', 'seven_day', 'both', 'none'] as const;
 const INSIGHT_PLACES = ['both', 'menu', 'card', 'none'] as const;
 
 export default class VibecheckPreferences extends ExtensionPreferences {
@@ -50,8 +51,8 @@ export default class VibecheckPreferences extends ExtensionPreferences {
 				'panel-primary',
 				_('First panel value'),
 				_('Remaining capacity shown first in the top bar.'),
-				PANEL_LIMITS.slice(0, -1),
-				panelLimitLabels.slice(0, -1),
+				PANEL_LIMITS,
+				panelLimitLabels,
 			),
 		);
 		appearance.add(
@@ -65,11 +66,13 @@ export default class VibecheckPreferences extends ExtensionPreferences {
 			),
 		);
 		appearance.add(
-			boundSwitch(
+			boundCombo(
 				settings,
-				'show-panel-reset',
+				'panel-reset',
 				_('Time until reset'),
-				_('Show when the first panel value resets.'),
+				_('Shown after the percentages in the top bar.'),
+				PANEL_RESETS,
+				[_('Current session'), _('Weekly · all models'), _('Both'), _('None')],
 			),
 		);
 		appearance.add(

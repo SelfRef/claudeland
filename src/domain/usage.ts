@@ -133,12 +133,28 @@ export function formatTimeRemaining(
 	return formatMessage(translate('resets in %dm'), minutes);
 }
 
-/** Compact countdown for the top bar, or an empty string without a reset. */
+/**
+ * Compact countdowns for the top bar: `five_hour`, `seven_day`, or `both`
+ * joined by a slash. Limits without a reset are left out, so the result can be
+ * an empty string.
+ */
 export function formatPanelReset(
 	limits: readonly UsageLimit[],
 	choice: string,
 	now = new Date(),
 	translate: Translator = identity,
+): string {
+	return (choice === 'both' ? ['five_hour', 'seven_day'] : [choice])
+		.map((id) => formatCountdown(limits, id, now, translate))
+		.filter(Boolean)
+		.join('/');
+}
+
+function formatCountdown(
+	limits: readonly UsageLimit[],
+	choice: string,
+	now: Date,
+	translate: Translator,
 ): string {
 	const remaining = splitRemaining(selectPanelLimit(limits, choice)?.resetsAt ?? null, now);
 	if (!remaining) {

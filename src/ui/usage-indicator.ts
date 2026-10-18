@@ -103,32 +103,41 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 	}
 
 	private renderPanel(state: Readonly<UsageState>): void {
-		const icon = this.settings.get_string('panel-icon');
-		this.panelIcon.visible = icon !== 'none';
-		if (this.panelIcon.visible) {
-			// St recolors file icons whose name ends in -symbolic with the panel foreground.
-			const name = icon === 'symbolic' ? 'vibecheck-symbolic.svg' : 'vibecheck.svg';
-			this.panelIcon.gicon = Gio.icon_new_for_string(`${this.extensionPath}/icons/${name}`);
-		}
+		this.showPanelIcon(this.settings.get_string('panel-icon'));
 
 		if (!state.snapshot) {
 			this.panelLabel.text = formatMessage(_('Claude %s'), state.loading ? '…' : '--');
+			this.panelLabel.visible = true;
 			return;
 		}
 
-		const primary = this.settings.get_string('panel-primary');
+		const percents = formatPanelPercents(state.snapshot.limits, [
+			this.settings.get_string('panel-primary'),
+			this.settings.get_string('panel-secondary'),
+		]);
 		// The countdown advances with each poll rather than every minute.
-		const reset = this.settings.get_boolean('show-panel-reset')
-			? formatPanelReset(state.snapshot.limits, primary, new Date(), _)
-			: '';
-		const suffix = state.stale ? ' *' : '';
-		this.panelLabel.text =
-			formatPanelPercents(state.snapshot.limits, [
-				primary,
-				this.settings.get_string('panel-secondary'),
-			]) +
-			(reset ? ` · ${reset}` : '') +
-			suffix;
+		const reset = formatPanelReset(
+			state.snapshot.limits,
+			this.settings.get_string('panel-reset'),
+			new Date(),
+			_,
+		);
+		const text = [percents, reset].filter(Boolean).join(' · ');
+		this.panelLabel.text = text + (state.stale ? ' *' : '');
+		this.panelLabel.visible = this.panelLabel.text !== '';
+		// With no values, no countdown, and no icon, the indicator would vanish.
+		if (!this.panelLabel.visible && !this.panelIcon.visible) {
+			this.showPanelIcon('color');
+		}
+	}
+
+	private showPanelIcon(style: string): void {
+		this.panelIcon.visible = style !== 'none';
+		if (this.panelIcon.visible) {
+			// St recolors file icons whose name ends in -symbolic with the panel foreground.
+			const name = style === 'symbolic' ? 'vibecheck-symbolic.svg' : 'vibecheck.svg';
+			this.panelIcon.gicon = Gio.icon_new_for_string(`${this.extensionPath}/icons/${name}`);
+		}
 	}
 
 	private renderMenu(state: Readonly<UsageState>): void {

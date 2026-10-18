@@ -34,6 +34,9 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
+msgid "Both"
+msgstr ""
+
 msgid "Bottom left"
 msgstr ""
 
@@ -202,10 +205,10 @@ msgstr ""
 msgid "Show percentages in the GNOME top bar."
 msgstr ""
 
-msgid "Show when the first panel value resets."
+msgid "Shown after a slash, or None for a single value."
 msgstr ""
 
-msgid "Shown after a slash, or None for a single value."
+msgid "Shown after the percentages in the top bar."
 msgstr ""
 
 msgid "Sign in"

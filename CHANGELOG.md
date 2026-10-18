@@ -9,13 +9,13 @@ the project follows [Semantic Versioning](https://semver.org/).
 ### Added
 
 - GNOME Shell 51 support and a Fedora 45 verification container.
-- Choose one or two remaining percentages for the top bar, shown as `n%/m%`:
+- Choose up to two remaining percentages for the top bar, shown as `n%/m%`:
   current session, weekly for all models, or the lowest remaining of all
   limits. Defaults to session and weekly.
 - The top bar shows the Claude icon in color (default), symbolic so it follows
   the panel color, or not at all.
-- The top bar shows the time until the first panel value resets, as
-  `n%/m% · 2h 10m`. On by default.
+- The top bar shows the time until the current session resets, the weekly
+  limit resets, or both, as `n%/m% · 2h 10m/3d 4h`. Session by default.
 - The desktop card shows a meter and reset time for each limit, like the menu.
 - What contributed to usage on this machine over the last day and week, from
   Claude Code's `/usage` report: request and session counts, behaviors such as

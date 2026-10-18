@@ -177,6 +177,11 @@ describe('formatting', () => {
 		);
 		expect(formatPanelReset(limits, 'seven_day_opus', now)).toBe('');
 		expect(formatPanelReset([limit('five_hour', null)], 'five_hour', now)).toBe('');
+		expect(formatPanelReset(limits, 'both', now)).toBe('2h 10m/2d 2h');
+		expect(formatPanelReset([limit('seven_day', '2030-01-03T12:30:00Z')], 'both', now)).toBe(
+			'2d 2h',
+		);
+		expect(formatPanelReset(limits, 'none', now)).toBe('');
 	});
 
 	it('supports injected system translations without coupling the domain to GNOME', () => {
