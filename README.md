@@ -5,6 +5,8 @@ without placing an always-on-top application over your work. It runs on any
 distribution shipping a supported GNOME Shell, under both X11 and Wayland.
 It is an independent project and is not affiliated with or endorsed by Anthropic.
 
+![Remaining usage in the top bar and on the desktop card](.github/screenshot.png)
+
 It displays remaining capacity for:
 
 - the current five-hour usage window;
