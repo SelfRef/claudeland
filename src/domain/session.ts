@@ -24,9 +24,6 @@ export interface SessionTiming {
 	hasRefreshToken: boolean;
 }
 
-/**
- * Renew slightly before the real deadline so a request cannot expire in flight.
- */
 export const ACCESS_TOKEN_SKEW_MS = 5 * 60 * 1000;
 
 export function evaluateSession(timing: SessionTiming, now: number = Date.now()): SessionState {
@@ -37,8 +34,9 @@ export function evaluateSession(timing: SessionTiming, now: number = Date.now())
 }
 
 /**
- * True while the access token is still worth sending. An unknown expiry is
- * treated as usable: the server answer, not a guess, decides.
+ * True while the access token is still worth sending. It stops a few minutes
+ * before the real expiry so a request cannot expire in flight. An unknown
+ * expiry is treated as usable: the server answer, not a guess, decides.
  */
 export function isAccessTokenUsable(timing: SessionTiming, now: number = Date.now()): boolean {
 	if (timing.accessTokenExpiresAt === null) {

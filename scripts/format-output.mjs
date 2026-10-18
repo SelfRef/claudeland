@@ -1,13 +1,13 @@
-// Restores blank lines between top-level functions and classes in the build.
+// Formats the build like the sources, because the extensions.gnome.org review
+// reads the JavaScript that ships, not the TypeScript.
 //
-// The extensions.gnome.org review asks for a blank line between functions and
-// classes, and it reads the JavaScript that ships, not the TypeScript sources.
-// The sources already comply, but tsc drops those blank lines when it emits and
-// blank lines and never inserts them. ESLint can, so the packaged output is
-// passed through the same padding rules the sources are linted with.
-import { readdir } from 'node:fs/promises';
+// tsc emits its own style (4-space indent, `}\ncatch`) and drops blank lines.
+// Prettier restores the project style; ESLint then restores the blank lines
+// between functions and classes, using the padding rules the sources follow.
+import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { ESLint } from 'eslint';
+import * as prettier from 'prettier';
 
 import { PADDING_RULES } from './padding-rules.mjs';
 
@@ -22,6 +22,12 @@ const eslint = new ESLint({
 });
 
 const targets = await javascriptFiles(resolve(root, 'dist'));
+
+for (const target of targets) {
+	const options = await prettier.resolveConfig(target, { editorconfig: true });
+	const source = await readFile(target, 'utf8');
+	await writeFile(target, await prettier.format(source, { ...options, filepath: target }));
+}
 
 const results = await eslint.lintFiles(targets);
 await ESLint.outputFixes(results);
