@@ -17,7 +17,12 @@ const eslint = new ESLint({
 	fix: true,
 	// Generated output: use only the rules below, not the project lint config.
 	overrideConfigFile: true,
-	overrideConfig: { rules: PADDING_RULES },
+	// Disable comments look unused under these rules; removing them would leave
+	// their indentation behind as a whitespace-only line.
+	overrideConfig: {
+		rules: PADDING_RULES,
+		linterOptions: { reportUnusedDisableDirectives: 'off' },
+	},
 	ignore: false,
 });
 
