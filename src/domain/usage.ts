@@ -206,7 +206,12 @@ export function formatPlanLabel(
 	const subscription = subscriptionType?.trim().toLowerCase() ?? '';
 	const tier = rateLimitTier?.trim().toLowerCase() ?? '';
 
-	if (subscription === 'max' || tier.includes('claude_max')) {
+	// Team Premium seats share the Max 5x rate-limit tier.
+	if (subscription === 'team' && tier.includes('claude_max')) {
+		return 'Team Premium';
+	}
+
+	if (subscription === 'max' || (!subscription && tier.includes('claude_max'))) {
 		if (tier.includes('20x')) {
 			return 'Max (20x)';
 		}

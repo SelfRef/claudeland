@@ -37,6 +37,7 @@ the project follows [Semantic Versioning](https://semver.org/).
   instead of doing nothing.
 - Menu text and the progress track follow the Shell style instead of assuming
   a dark menu.
+- Team Premium seats are labelled "Team Premium" instead of "Max (5x)".
 
 ### Removed
 

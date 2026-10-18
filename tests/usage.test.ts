@@ -177,6 +177,8 @@ describe('formatting', () => {
 		expect(formatPlanLabel('max', 'default_claude_max_5x')).toBe('Max (5x)');
 		expect(formatPlanLabel('max', 'default_claude_max_20x')).toBe('Max (20x)');
 		expect(formatPlanLabel('pro', 'default')).toBe('Pro');
+		expect(formatPlanLabel('team', 'default_claude_max_5x')).toBe('Team Premium');
+		expect(formatPlanLabel('team', 'default')).toBe('Team');
 		expect(formatPlanLabel(null, null)).toBe('Claude');
 	});
 });
