@@ -6,7 +6,7 @@ limits discovered at runtime.
 
 ## Workflow
 
-- Work and commit on `main`, the only branch.
+- Work and commit on `master`, the only branch.
 - Use `pnpm`. Run `pnpm check` before every commit.
 - UI or Shell changes: run `pnpm verify:shell`; try them by hand with
   `pnpm dev:nested`.

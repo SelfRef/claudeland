@@ -113,7 +113,7 @@ For a source installation, update the checkout and reinstall the extension:
 
 ```bash
 cd vibecheck
-git switch main
+git switch master
 git pull --ff-only
 pnpm install --frozen-lockfile
 pnpm dev:install
