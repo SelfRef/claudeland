@@ -24,31 +24,17 @@ export default class ClaudelandExtension extends Extension {
       () => this.recreateDesktopCard(),
       this,
     );
-    this.settings.connectObject(
-      'changed::panel-primary',
-      () => void this.controller?.refresh(),
-      this,
-    );
-    this.settings.connectObject(
-      'changed::panel-secondary',
-      () => void this.controller?.refresh(),
-      this,
-    );
-    this.settings.connectObject(
-      'changed::refresh-interval',
-      () => void this.controller?.refresh(),
-      this,
-    );
-    this.settings.connectObject(
-      'changed::warning-remaining',
-      () => void this.controller?.refresh(),
-      this,
-    );
-    this.settings.connectObject(
-      'changed::critical-remaining',
-      () => void this.controller?.refresh(),
-      this,
-    );
+    // Display-only keys redraw the cached snapshot; refetching on every change
+    // runs into the usage endpoint's rate limit. A new refresh interval takes
+    // effect after the next poll.
+    for (const key of [
+      'panel-primary',
+      'panel-secondary',
+      'warning-remaining',
+      'critical-remaining',
+    ]) {
+      this.settings.connectObject(`changed::${key}`, () => this.controller?.redraw(), this);
+    }
 
     this.syncSurfaces();
     this.controller.start();

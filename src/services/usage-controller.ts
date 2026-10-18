@@ -3,7 +3,7 @@ import GLib from 'gi://GLib';
 
 import type { ClaudeCredential } from '../domain/credential.js';
 import { canRenew, evaluateSession, isAccessTokenUsable } from '../domain/session.js';
-import type { UsageSnapshot } from '../domain/usage.js';
+import { severityFor, type UsageSnapshot } from '../domain/usage.js';
 import { ClaudeAuth } from './claude-auth.js';
 import { ClaudeCredentials } from './claude-credentials.js';
 import { ClaudeUsageClient } from './claude-usage-client.js';
@@ -65,6 +65,22 @@ export class UsageController {
 
   start(): void {
     void this.refresh();
+  }
+
+  /** Re-render the cached snapshot after a display-only setting changed. */
+  redraw(): void {
+    const snapshot = this.state.snapshot;
+    const warning = this.settings.get_uint('warning-remaining');
+    const critical = this.settings.get_uint('critical-remaining');
+    this.setState({
+      snapshot: snapshot && {
+        ...snapshot,
+        limits: snapshot.limits.map((limit) => ({
+          ...limit,
+          severity: severityFor(limit.remainingPercent, warning, critical),
+        })),
+      },
+    });
   }
 
   subscribe(listener: StateListener): () => void {

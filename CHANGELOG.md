@@ -13,6 +13,11 @@ the project follows [Semantic Versioning](https://semver.org/).
   current session, weekly for all models, the most constrained model limit, or
   the most constrained limit overall. Defaults to session and weekly.
 
+### Fixed
+
+- Changing a display setting redraws the cached usage instead of requesting it
+  again, so adjusting preferences no longer runs into the rate limit.
+
 ### Removed
 
 - The compact panel switch, replaced by the panel value choices.
