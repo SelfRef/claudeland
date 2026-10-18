@@ -80,11 +80,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 		menu.addMenuItem(this.loginItem);
 
 		const refreshItem = new PopupMenu.PopupMenuItem(_('Refresh now'));
-		// PopupBaseMenuItem.activate() emits the menu action and closes its parent.
-		// Refresh is an in-place operation, so deliberately bypass the base method.
-		refreshItem.activate = (_event: Clutter.Event) => {
-			void this.controller.refresh();
-		};
+		refreshItem.connectObject('activate', () => void this.controller.refresh(), this);
 		menu.addMenuItem(refreshItem);
 
 		const settingsItem = new PopupMenu.PopupMenuItem(_('Preferences'));

@@ -24,6 +24,7 @@ the project follows [Semantic Versioning](https://semver.org/).
   `org.gnome.shell.extensions.vibecheck`. Settings from Claudeland do not carry
   over.
 - Only maintained GNOME Shell releases are supported: 50 and 51.
+- Refresh now closes the menu like every other menu item.
 
 ### Fixed
 
