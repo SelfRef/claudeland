@@ -1,8 +1,8 @@
 # AGENTS.md
 
 Vibecheck is a GNOME Shell extension that shows the remaining Claude
-subscription capacity: the five-hour window, weekly limits, and model-scoped
-limits discovered at runtime.
+subscription capacity: the five-hour window, weekly limits, model-scoped limits
+discovered at runtime, and what contributed to usage on this machine.
 
 ## Workflow
 
@@ -25,9 +25,12 @@ limits discovered at runtime.
 
 - `src/domain/`: pure types, normalization, and formatting. No GNOME imports;
   runs under Node and is covered by unit tests.
-- `src/services/`: credentials, Claude Code authentication, and the HTTP
-  adapter. The usage endpoint is undocumented: keep it isolated in
-  `claude-usage-client.ts` and treat every response as untrusted.
+- `src/services/`: credentials, Claude Code authentication, the Claude Code
+  `/usage` runner, and the HTTP adapter. Usage comes from
+  `claude-cli-usage.ts` by default; direct requests are the opt-in and the
+  fallback without Claude Code. The usage endpoint is undocumented: keep it
+  isolated in `claude-usage-client.ts` and treat every response and all CLI
+  output as untrusted.
 - `src/ui/`: Shell actors and menus. `extension.ts` is lifecycle only;
   `prefs.ts` must not import Shell, St, or Clutter.
 - Discover model-scoped limits dynamically; never hard-code model names.
@@ -48,9 +51,11 @@ limits discovered at runtime.
 
 - Never log, persist, commit, or use in fixtures a real token, email address,
   or organization identifier.
-- Authentication and session renewal belong to the Claude Code CLI (ADR 002,
-  ADR 003). Do not implement the OAuth token protocol or scrape browser
-  cookies.
+- Authentication and session renewal belong to the Claude Code CLI. Do not
+  implement the OAuth token protocol or scrape browser cookies.
+- Run the CLI's `/usage` with `--setting-sources ''` and
+  `--no-session-persistence`, so the user's hooks stay idle and the run is not
+  counted in its own report.
 - The refresh token stays in memory and reaches the CLI only through the child
   environment, never argv, GSettings, logs, or files.
 - An expired access token is not an expired session: ask the user to sign in

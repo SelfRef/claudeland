@@ -12,10 +12,15 @@ It displays remaining capacity for:
 - model- or surface-scoped limits discovered at runtime, such as Fable;
 - any compatible limits Anthropic adds to the response in the future.
 
+It also shows what contributed to usage on this machine over the last day and
+week, as reported by Claude Code's `/usage`: long context, subagent-heavy or
+long-running sessions, and the top subagents and MCP servers.
+
 > [!WARNING]
-> Anthropic does not currently document the OAuth usage endpoint used by Claude
-> Code's usage screen. Vibecheck isolates that integration behind one adapter,
-> but a Claude Code or server-side change may temporarily break live data.
+> Anthropic does not document the usage data behind Claude Code's `/usage`
+> screen. Vibecheck reads it through Claude Code by default, which absorbs most
+> changes, but a Claude Code or server-side change may temporarily break live
+> data.
 
 ## Status
 
@@ -36,6 +41,23 @@ directly:
 - the optional desktop card is placed in GNOME's background actor group, so it
   stays below application windows and only receives clicks where the desktop
   shows; right-click it to refresh or open the preferences.
+
+## Settings
+
+Open them from the top bar menu, the desktop card's right-click menu, or
+`gnome-extensions prefs vibecheck@selfref.dev`.
+
+- **Top bar:** up to two remaining percentages (current session, weekly for
+  all models, or the lowest remaining limit), the time until the session, the
+  weekly limit, or both reset, and a color, symbolic, or hidden icon.
+- **Usage contributors:** in the menu (default), on the card, in both, or
+  hidden.
+- **Desktop card:** off by default, placed in any corner of the primary
+  monitor.
+- **Updates and thresholds:** refresh interval, and the remaining percentages
+  that turn a limit yellow or red.
+- **Data source:** whether Claude Code is installed and signed in, a switch to
+  request usage directly, and a sign-in button when one is needed.
 
 ## Requirements
 
@@ -185,7 +207,7 @@ journalctl --user -f -o cat /usr/bin/gnome-shell
 ## Authentication and data flow
 
 By default, and whenever Claude Code is installed, Vibecheck runs Claude Code's
-own `/usage` command and reads its report (ADR 004):
+own `/usage` command and reads its report:
 
 ```text
 claude -p /usage ──> rate limits + "What's contributing" report
@@ -250,36 +272,32 @@ trying again.
 English is the source and fallback language. Vibecheck follows the GNOME
 system locale through gettext; Italian is included in the initial release.
 Translations live in `po/` and are compiled into the extension during build.
-
-See [SECURITY.md](SECURITY.md) for the threat model.
+Claude Code's own contributing-usage findings are shown as it words them, in
+English.
 
 ## Repository layout
 
 ```text
-src/domain/       Pure types, normalization, formatting
-src/services/     Claude credentials, auth, and HTTP adapter
-src/ui/           GNOME Shell indicator and desktop actor
+src/domain/       Pure types, normalization, formatting, report parsing
+src/services/     Claude credentials, auth, Claude Code runner, HTTP adapter
+src/ui/           GNOME Shell indicator, menus, and desktop card
 schemas/          GSettings schema
-tests/            Unit tests and synthetic fixtures
+tests/            Unit tests, synthetic fixtures, and the Shell probe
 scripts/          Reproducible build/install/pack commands
-docs/             Architecture decisions and roadmap
 ```
 
 ## Limitations
 
-- The usage endpoint is undocumented and may change without notice.
+- The usage endpoint and the `/usage` report are undocumented and may change
+  without notice.
+- Through Claude Code, every refresh starts a short `claude` process (about
+  1.5 seconds) instead of making one HTTPS request.
 - The desktop card lives inside the wallpaper's own actor group, since GNOME
   Shell exposes no stable API dedicated to third-party desktop widgets.
 - A normal “daily quota” is not provided by Claude subscriptions. Vibecheck
   shows the official five-hour and weekly windows instead.
 - KDE Plasma, Sway, and Hyprland need separate frontends; they are not GNOME
   Shell and cannot load this extension.
-
-## Contributing
-
-Bug reports and pull requests are welcome; see
-[CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities privately as
-described in [SECURITY.md](SECURITY.md).
 
 ## License
 
