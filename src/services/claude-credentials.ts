@@ -29,34 +29,23 @@ export class ClaudeCredentials {
 		try {
 			bytes = await loadContents(file);
 		} catch {
-			throw new VibecheckError(
-				'credentials-missing',
-				'Claude Code credentials were not found. Sign in to continue.',
-			);
+			throw new VibecheckError('credentials-missing');
 		}
 
 		let payload: unknown;
 		try {
 			payload = JSON.parse(new TextDecoder().decode(bytes)) as unknown;
 		} catch {
-			throw new VibecheckError(
-				'credentials-invalid',
-				'The Claude Code credentials file is invalid.',
-			);
+			throw new VibecheckError('credentials-invalid');
 		}
 
 		try {
 			return parseCredential(payload);
 		} catch (error) {
-			if (error instanceof InvalidCredentialError) {
-				throw new VibecheckError(
-					error.problem === 'missing' ? 'credentials-missing' : 'credentials-invalid',
-					error.message,
-				);
-			}
 			throw new VibecheckError(
-				'credentials-invalid',
-				'The Claude Code credentials file is invalid.',
+				error instanceof InvalidCredentialError && error.problem === 'missing'
+					? 'credentials-missing'
+					: 'credentials-invalid',
 			);
 		}
 	}

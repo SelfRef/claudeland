@@ -7,14 +7,13 @@ import { severityFor, type UsageSnapshot } from '../domain/usage.js';
 import { ClaudeAuth } from './claude-auth.js';
 import { ClaudeCredentials } from './claude-credentials.js';
 import { ClaudeUsageClient } from './claude-usage-client.js';
-import { VibecheckError, errorMessage } from './errors.js';
+import { VibecheckError } from './errors.js';
 
 export interface UsageState {
 	snapshot: UsageSnapshot | null;
 	loading: boolean;
 	renewing: boolean;
 	stale: boolean;
-	error: string | null;
 	errorCode: VibecheckError['code'] | null;
 	planLabel: string | null;
 }
@@ -49,7 +48,6 @@ export class UsageController {
 		loading: false,
 		renewing: false,
 		stale: false,
-		error: null,
 		errorCode: null,
 		planLabel: null,
 	};
@@ -95,7 +93,7 @@ export class UsageController {
 			return;
 		}
 
-		this.setState({ loading: true, error: null, errorCode: null });
+		this.setState({ loading: true, errorCode: null });
 		let nextDelay = this.baseIntervalSeconds();
 
 		try {
@@ -152,7 +150,6 @@ export class UsageController {
 				loading: false,
 				renewing: false,
 				stale: false,
-				error: null,
 				errorCode: null,
 			});
 		} catch (error) {
@@ -166,7 +163,6 @@ export class UsageController {
 				loading: false,
 				renewing: false,
 				stale: this.state.snapshot !== null,
-				error: errorMessage(error),
 				errorCode: error instanceof VibecheckError ? error.code : 'network-error',
 			});
 		} finally {
@@ -204,7 +200,7 @@ export class UsageController {
 	private async readCredential(): Promise<ClaudeCredential> {
 		const credentials = this.credentials;
 		if (!credentials) {
-			throw new VibecheckError('credentials-missing', 'Vibecheck is shutting down.');
+			throw new VibecheckError('credentials-missing');
 		}
 
 		try {
@@ -213,10 +209,10 @@ export class UsageController {
 			if (error instanceof VibecheckError && error.code === 'credentials-missing') {
 				const status = await this.auth?.status();
 				if (status && !status.installed) {
-					throw new VibecheckError('claude-cli-missing', 'Install Claude Code to authenticate.');
+					throw new VibecheckError('claude-cli-missing');
 				}
 				if (status && !status.loggedIn) {
-					throw new VibecheckError('not-authenticated', 'Sign in to Claude Code to view usage.');
+					throw new VibecheckError('not-authenticated');
 				}
 			}
 			throw error;
@@ -230,19 +226,13 @@ export class UsageController {
 	private async renewCredential(credential: ClaudeCredential): Promise<ClaudeCredential> {
 		const auth = this.auth;
 		if (!auth) {
-			throw new VibecheckError('credentials-expired', 'Vibecheck is shutting down.');
+			throw new VibecheckError('credentials-expired');
 		}
 		if (!canRenew(credential)) {
-			throw new VibecheckError(
-				'credentials-expired',
-				'The Claude session has expired. Sign in again.',
-			);
+			throw new VibecheckError('credentials-expired');
 		}
 		if (Date.now() < this.renewalBlockedUntil) {
-			throw new VibecheckError(
-				'renewal-failed',
-				'The Claude session could not be renewed automatically. Retrying later.',
-			);
+			throw new VibecheckError('renewal-failed');
 		}
 
 		this.setState({ renewing: true });
@@ -265,10 +255,7 @@ export class UsageController {
 		}
 
 		this.renewalBlockedUntil = Date.now() + RENEWAL_COOLDOWN_MS;
-		throw new VibecheckError(
-			'renewal-failed',
-			'The Claude session could not be renewed automatically. Retrying later.',
-		);
+		throw new VibecheckError('renewal-failed');
 	}
 
 	private setState(patch: Partial<UsageState>): void {

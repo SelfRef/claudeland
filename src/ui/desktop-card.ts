@@ -5,11 +5,12 @@ import Meta from 'gi://Meta';
 import Pango from 'gi://Pango';
 import St from 'gi://St';
 
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import { formatPercent, localizedLimitLabel } from '../domain/usage.js';
+import { formatMessage, formatPercent, localizedLimitLabel } from '../domain/usage.js';
 import type { UsageController, UsageState } from '../services/usage-controller.js';
-import { formatClockTime, formatMessage, localizedError, translate as _ } from './localization.js';
+import { formatClockTime, localizedError } from './localization.js';
 
 export class DesktopCard {
 	private readonly actor: St.BoxLayout;
@@ -102,8 +103,8 @@ export class DesktopCard {
 					? _('Renewing the Claude session…')
 					: state.loading
 						? _('Loading…')
-						: state.error
-							? localizedError(state.errorCode, state.error)
+						: state.errorCode
+							? localizedError(state.errorCode)
 							: _('Data unavailable'),
 				style_class: 'vibecheck-desktop-empty',
 			});

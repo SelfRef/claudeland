@@ -90,10 +90,7 @@ export class ClaudeAuth {
 			return false;
 		}
 		if (!GLib.find_program_in_path('claude')) {
-			throw new VibecheckError(
-				'claude-cli-missing',
-				'Claude Code is not installed or is not available in PATH.',
-			);
+			throw new VibecheckError('claude-cli-missing');
 		}
 		if (this.renewal) {
 			return this.renewal;
@@ -109,10 +106,7 @@ export class ClaudeAuth {
 
 	launchLogin(): void {
 		if (!GLib.find_program_in_path('claude')) {
-			throw new VibecheckError(
-				'claude-cli-missing',
-				'Claude Code is not installed or is not available in PATH.',
-			);
+			throw new VibecheckError('claude-cli-missing');
 		}
 
 		const command = ['claude', 'auth', 'login', '--claudeai'];
@@ -129,10 +123,7 @@ export class ClaudeAuth {
 			}
 		}
 
-		throw new VibecheckError(
-			'claude-cli-missing',
-			'No compatible terminal was found to start Claude sign-in.',
-		);
+		throw new VibecheckError('terminal-missing');
 	}
 
 	destroy(): void {

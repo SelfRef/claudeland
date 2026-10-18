@@ -122,12 +122,12 @@ export function formatTimeRemaining(
 		return translate('reset imminent');
 	}
 	if (days > 0) {
-		return formatTemplate(translate('resets in %dd %dh'), days, hours);
+		return formatMessage(translate('resets in %dd %dh'), days, hours);
 	}
 	if (hours > 0) {
-		return formatTemplate(translate('resets in %dh %dm'), hours, minutes);
+		return formatMessage(translate('resets in %dh %dm'), hours, minutes);
 	}
-	return formatTemplate(translate('resets in %dm'), minutes);
+	return formatMessage(translate('resets in %dm'), minutes);
 }
 
 /** Compact countdown for the top bar, or an empty string without a reset. */
@@ -144,12 +144,12 @@ export function formatPanelReset(
 
 	const [days, hours, minutes] = remaining;
 	if (days > 0) {
-		return formatTemplate(translate('%dd %dh'), days, hours);
+		return formatMessage(translate('%dd %dh'), days, hours);
 	}
 	if (hours > 0) {
-		return formatTemplate(translate('%dh %dm'), hours, minutes);
+		return formatMessage(translate('%dh %dm'), hours, minutes);
 	}
-	return formatTemplate(translate('%dm'), minutes);
+	return formatMessage(translate('%dm'), minutes);
 }
 
 export function localizedLimitLabel(
@@ -163,9 +163,13 @@ export function localizedLimitLabel(
 		return translate('Weekly · all models');
 	}
 	if (limit.scopeModel) {
-		return formatTemplate(translate('Weekly · %s'), limit.scopeModel);
+		return formatMessage(translate('Weekly · %s'), limit.scopeModel);
 	}
-	return translate(limit.label);
+	if (limit.id === 'extra_usage') {
+		return translate('Extra usage');
+	}
+	// A limit kind this version does not know yet, labelled from its API key.
+	return limit.label;
 }
 
 export function selectPanelLimit(limits: readonly UsageLimit[], choice: string): UsageLimit | null {
@@ -353,7 +357,7 @@ function round(value: number, decimals: number): number {
 	return Math.round(value * multiplier) / multiplier;
 }
 
-function formatTemplate(template: string, ...values: Array<string | number>): string {
+export function formatMessage(template: string, ...values: Array<string | number>): string {
 	let index = 0;
 	return template.replace(/%[sd]/g, () => String(values[index++] ?? ''));
 }

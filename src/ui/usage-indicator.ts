@@ -3,11 +3,13 @@ import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 import St from 'gi://St';
 
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {
+	formatMessage,
 	formatPanelPercents,
 	formatPanelReset,
 	formatPercent,
@@ -15,8 +17,9 @@ import {
 	localizedLimitLabel,
 	type UsageLimit,
 } from '../domain/usage.js';
+import { VibecheckError } from '../services/errors.js';
 import type { UsageController, UsageState } from '../services/usage-controller.js';
-import { formatClockTime, formatMessage, localizedError, translate as _ } from './localization.js';
+import { formatClockTime, localizedError } from './localization.js';
 
 class UsageIndicatorImpl extends PanelMenu.Button {
 	private readonly panelIcon: St.Icon;
@@ -68,10 +71,10 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 				try {
 					this.controller.launchLogin();
 				} catch (error) {
-					Main.notifyError(
-						_('Vibecheck'),
-						_(error instanceof Error ? error.message : String(error)),
-					);
+					if (!(error instanceof VibecheckError)) {
+						throw error;
+					}
+					Main.notifyError(_('Vibecheck'), localizedError(error.code));
 				}
 			},
 			this,
@@ -139,8 +142,8 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 			this.statusItem.label.text = _('Renewing the Claude session…');
 		} else if (state.loading && !state.snapshot) {
 			this.statusItem.label.text = _('Loading Claude usage…');
-		} else if (state.error) {
-			const error = localizedError(state.errorCode, state.error);
+		} else if (state.errorCode) {
+			const error = localizedError(state.errorCode);
 			this.statusItem.label.text = state.stale ? formatMessage(_('Stale data · %s'), error) : error;
 		} else if (state.snapshot) {
 			const updated = formatClockTime(state.snapshot.fetchedAt);
@@ -168,9 +171,6 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 	}
 }
 
-// The GNOME Shell typings and generated GObject typings can resolve through
-// different @girs dependency instances. At runtime they are the same GObject
-// namespace; preserve the concrete constructor type across that type boundary.
 export const UsageIndicator = GObject.registerClass(
 	UsageIndicatorImpl as any,
 ) as unknown as typeof UsageIndicatorImpl;

@@ -2,7 +2,6 @@ import GLib from 'gi://GLib';
 import Soup from 'gi://Soup';
 
 import {
-	InvalidUsagePayloadError,
 	normalizeUsage,
 	type NormalizeOptions,
 	type UsageSnapshot,
@@ -37,51 +36,33 @@ export class ClaudeUsageClient {
 		try {
 			bytes = await sendAndRead(this.session, message);
 		} catch {
-			throw new VibecheckError(
-				'network-error',
-				'Could not reach Anthropic. Check your connection.',
-			);
+			throw new VibecheckError('network-error');
 		}
 
 		const status = message.status_code;
 		if (status === Soup.Status.UNAUTHORIZED || status === Soup.Status.FORBIDDEN) {
-			throw new VibecheckError(
-				'unauthorized',
-				'The Claude session is no longer valid. Sign in again.',
-			);
+			throw new VibecheckError('unauthorized');
 		}
 		if (status === 429) {
-			throw new VibecheckError(
-				'rate-limited',
-				'Too many requests. Retrying later.',
-				parseRetryAfter(message),
-			);
+			throw new VibecheckError('rate-limited', parseRetryAfter(message));
 		}
 		if (status >= 500) {
-			throw new VibecheckError('server-error', `Anthropic is unavailable (HTTP ${status}).`);
+			throw new VibecheckError('server-error');
 		}
 		if (status < 200 || status >= 300) {
-			throw new VibecheckError(
-				'invalid-response',
-				`Unexpected Anthropic response (HTTP ${status}).`,
-			);
+			throw new VibecheckError('invalid-response');
 		}
 
 		try {
-			const data = bytes.get_data();
-			if (data === null) {
-				throw new InvalidUsagePayloadError('Claude usage response is empty');
-			}
-			const payload = JSON.parse(new TextDecoder().decode(data)) as unknown;
+			const payload = JSON.parse(
+				new TextDecoder().decode(bytes.get_data() ?? new Uint8Array()),
+			) as unknown;
 			return {
 				snapshot: normalizeUsage(payload, options),
 				planLabel: formatPlanLabel(credential.subscriptionType, credential.rateLimitTier),
 			};
-		} catch (error) {
-			if (error instanceof InvalidUsagePayloadError) {
-				throw new VibecheckError('invalid-response', error.message);
-			}
-			throw new VibecheckError('invalid-response', 'Anthropic returned an invalid response.');
+		} catch {
+			throw new VibecheckError('invalid-response');
 		}
 	}
 

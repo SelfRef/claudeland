@@ -58,9 +58,6 @@ msgstr ""
 msgid "Claude Code credentials were not found. Sign in to continue."
 msgstr ""
 
-msgid "Claude Code is not installed or is not available in PATH."
-msgstr ""
-
 msgid "Claude plan"
 msgstr ""
 
@@ -227,12 +224,6 @@ msgid "Top left"
 msgstr ""
 
 msgid "Top right"
-msgstr ""
-
-msgid "Unexpected Anthropic response."
-msgstr ""
-
-msgid "Unknown error"
 msgstr ""
 
 msgid "Updates and thresholds"
