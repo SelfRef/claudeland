@@ -9,7 +9,6 @@
 			<choices>
 				<choice value="five_hour"/>
 				<choice value="seven_day"/>
-				<choice value="model"/>
 				<choice value="lowest"/>
 			</choices>
 			<default>'five_hour'</default>
@@ -19,7 +18,6 @@
 			<choices>
 				<choice value="five_hour"/>
 				<choice value="seven_day"/>
-				<choice value="model"/>
 				<choice value="lowest"/>
 				<choice value="none"/>
 			</choices>

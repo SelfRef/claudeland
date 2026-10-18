@@ -98,14 +98,11 @@ msgstr "Caricamento utilizzo Claude…"
 msgid "Loading…"
 msgstr "Caricamento…"
 
+msgid "Lowest remaining"
+msgstr "Residuo più basso"
+
 msgid "Minutes between usage requests."
 msgstr "Minuti tra una richiesta e la successiva."
-
-msgid "Most constrained limit"
-msgstr "Limite più vincolato"
-
-msgid "Most constrained model limit"
-msgstr "Limite di modello più vincolato"
 
 msgid "No compatible terminal was found to start Claude sign-in."
 msgstr "Nessun terminale compatibile trovato per avviare il login Claude."

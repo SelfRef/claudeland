@@ -12,7 +12,7 @@ import { VibecheckError } from './services/errors.js';
 
 const POSITIONS = ['top-right', 'top-left', 'bottom-right', 'bottom-left'] as const;
 const PANEL_ICONS = ['none', 'color', 'symbolic'] as const;
-const PANEL_LIMITS = ['five_hour', 'seven_day', 'model', 'lowest', 'none'] as const;
+const PANEL_LIMITS = ['five_hour', 'seven_day', 'lowest', 'none'] as const;
 
 export default class VibecheckPreferences extends ExtensionPreferences {
 	async fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
@@ -40,8 +40,7 @@ export default class VibecheckPreferences extends ExtensionPreferences {
 		const panelLimitLabels = [
 			_('Current session'),
 			_('Weekly · all models'),
-			_('Most constrained model limit'),
-			_('Most constrained limit'),
+			_('Lowest remaining'),
 			_('None'),
 		];
 		appearance.add(

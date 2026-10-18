@@ -97,13 +97,10 @@ msgstr ""
 msgid "Loading…"
 msgstr ""
 
+msgid "Lowest remaining"
+msgstr ""
+
 msgid "Minutes between usage requests."
-msgstr ""
-
-msgid "Most constrained limit"
-msgstr ""
-
-msgid "Most constrained model limit"
 msgstr ""
 
 msgid "No compatible terminal was found to start Claude sign-in."

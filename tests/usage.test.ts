@@ -120,7 +120,7 @@ describe('formatting', () => {
 		];
 		expect(formatPanelPercents(limits, ['five_hour', 'seven_day'])).toBe('80%/60%');
 		expect(formatPanelPercents(limits, ['seven_day', 'none'])).toBe('60%');
-		expect(formatPanelPercents(limits, ['model', 'lowest'])).toBe('40%/40%');
+		expect(formatPanelPercents(limits, ['seven_day', 'lowest'])).toBe('60%/40%');
 		expect(formatPanelPercents([limit('five_hour', 80)], ['five_hour', 'seven_day'])).toBe(
 			'80%/--',
 		);
@@ -148,7 +148,7 @@ describe('formatting', () => {
 		expect(formatPanelReset([limit('five_hour', '2030-01-01T10:05:00Z')], 'five_hour', now)).toBe(
 			'5m',
 		);
-		expect(formatPanelReset(limits, 'model', now)).toBe('');
+		expect(formatPanelReset(limits, 'seven_day_opus', now)).toBe('');
 		expect(formatPanelReset([limit('five_hour', null)], 'five_hour', now)).toBe('');
 	});
 

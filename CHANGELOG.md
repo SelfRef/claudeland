@@ -10,8 +10,8 @@ the project follows [Semantic Versioning](https://semver.org/).
 
 - GNOME Shell 51 support and a Fedora 45 verification container.
 - Choose one or two remaining percentages for the top bar, shown as `n%/m%`:
-  current session, weekly for all models, the most constrained model limit, or
-  the most constrained limit overall. Defaults to session and weekly.
+  current session, weekly for all models, or the lowest remaining of all
+  limits. Defaults to session and weekly.
 - The top bar shows the Claude icon in color (default), symbolic so it follows
   the panel color, or not at all.
 - The top bar shows the time until the first panel value resets, as

@@ -173,12 +173,7 @@ export function localizedLimitLabel(
 }
 
 export function selectPanelLimit(limits: readonly UsageLimit[], choice: string): UsageLimit | null {
-	const candidates =
-		choice === 'lowest'
-			? limits
-			: choice === 'model'
-				? limits.filter((limit) => limit.scopeModel)
-				: limits.filter((limit) => limit.id === choice);
+	const candidates = choice === 'lowest' ? limits : limits.filter((limit) => limit.id === choice);
 	return candidates.reduce<UsageLimit | null>(
 		(lowest, limit) =>
 			!lowest || limit.remainingPercent < lowest.remainingPercent ? limit : lowest,
