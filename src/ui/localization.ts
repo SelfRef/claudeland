@@ -36,11 +36,17 @@ export function localizedError(code: VibecheckErrorCode): string {
 	}
 }
 
+let interfaceSettings: Gio.Settings | null = null;
+
 /** Time of day in the 12h or 24h format the GNOME clock is set to. */
 export function formatClockTime(isoTime: string): string {
-	const clockFormat = new Gio.Settings({ schema_id: 'org.gnome.desktop.interface' }).get_string(
-		'clock-format',
-	);
+	interfaceSettings ??= new Gio.Settings({ schema_id: 'org.gnome.desktop.interface' });
+	const clockFormat = interfaceSettings.get_string('clock-format');
 	const time = GLib.DateTime.new_from_unix_local(Math.floor(Date.parse(isoTime) / 1000));
 	return time?.format(clockFormat === '12h' ? '%l:%M %p' : '%H:%M')?.trim() ?? '--';
+}
+
+/** Drops the settings `formatClockTime()` keeps, for the extension's `disable()`. */
+export function releaseClockSettings(): void {
+	interfaceSettings = null;
 }

@@ -5,6 +5,7 @@ import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/
 
 import { UsageController } from './services/usage-controller.js';
 import { DesktopCard } from './ui/desktop-card.js';
+import { releaseClockSettings } from './ui/localization.js';
 import { UsageIndicator } from './ui/usage-indicator.js';
 
 export default class VibecheckExtension extends Extension {
@@ -64,6 +65,7 @@ export default class VibecheckExtension extends Extension {
 		this.desktopCard = null;
 		this.controller?.destroy();
 		this.controller = null;
+		releaseClockSettings();
 
 		this.settings?.disconnectObject(this);
 		this.settings = null;
