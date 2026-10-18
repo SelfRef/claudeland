@@ -73,13 +73,7 @@ order. No actor, signal, or GLib timer may survive `disable()`.
 
 ## Compatibility
 
-GNOME Shell code is compiled against GNOME 50 type definitions and supports
-Shell 45 through 51, under X11 and Wayland alike. The package uses the ES module
-extension API introduced in Shell 45. Compatibility-sensitive code uses APIs
-available in every declared release, and each of them must be verified with
-`pnpm verify:shell` before publication.
-
-One runtime difference is handled in the sources:
-
-- `St.BoxLayout` gained an `orientation` property after Shell 46, so
-  `src/ui/compat.ts` sets `vertical` when it is absent.
+GNOME Shell code is compiled against GNOME 50 type definitions and supports the
+maintained Shell releases, 50 and 51, under X11 and Wayland alike. Support
+follows GNOME's own: when a new release ships, the oldest one is dropped. Each
+declared release must be verified with `pnpm verify:shell` before publication.

@@ -1,3 +1,4 @@
+import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
@@ -8,7 +9,6 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import { formatPercent, localizedLimitLabel } from '../domain/usage.js';
 import type { UsageController, UsageState } from '../services/usage-controller.js';
-import { setBoxLayoutVertical } from './compat.js';
 import { formatClockTime, formatMessage, localizedError, translate as _ } from './localization.js';
 
 export class DesktopCard {
@@ -27,17 +27,17 @@ export class DesktopCard {
       reactive: false,
       can_focus: false,
       width: 300,
+      orientation: Clutter.Orientation.VERTICAL,
       style_class: 'vibecheck-desktop-card',
     });
-    setBoxLayoutVertical(this.actor);
     this.title = new St.Label({
       text: _('Claude plan'),
       style_class: 'vibecheck-desktop-title',
     });
     this.content = new St.BoxLayout({
+      orientation: Clutter.Orientation.VERTICAL,
       style_class: 'vibecheck-desktop-content',
     });
-    setBoxLayoutVertical(this.content);
     this.actor.add_child(this.title);
     this.actor.add_child(this.content);
 

@@ -8,18 +8,8 @@ const uuid = 'vibecheck@selfref.dev';
 
 run('pnpm', ['dev:install']);
 
-// GNOME 49+ replaced --nested with Mutter DevKit; ask the binary which it has.
-const help = spawnSync('gnome-shell', ['--help'], { encoding: 'utf8' });
-if (help.error) {
-  console.error('gnome-shell is not available in PATH');
-  process.exit(1);
-}
-const mode = `${help.stdout}${help.stderr}`.includes('--devkit') ? '--devkit' : '--nested';
-// Without the viewer the shell runs headless and shows nothing.
-if (
-  mode === '--devkit' &&
-  !['/usr/lib/mutter-devkit', '/usr/libexec/mutter-devkit'].some((path) => existsSync(path))
-) {
+// Without the DevKit viewer the shell runs headless and shows nothing.
+if (!['/usr/lib/mutter-devkit', '/usr/libexec/mutter-devkit'].some((path) => existsSync(path))) {
   console.error('Mutter DevKit is not installed (Arch: mutter-devkit, Ubuntu: mutter-dev-bin)');
   process.exit(1);
 }
@@ -35,7 +25,7 @@ const shell = spawnSync(
     '--',
     'sh',
     '-c',
-    `gsettings set org.gnome.shell enabled-extensions "['${uuid}']" && exec gnome-shell ${mode} --wayland`,
+    `gsettings set org.gnome.shell enabled-extensions "['${uuid}']" && exec gnome-shell --devkit --wayland`,
   ],
   { cwd: root, env: { ...process.env, XDG_CONFIG_HOME: config }, stdio: 'inherit' },
 );

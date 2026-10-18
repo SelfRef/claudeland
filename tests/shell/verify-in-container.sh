@@ -68,12 +68,6 @@ shell_errors() {
   grep -iE "JS ERROR|JS WARNING" /tmp/shell.log || true
 }
 
-# GNOME Shell 45 still reports the enabled extension state as ENABLED; later
-# releases call it ACTIVE.
-is_active() {
-  [ "$1" = "ACTIVE" ] || [ "$1" = "ENABLED" ]
-}
-
 stop_shell() {
   for pid in $WINDOW_PIDS; do
     kill "$pid" 2>/dev/null || true
@@ -106,14 +100,14 @@ echo "=== phase 1: the extension itself ==="
 start_shell "$UUID"
 STATE=$(gnome-extensions info "$UUID" 2>/dev/null | sed -n 's/^  State: //p')
 echo "state after startup: ${STATE:-unknown}"
-is_active "$STATE" || STATUS=1
+[ "$STATE" = "ACTIVE" ] || STATUS=1
 gnome-extensions disable "$UUID" >/dev/null 2>&1 || true
 sleep 2
 gnome-extensions enable "$UUID" >/dev/null 2>&1 || true
 sleep 3
 STATE=$(gnome-extensions info "$UUID" 2>/dev/null | sed -n 's/^  State: //p')
 echo "state after a disable/enable cycle: ${STATE:-unknown}"
-is_active "$STATE" || STATUS=1
+[ "$STATE" = "ACTIVE" ] || STATUS=1
 if shell_errors > /tmp/errors.log && [ -s /tmp/errors.log ]; then
   echo "unexpected shell errors:"
   cat /tmp/errors.log

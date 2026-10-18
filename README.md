@@ -19,7 +19,7 @@ It displays remaining capacity for:
 
 ## Status
 
-The project is at `0.3.1` and targets GNOME Shell 45 through 51, under X11
+The project is at `0.3.1` and targets the maintained GNOME Shell releases, 50 and 51, under X11
 and Wayland alike. Compatibility is checked against GNOME Shell 50 type
 definitions, and every declared release is exercised by a runtime verification
 run against a real headless Shell.
@@ -38,7 +38,7 @@ directly:
 
 ## Requirements
 
-- any distribution using GNOME Shell 45 through 51;
+- any distribution using GNOME Shell 50 or 51;
 - an X11 or a Wayland session; both are supported;
 - Claude Code installed and available as `claude` in `PATH`;
 - a Claude subscription authenticated through Claude Code;
@@ -152,7 +152,7 @@ disposable container, so a second desktop is not needed:
 
 ```bash
 pnpm build && pnpm verify:shell        # every declared release
-pnpm verify:shell 45 50                # selected releases
+pnpm verify:shell 51                   # selected releases
 ```
 
 For each release this starts a real headless GNOME Shell, enables the packaged
@@ -172,8 +172,8 @@ pnpm dev:nested
 This installs the extension and starts a nested Wayland shell with it enabled,
 using its own settings database in `build/nested`, so your desktop session is
 not touched.
-GNOME 48 and older use `--nested`; GNOME 49+ uses Mutter DevKit, which on Ubuntu
-needs `mutter-dev-bin` (Arch: `mutter-devkit`).
+The window comes from Mutter DevKit: install `mutter-devkit` on Arch or
+`mutter-dev-bin` on Ubuntu.
 
 Follow logs with:
 

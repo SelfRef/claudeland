@@ -91,8 +91,8 @@ to remain open until authentication finishes, even if the extension is disabled.
 
 ## Supported releases and how they were verified
 
-Vibecheck is submitted as one modular ES module package for GNOME Shell 45
-through 50, as declared in `metadata.json`. The package uses libsoup 3 directly
+Vibecheck is submitted as one modular ES module package for GNOME Shell 50
+and 51, as declared in `metadata.json`. The package uses libsoup 3 directly
 and contains no legacy API shims or bundled entry points.
 
 Every declared release is verified with `pnpm verify:shell`, which starts a real

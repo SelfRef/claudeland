@@ -3,7 +3,7 @@
 # declares, inside disposable containers.
 #
 #   scripts/verify-shell.sh          # every declared release
-#   scripts/verify-shell.sh 45 50    # selected releases
+#   scripts/verify-shell.sh 51       # selected releases
 #
 # Each run starts a real GNOME Shell headlessly, enables the extension, and
 # renders every panel and card state.

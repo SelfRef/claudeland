@@ -16,7 +16,6 @@ import {
   type UsageLimit,
 } from '../domain/usage.js';
 import type { UsageController, UsageState } from '../services/usage-controller.js';
-import { setBoxLayoutVertical } from './compat.js';
 import { formatClockTime, formatMessage, localizedError, translate as _ } from './localization.js';
 
 class UsageIndicatorImpl extends PanelMenu.Button {
@@ -169,7 +168,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
   }
 }
 
-// The GNOME 46 Shell typings and generated GObject typings can resolve through
+// The GNOME Shell typings and generated GObject typings can resolve through
 // different @girs dependency instances. At runtime they are the same GObject
 // namespace; preserve the concrete constructor type across that type boundary.
 export const UsageIndicator = GObject.registerClass(
@@ -185,9 +184,9 @@ function createLimitRow(limit: UsageLimit): PopupMenu.PopupBaseMenuItem {
 
   const content = new St.BoxLayout({
     x_expand: true,
+    orientation: Clutter.Orientation.VERTICAL,
     style_class: 'vibecheck-limit-content',
   });
-  setBoxLayoutVertical(content);
   const header = new St.BoxLayout({ x_expand: true });
   header.add_child(
     new St.Label({
