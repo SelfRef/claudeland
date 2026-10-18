@@ -141,6 +141,7 @@ gnome-extensions uninstall claudeland@fabiosm46.dev
 | `pnpm verify:session` | Exercise credential reading and session renewal under GJS        |
 | `pnpm verify:shell`   | Verify the built extension on every declared GNOME Shell release |
 | `pnpm dev:install`    | Build and install into the user extension directory              |
+| `pnpm dev:nested`     | Install, then run the extension in a nested GNOME Shell window   |
 | `pnpm package`        | Produce the extension ZIP and SHA-256 checksum in `build/`       |
 | `pnpm clean`          | Remove every generated build directory                           |
 
@@ -162,18 +163,17 @@ then renders every panel and card state through a throwaway probe extension
 mock logind on a private bus, so nothing outside the container is touched.
 Docker is the only requirement.
 
-To drive the real UI by hand, GNOME 48 and older can run a nested Wayland
-shell:
+To drive the real UI by hand, run it in a nested GNOME Shell window:
 
 ```bash
-dbus-run-session gnome-shell --nested --wayland
+pnpm dev:nested
 ```
 
-GNOME 49+ uses Mutter DevKit. On Ubuntu install `mutter-dev-bin`, then run:
-
-```bash
-dbus-run-session gnome-shell --devkit --wayland
-```
+This installs the extension and starts a nested Wayland shell with it enabled,
+using its own settings database in `build/nested`, so your desktop session is
+not touched.
+GNOME 48 and older use `--nested`; GNOME 49+ uses Mutter DevKit, which on Ubuntu
+needs `mutter-dev-bin` (Arch: `mutter-devkit`).
 
 Follow logs with:
 

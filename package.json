@@ -16,6 +16,7 @@
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "clean": "node scripts/clean.mjs",
     "dev:install": "node scripts/install.mjs",
+    "dev:nested": "node scripts/nested.mjs",
     "format": "prettier --write . && eslint --fix .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
