@@ -20,9 +20,8 @@ the project follows [Semantic Versioning](https://semver.org/).
 - What contributed to usage on this machine over the last day and week, from
   Claude Code's `/usage` report: request and session counts, behaviors such as
   long context or subagent-heavy sessions, and top subagents and MCP servers.
-  Shown in the menu and on the card by default; a setting limits it to one of
-  them or hides it. Refreshed with every poll through Claude Code, otherwise
-  at most every 15 minutes.
+  Refreshed with every poll through Claude Code, otherwise at most every 15
+  minutes.
 
 ### Changed
 

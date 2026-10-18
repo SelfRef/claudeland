@@ -44,7 +44,7 @@
 				<choice value="card"/>
 				<choice value="none"/>
 			</choices>
-			<default>'both'</default>
+			<default>'menu'</default>
 			<summary>Where to show what contributes to usage over the last day and week</summary>
 		</key>
 		<key name="show-desktop-widget" type="b">
