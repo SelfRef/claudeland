@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
-const uuid = 'claudeland@fabiosm46.dev';
+const uuid = 'vibecheck@selfref.dev';
 
 run('pnpm', ['dev:install']);
 

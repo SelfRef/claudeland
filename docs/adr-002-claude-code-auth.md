@@ -18,6 +18,6 @@ for the usage request; never copy the token into GSettings or project storage.
 ## Consequences
 
 - The user sees Anthropic's official login flow.
-- Claudeland does not own refresh-token storage.
+- Vibecheck does not own refresh-token storage.
 - Claude Code credential-layout changes require adapter maintenance.
 - The usage endpoint remains experimental and must fail safely.

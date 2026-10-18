@@ -10,7 +10,7 @@ run('pnpm', ['build']);
 const dist = resolve(root, 'dist');
 
 const metadata = JSON.parse(await readFile(resolve(dist, 'metadata.json'), 'utf8'));
-if (metadata.uuid !== 'claudeland@fabiosm46.dev') {
+if (metadata.uuid !== 'vibecheck@selfref.dev') {
   throw new Error('Refusing to install an extension with an unexpected UUID');
 }
 

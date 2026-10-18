@@ -9,7 +9,7 @@ Claude Code issues a short-lived access token next to a long-lived refresh
 token. On the observed installation the access token lasted eight hours and the
 refresh token about thirty days.
 
-Claudeland treated any expired access token as a lost session and asked for an
+Vibecheck treated any expired access token as a lost session and asked for an
 interactive sign-in. An overnight gap was therefore enough to demand a browser
 login while the session was, in fact, still valid for four more weeks.
 
@@ -17,7 +17,7 @@ Three renewal strategies were considered.
 
 1. Post to the OAuth token endpoint directly. This duplicates a sensitive,
    undocumented flow: client identity, refresh-token rotation, and the layout
-   of the credential file would all become Claudeland's problem.
+   of the credential file would all become Vibecheck's problem.
 2. Ask the CLI for a refresh. There is no `claude auth refresh` in 2.1.251.
    `claude auth status` performs no renewal at all — it reports `loggedIn:
 true` even when the access token has expired — and the only implicit
@@ -48,9 +48,9 @@ after a failure so a broken session cannot spawn a subprocess on every poll.
 - A session renews itself across an overnight gap without user action.
 - Claude Code keeps ownership of the client identity, the token protocol,
   refresh-token rotation, and the credential file format.
-- Claudeland reads the refresh token and passes it to the CLI through the child
+- Vibecheck reads the refresh token and passes it to the CLI through the child
   environment, never through argv, and never persists or logs it. ADR 002 is
-  extended, not reversed: Claudeland still owns no credential storage.
+  extended, not reversed: Vibecheck still owns no credential storage.
 - The renewal environment is a Claude Code contract. If it changes, automatic
   renewal degrades to the previous behaviour — an explicit sign-in action —
   rather than to a broken extension.

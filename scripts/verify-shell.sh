@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Verifies the built extension against every GNOME Shell release Claudeland
+# Verifies the built extension against every GNOME Shell release Vibecheck
 # declares, inside disposable containers.
 #
 #   scripts/verify-shell.sh          # every declared release
@@ -48,7 +48,7 @@ for version in "${versions[@]}"; do
   package="$root/dist"
   probe="$root/tests/shell/uicheck-extension.js"
 
-  image="claudeland-verify-gnome${version}"
+  image="vibecheck-verify-gnome${version}"
   echo "==> Building ${image}"
   docker build -q -f "$dockerfile" -t "$image" tests/shell >/dev/null
 

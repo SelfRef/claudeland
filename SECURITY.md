@@ -7,7 +7,7 @@ Use GitHub private vulnerability reporting for this repository.
 
 ## Credential model
 
-Claudeland does not implement its own browser login and does not store a copy
+Vibecheck does not implement its own browser login and does not store a copy
 of Claude credentials. It delegates login to the installed Claude Code CLI and
 reads the existing local credential only when making a usage request.
 

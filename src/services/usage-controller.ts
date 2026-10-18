@@ -7,7 +7,7 @@ import { severityFor, type UsageSnapshot } from '../domain/usage.js';
 import { ClaudeAuth } from './claude-auth.js';
 import { ClaudeCredentials } from './claude-credentials.js';
 import { ClaudeUsageClient } from './claude-usage-client.js';
-import { ClaudelandError, errorMessage } from './errors.js';
+import { VibecheckError, errorMessage } from './errors.js';
 
 export interface UsageState {
   snapshot: UsageSnapshot | null;
@@ -15,7 +15,7 @@ export interface UsageState {
   renewing: boolean;
   stale: boolean;
   error: string | null;
-  errorCode: ClaudelandError['code'] | null;
+  errorCode: VibecheckError['code'] | null;
   planLabel: string | null;
 }
 
@@ -128,7 +128,7 @@ export class UsageController {
         // when the recorded expiry still looked fine.
         if (
           !renewed &&
-          error instanceof ClaudelandError &&
+          error instanceof VibecheckError &&
           error.code === 'unauthorized' &&
           canRenew(credential)
         ) {
@@ -159,7 +159,7 @@ export class UsageController {
       if (this.client !== client) {
         return;
       }
-      if (error instanceof ClaudelandError && error.code === 'rate-limited') {
+      if (error instanceof VibecheckError && error.code === 'rate-limited') {
         nextDelay = Math.max(nextDelay, error.retryAfterSeconds ?? nextDelay * 2);
       }
       this.setState({
@@ -167,7 +167,7 @@ export class UsageController {
         renewing: false,
         stale: this.state.snapshot !== null,
         error: errorMessage(error),
-        errorCode: error instanceof ClaudelandError ? error.code : 'network-error',
+        errorCode: error instanceof VibecheckError ? error.code : 'network-error',
       });
     } finally {
       if (this.client === client) {
@@ -204,19 +204,19 @@ export class UsageController {
   private async readCredential(): Promise<ClaudeCredential> {
     const credentials = this.credentials;
     if (!credentials) {
-      throw new ClaudelandError('credentials-missing', 'Claudeland is shutting down.');
+      throw new VibecheckError('credentials-missing', 'Vibecheck is shutting down.');
     }
 
     try {
       return await credentials.read();
     } catch (error) {
-      if (error instanceof ClaudelandError && error.code === 'credentials-missing') {
+      if (error instanceof VibecheckError && error.code === 'credentials-missing') {
         const status = await this.auth?.status();
         if (status && !status.installed) {
-          throw new ClaudelandError('claude-cli-missing', 'Install Claude Code to authenticate.');
+          throw new VibecheckError('claude-cli-missing', 'Install Claude Code to authenticate.');
         }
         if (status && !status.loggedIn) {
-          throw new ClaudelandError('not-authenticated', 'Sign in to Claude Code to view usage.');
+          throw new VibecheckError('not-authenticated', 'Sign in to Claude Code to view usage.');
         }
       }
       throw error;
@@ -225,21 +225,21 @@ export class UsageController {
 
   /**
    * Delegates renewal to the Claude Code CLI and returns the credential it
-   * wrote. Claudeland never talks to the OAuth token endpoint itself.
+   * wrote. Vibecheck never talks to the OAuth token endpoint itself.
    */
   private async renewCredential(credential: ClaudeCredential): Promise<ClaudeCredential> {
     const auth = this.auth;
     if (!auth) {
-      throw new ClaudelandError('credentials-expired', 'Claudeland is shutting down.');
+      throw new VibecheckError('credentials-expired', 'Vibecheck is shutting down.');
     }
     if (!canRenew(credential)) {
-      throw new ClaudelandError(
+      throw new VibecheckError(
         'credentials-expired',
         'The Claude session has expired. Sign in again.',
       );
     }
     if (Date.now() < this.renewalBlockedUntil) {
-      throw new ClaudelandError(
+      throw new VibecheckError(
         'renewal-failed',
         'The Claude session could not be renewed automatically. Retrying later.',
       );
@@ -265,7 +265,7 @@ export class UsageController {
     }
 
     this.renewalBlockedUntil = Date.now() + RENEWAL_COOLDOWN_MS;
-    throw new ClaudelandError(
+    throw new VibecheckError(
       'renewal-failed',
       'The Claude session could not be renewed automatically. Retrying later.',
     );

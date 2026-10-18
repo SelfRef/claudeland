@@ -21,7 +21,7 @@ const HOUR_MS = 60 * 60 * 1000;
 const ACCESS_TOKEN = 'access-token-placeholder';
 const REFRESH_TOKEN = 'refresh-token-placeholder';
 
-const root = GLib.dir_make_tmp('claudeland-session-check-XXXXXX');
+const root = GLib.dir_make_tmp('vibecheck-session-check-XXXXXX');
 const credentialsPath = `${root}/credentials.json`;
 const argvLogPath = `${root}/argv.log`;
 const binDirectory = `${root}/bin`;
@@ -240,4 +240,4 @@ if (failure) {
   // An uncaught exception leaves GJS with a non-zero exit status.
   throw failure instanceof Error ? failure : new Error(String(failure));
 }
-print('Claudeland GJS session check passed');
+print('Vibecheck GJS session check passed');

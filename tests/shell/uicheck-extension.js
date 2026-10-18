@@ -1,9 +1,9 @@
-// GNOME Shell UI regression probe for Claudeland.
+// GNOME Shell UI regression probe for Vibecheck.
 //
 // The unit tests cover pure logic and the GJS harnesses cover the services.
 // Neither can touch St, Clutter, or PopupMenu, which is exactly where a new
 // GNOME Shell release breaks an extension. This probe is installed as a
-// throwaway extension next to a build of Claudeland, drives its actors through
+// throwaway extension next to a build of Vibecheck, drives its actors through
 // every render path with a synthetic snapshot, and reports one line to the
 // journal.
 //
@@ -17,7 +17,7 @@ import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import { DesktopCard } from './ui/desktop-card.js';
 import { UsageIndicator } from './ui/usage-indicator.js';
 
-const ROLE = 'claudeland-uicheck';
+const ROLE = 'vibecheck-uicheck';
 
 /** Long enough for the verification script to open a window on top. */
 const STACKING_DELAY = 12;
@@ -27,7 +27,7 @@ function typeName(actor) {
 }
 
 function isCard(actor) {
-  return actor.has_style_class_name?.('claudeland-desktop-card') === true;
+  return actor.has_style_class_name?.('vibecheck-desktop-card') === true;
 }
 
 function actorsWithStyle(root, styleClass) {
@@ -46,7 +46,7 @@ function actorsWithStyle(root, styleClass) {
 
 function checkProgressBars(indicator) {
   const expectedFractions = SNAPSHOT.limits.map((limit) => limit.remainingPercent / 100);
-  const tracks = actorsWithStyle(indicator.menu.box, 'claudeland-progress-track');
+  const tracks = actorsWithStyle(indicator.menu.box, 'vibecheck-progress-track');
   if (tracks.length !== expectedFractions.length) {
     return [`expected ${expectedFractions.length} progress tracks, found ${tracks.length}`];
   }
@@ -95,7 +95,7 @@ function checkStacking() {
 
   const failures = [];
   const children = owner.get_children();
-  console.log(`CLAUDELAND UI LAYERS: ${children.map(typeName).join(',')}`);
+  console.log(`VIBECHECK UI LAYERS: ${children.map(typeName).join(',')}`);
   if (children.length < 2) {
     failures.push(
       'the wallpaper group holds no wallpaper actor, so the card layering is unverifiable',
@@ -216,7 +216,7 @@ class ProbeController {
   launchLogin() {}
 }
 
-export default class ClaudelandUiCheck extends Extension {
+export default class VibecheckUiCheck extends Extension {
   _timeoutId = null;
 
   _progressTimeoutId = null;
@@ -275,9 +275,9 @@ export default class ClaudelandUiCheck extends Extension {
       settings.reset('panel-icon');
 
       if (failures.length > 0) {
-        console.error(`CLAUDELAND UI CHECK FAILED: ${failures.join(' | ')}`);
+        console.error(`VIBECHECK UI CHECK FAILED: ${failures.join(' | ')}`);
       } else {
-        console.log('CLAUDELAND UI CHECK OK');
+        console.log('VIBECHECK UI CHECK OK');
       }
       return GLib.SOURCE_REMOVE;
     });

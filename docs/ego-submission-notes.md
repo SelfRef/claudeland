@@ -1,11 +1,11 @@
 # Notes for the extensions.gnome.org review
 
 These notes answer, up front, the questions a reviewer is most likely to have
-about Claudeland. They are meant to be pasted into the submission comment.
+about Vibecheck. They are meant to be pasted into the submission comment.
 
 ## What the extension does
 
-Claudeland shows how much of a Claude subscription is left: the rolling
+Vibecheck shows how much of a Claude subscription is left: the rolling
 five-hour window, the weekly limits, and any model-scoped limits the account
 returns. It reads the credential created by Claude Code, Anthropic's official
 CLI, and performs one authenticated `GET` to
@@ -15,7 +15,7 @@ It never sends prompts, never creates conversations, and has no telemetry.
 
 ## Why the extension launches a process
 
-Claudeland does not own an OAuth client. Authentication and token renewal are
+Vibecheck does not own an OAuth client. Authentication and token renewal are
 delegated to the Claude Code CLI the user already has installed, which is the
 only component allowed to hold the client identity and rotate the refresh
 token. That delegation accounts for three subprocess purposes, implemented at
@@ -48,7 +48,7 @@ polling into repeated process spawning.
 
 The refresh token is passed through the environment rather than the argument
 vector, because `/proc/<pid>/cmdline` is world-readable while
-`/proc/<pid>/environ` is not. Claudeland holds it in memory for the duration of
+`/proc/<pid>/environ` is not. Vibecheck holds it in memory for the duration of
 that call only: it is never written to GSettings, to a file, or to the journal.
 
 ### 3. `claude auth login --claudeai` (interactive sign-in)
@@ -91,7 +91,7 @@ to remain open until authentication finishes, even if the extension is disabled.
 
 ## Supported releases and how they were verified
 
-Claudeland is submitted as one modular ES module package for GNOME Shell 45
+Vibecheck is submitted as one modular ES module package for GNOME Shell 45
 through 50, as declared in `metadata.json`. The package uses libsoup 3 directly
 and contains no legacy API shims or bundled entry points.
 

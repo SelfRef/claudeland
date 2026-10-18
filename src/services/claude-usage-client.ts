@@ -9,7 +9,7 @@ import {
   formatPlanLabel,
 } from '../domain/usage.js';
 import type { ClaudeCredential } from '../domain/credential.js';
-import { ClaudelandError } from './errors.js';
+import { VibecheckError } from './errors.js';
 
 const USAGE_URL = 'https://api.anthropic.com/api/oauth/usage';
 const OAUTH_BETA = 'oauth-2025-04-20';
@@ -17,7 +17,7 @@ const OAUTH_BETA = 'oauth-2025-04-20';
 export class ClaudeUsageClient {
   private readonly session = new Soup.Session({
     timeout: 20,
-    user_agent: 'claudeland/0.3.1',
+    user_agent: 'vibecheck/0.3.1',
   });
 
   /**
@@ -37,7 +37,7 @@ export class ClaudeUsageClient {
     try {
       bytes = await sendAndRead(this.session, message);
     } catch {
-      throw new ClaudelandError(
+      throw new VibecheckError(
         'network-error',
         'Could not reach Anthropic. Check your connection.',
       );
@@ -45,23 +45,23 @@ export class ClaudeUsageClient {
 
     const status = message.status_code;
     if (status === Soup.Status.UNAUTHORIZED || status === Soup.Status.FORBIDDEN) {
-      throw new ClaudelandError(
+      throw new VibecheckError(
         'unauthorized',
         'The Claude session is no longer valid. Sign in again.',
       );
     }
     if (status === 429) {
-      throw new ClaudelandError(
+      throw new VibecheckError(
         'rate-limited',
         'Too many requests. Retrying later.',
         parseRetryAfter(message),
       );
     }
     if (status >= 500) {
-      throw new ClaudelandError('server-error', `Anthropic is unavailable (HTTP ${status}).`);
+      throw new VibecheckError('server-error', `Anthropic is unavailable (HTTP ${status}).`);
     }
     if (status < 200 || status >= 300) {
-      throw new ClaudelandError(
+      throw new VibecheckError(
         'invalid-response',
         `Unexpected Anthropic response (HTTP ${status}).`,
       );
@@ -79,9 +79,9 @@ export class ClaudeUsageClient {
       };
     } catch (error) {
       if (error instanceof InvalidUsagePayloadError) {
-        throw new ClaudelandError('invalid-response', error.message);
+        throw new VibecheckError('invalid-response', error.message);
       }
-      throw new ClaudelandError('invalid-response', 'Anthropic returned an invalid response.');
+      throw new VibecheckError('invalid-response', 'Anthropic returned an invalid response.');
     }
   }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="org.gnome.shell.extensions.claudeland" path="/org/gnome/shell/extensions/claudeland/">
+  <schema id="org.gnome.shell.extensions.vibecheck" path="/org/gnome/shell/extensions/vibecheck/">
     <key name="show-panel" type="b">
       <default>true</default>
       <summary>Show the GNOME panel indicator</summary>

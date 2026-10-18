@@ -68,7 +68,7 @@ the project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
-- Documentation no longer describes Claudeland as Ubuntu- or Wayland-specific.
+- Documentation no longer describes Vibecheck as Ubuntu- or Wayland-specific.
   It runs on any distribution shipping a supported GNOME Shell, under X11 and
   Wayland alike.
 
@@ -77,7 +77,7 @@ the project follows [Semantic Versioning](https://semver.org/).
 ### Added
 
 - Automatic session renewal. When the Claude access token has expired, or an
-  authenticated request is rejected, Claudeland asks the Claude Code CLI to
+  authenticated request is rejected, Vibecheck asks the Claude Code CLI to
   renew the session non-interactively and retries once. Sign-in is requested
   only when the refresh token is missing, expired, or rejected.
 - GNOME Shell 50 compatibility metadata, type validation, and runtime smoke
@@ -136,8 +136,8 @@ the project follows [Semantic Versioning](https://semver.org/).
 
 - Keep the usage popup open when selecting “Refresh now”.
 
-[Unreleased]: https://github.com/FabioSM46/claudeland/compare/v0.3.1...HEAD
-[0.3.1]: https://github.com/FabioSM46/claudeland/compare/v0.3.0...v0.3.1
-[0.3.0]: https://github.com/FabioSM46/claudeland/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/FabioSM46/claudeland/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/FabioSM46/claudeland/releases/tag/v0.1.0
+[Unreleased]: https://github.com/SelfRef/vibecheck/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/SelfRef/vibecheck/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/SelfRef/vibecheck/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/SelfRef/vibecheck/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/SelfRef/vibecheck/releases/tag/v0.1.0

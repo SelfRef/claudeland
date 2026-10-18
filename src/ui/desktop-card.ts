@@ -27,15 +27,15 @@ export class DesktopCard {
       reactive: false,
       can_focus: false,
       width: 300,
-      style_class: 'claudeland-desktop-card',
+      style_class: 'vibecheck-desktop-card',
     });
     setBoxLayoutVertical(this.actor);
     this.title = new St.Label({
       text: _('Claude plan'),
-      style_class: 'claudeland-desktop-title',
+      style_class: 'vibecheck-desktop-title',
     });
     this.content = new St.BoxLayout({
-      style_class: 'claudeland-desktop-content',
+      style_class: 'vibecheck-desktop-content',
     });
     setBoxLayoutVertical(this.content);
     this.actor.add_child(this.title);
@@ -105,7 +105,7 @@ export class DesktopCard {
             : state.error
               ? localizedError(state.errorCode, state.error)
               : _('Data unavailable'),
-        style_class: 'claudeland-desktop-empty',
+        style_class: 'vibecheck-desktop-empty',
       });
       // Error messages run longer than the card is wide; wrap them in full.
       message.clutter_text.line_wrap = true;
@@ -116,18 +116,18 @@ export class DesktopCard {
     }
 
     for (const limit of state.snapshot.limits) {
-      const row = new St.BoxLayout({ style_class: 'claudeland-desktop-row' });
+      const row = new St.BoxLayout({ style_class: 'vibecheck-desktop-row' });
       row.add_child(
         new St.Label({
           text: localizedLimitLabel(limit, _),
           x_expand: true,
-          style_class: 'claudeland-desktop-label',
+          style_class: 'vibecheck-desktop-label',
         }),
       );
       row.add_child(
         new St.Label({
           text: formatPercent(limit.remainingPercent),
-          style_class: `claudeland-desktop-value claudeland-${limit.severity}`,
+          style_class: `vibecheck-desktop-value vibecheck-${limit.severity}`,
         }),
       );
       this.content.add_child(row);

@@ -13,7 +13,7 @@ object and call a module-level `init()`, so the package built for Shell 45 and
 later cannot be loaded at all on them: it fails to parse.
 
 Those releases still carry a large installed base, most visibly Ubuntu 22.04
-LTS with Shell 42. Supporting them is what makes Claudeland available beyond
+LTS with Shell 42. Supporting them is what makes Vibecheck available beyond
 recent distributions.
 
 Three runtime differences accompany the API change. libadwaita gained
@@ -47,7 +47,7 @@ behind a capability check rather than a version comparison.
 
 ## Superseding decision
 
-Claudeland now supports GNOME Shell 45 and later with one modular ES module
+Vibecheck now supports GNOME Shell 45 and later with one modular ES module
 package. The legacy package was rejected during extensions.gnome.org review;
 maintaining and reviewing a second, monolithic transpiled package was judged to
 cost more than the additional coverage justified. The legacy build, shims,

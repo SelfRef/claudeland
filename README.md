@@ -1,6 +1,6 @@
-# Claudeland
+# Vibecheck
 
-Claudeland is a GNOME Shell extension that keeps Claude plan capacity visible
+Vibecheck is a GNOME Shell extension that keeps Claude plan capacity visible
 without placing an always-on-top application over your work. It runs on any
 distribution shipping a supported GNOME Shell, under both X11 and Wayland.
 It is an independent project and is not affiliated with or endorsed by Anthropic.
@@ -14,7 +14,7 @@ It displays remaining capacity for:
 
 > [!WARNING]
 > Anthropic does not currently document the OAuth usage endpoint used by Claude
-> Code's usage screen. Claudeland isolates that integration behind one adapter,
+> Code's usage screen. Vibecheck isolates that integration behind one adapter,
 > but a Claude Code or server-side change may temporarily break live data.
 
 ## Status
@@ -29,7 +29,7 @@ run against a real headless Shell.
 GNOME does not let ordinary applications control their global position and
 stacking order, and Wayland enforces that by design. A GTK, Qt, Electron, or
 Tauri window cannot reliably behave like a desktop widget below every
-application on stock GNOME. Claudeland therefore integrates with GNOME Shell
+application on stock GNOME. Vibecheck therefore integrates with GNOME Shell
 directly:
 
 - the panel indicator is the stable default;
@@ -56,18 +56,18 @@ If needed, log in through the official browser flow:
 claude auth login --claudeai
 ```
 
-Claudeland never asks for browser cookies and does not save a second copy of
+Vibecheck never asks for browser cookies and does not save a second copy of
 your credential.
 
 ## Install the release
 
-Download `claudeland@fabiosm46.dev.shell-extension.zip` and its `.sha256`
+Download `vibecheck@selfref.dev.shell-extension.zip` and its `.sha256`
 companion from the
-[v0.3.1 release](https://github.com/FabioSM46/claudeland/releases/tag/v0.3.1),
+[latest release](https://github.com/SelfRef/vibecheck/releases/latest),
 then, in the download directory, verify and install it for the current user:
 
 ```bash
-ARCHIVE=claudeland@fabiosm46.dev.shell-extension.zip
+ARCHIVE=vibecheck@selfref.dev.shell-extension.zip
 sha256sum --check "$ARCHIVE.sha256"
 gnome-extensions install --force "$ARCHIVE"
 ```
@@ -75,7 +75,7 @@ gnome-extensions install --force "$ARCHIVE"
 Log out and back in after the first installation, then enable it:
 
 ```bash
-gnome-extensions enable claudeland@fabiosm46.dev
+gnome-extensions enable vibecheck@selfref.dev
 ```
 
 On X11, GNOME Shell can instead be restarted with `Alt+F2`, `r`, Enter. That
@@ -85,8 +85,8 @@ back in is the only way to reload the Shell.
 Verify the installation and open preferences with:
 
 ```bash
-gnome-extensions info claudeland@fabiosm46.dev
-gnome-extensions prefs claudeland@fabiosm46.dev
+gnome-extensions info vibecheck@selfref.dev
+gnome-extensions prefs vibecheck@selfref.dev
 ```
 
 ## Install from source
@@ -95,8 +95,8 @@ Clone the public repository, install the locked development dependencies, and
 install the extension for your user:
 
 ```bash
-git clone https://github.com/FabioSM46/claudeland.git
-cd claudeland
+git clone https://github.com/SelfRef/vibecheck.git
+cd vibecheck
 corepack enable
 pnpm install --frozen-lockfile
 pnpm dev:install
@@ -112,7 +112,7 @@ verify the checksum, and run `gnome-extensions install --force` again.
 For a source installation, update the checkout and reinstall the extension:
 
 ```bash
-cd claudeland
+cd vibecheck
 git switch main
 git pull --ff-only
 pnpm install --frozen-lockfile
@@ -125,8 +125,8 @@ instead be restarted with `Alt+F2`, `r`, Enter.
 ## Uninstall
 
 ```bash
-gnome-extensions disable claudeland@fabiosm46.dev
-gnome-extensions uninstall claudeland@fabiosm46.dev
+gnome-extensions disable vibecheck@selfref.dev
+gnome-extensions uninstall vibecheck@selfref.dev
 ```
 
 ## Commands
@@ -206,15 +206,15 @@ last valid snapshot and backs off.
 Claude Code issues a short-lived access token alongside a long-lived refresh
 token, so an access token that expires overnight does not end the session.
 
-When the access token has expired, or a request comes back `401`, Claudeland
+When the access token has expired, or a request comes back `401`, Vibecheck
 asks the Claude Code CLI to renew the session non-interactively and retries the
-request once. Claudeland never speaks the OAuth token protocol itself: the CLI
+request once. Vibecheck never speaks the OAuth token protocol itself: the CLI
 keeps ownership of the client identity, of refresh-token rotation, and of the
 credential file. The refresh token is read from that file, passed to the CLI
 through the child environment, and never stored or logged.
 
 Signing in again is requested only when the refresh token is missing, expired,
-or rejected. After a failed renewal Claudeland waits fifteen minutes before
+or rejected. After a failed renewal Vibecheck waits fifteen minutes before
 trying again.
 
 ## Privacy
@@ -229,7 +229,7 @@ trying again.
 
 ## Languages
 
-English is the source and fallback language. Claudeland follows the GNOME
+English is the source and fallback language. Vibecheck follows the GNOME
 system locale through gettext; Italian is included in the initial release.
 Translations live in `po/` and are compiled into the extension during build.
 
@@ -252,22 +252,22 @@ docs/             Architecture decisions and roadmap
 - The usage endpoint is undocumented and may change without notice.
 - The desktop card lives inside the wallpaper's own actor group, since GNOME
   Shell exposes no stable API dedicated to third-party desktop widgets.
-- A normal “daily quota” is not provided by Claude subscriptions. Claudeland
+- A normal “daily quota” is not provided by Claude subscriptions. Vibecheck
   shows the official five-hour and weekly windows instead.
 - KDE Plasma, Sway, and Hyprland need separate frontends; they are not GNOME
   Shell and cannot load this extension.
 
-## Forking and attribution
+## Contributing
 
-Claudeland does not accept external code contributions or pull requests. Bug
-reports may still be submitted through the issue tracker, and vulnerabilities
-must be reported privately as described in [SECURITY.md](SECURITY.md).
-
-Forks are permitted under the MIT License. Forks and redistributions must keep
-the original `LICENSE` file and its copyright notice, which identifies
-[FabioSM46](https://github.com/FabioSM46) as the original author. Forks are
-independent projects and must not imply official status or endorsement.
+Bug reports and pull requests are welcome; see
+[CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities privately as
+described in [SECURITY.md](SECURITY.md).
 
 ## License
 
 [MIT](LICENSE)
+
+## Credits
+
+Vibecheck began as a fork of Claudeland, originally written by
+[FabioSM46](https://github.com/FabioSM46).

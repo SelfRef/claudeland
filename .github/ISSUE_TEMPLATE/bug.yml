@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible Claudeland problem
+description: Report a reproducible Vibecheck problem
 title: 'bug: '
 labels: [bug]
 body:

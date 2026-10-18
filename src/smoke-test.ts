@@ -25,4 +25,4 @@ if (evaluateSession(credential, now) !== 'renewable') {
   throw new Error('GJS smoke test failed: expired access token must stay renewable');
 }
 
-print('Claudeland GJS smoke test passed');
+print('Vibecheck GJS smoke test passed');

@@ -13,7 +13,7 @@ import Gtk from 'gi://Gtk?version=4.0';
 Gtk.init();
 
 const window = new Gtk.Window({
-  title: `claudeland probe window ${ARGV[0] ?? ''}`.trim(),
+  title: `vibecheck probe window ${ARGV[0] ?? ''}`.trim(),
   default_width: 400,
   default_height: 300,
 });

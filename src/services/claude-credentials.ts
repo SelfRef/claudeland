@@ -6,7 +6,7 @@ import {
   parseCredential,
   type ClaudeCredential,
 } from '../domain/credential.js';
-import { ClaudelandError } from './errors.js';
+import { VibecheckError } from './errors.js';
 
 export type { ClaudeCredential };
 
@@ -29,7 +29,7 @@ export class ClaudeCredentials {
     try {
       bytes = await loadContents(file);
     } catch {
-      throw new ClaudelandError(
+      throw new VibecheckError(
         'credentials-missing',
         'Claude Code credentials were not found. Sign in to continue.',
       );
@@ -39,7 +39,7 @@ export class ClaudeCredentials {
     try {
       payload = JSON.parse(new TextDecoder().decode(bytes)) as unknown;
     } catch {
-      throw new ClaudelandError(
+      throw new VibecheckError(
         'credentials-invalid',
         'The Claude Code credentials file is invalid.',
       );
@@ -49,12 +49,12 @@ export class ClaudeCredentials {
       return parseCredential(payload);
     } catch (error) {
       if (error instanceof InvalidCredentialError) {
-        throw new ClaudelandError(
+        throw new VibecheckError(
           error.problem === 'missing' ? 'credentials-missing' : 'credentials-invalid',
           error.message,
         );
       }
-      throw new ClaudelandError(
+      throw new VibecheckError(
         'credentials-invalid',
         'The Claude Code credentials file is invalid.',
       );

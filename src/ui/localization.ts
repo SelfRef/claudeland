@@ -4,9 +4,9 @@ import GLib from 'gi://GLib';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import type { Translator } from '../domain/usage.js';
-import type { ClaudelandErrorCode } from '../services/errors.js';
+import type { VibecheckErrorCode } from '../services/errors.js';
 
-const ERROR_MESSAGES: Partial<Record<ClaudelandErrorCode, string>> = {
+const ERROR_MESSAGES: Partial<Record<VibecheckErrorCode, string>> = {
   'claude-cli-missing': 'Install Claude Code to authenticate.',
   'not-authenticated': 'Sign in to Claude Code to view usage.',
   'credentials-missing': 'Claude Code credentials were not found. Sign in to continue.',
@@ -22,7 +22,7 @@ const ERROR_MESSAGES: Partial<Record<ClaudelandErrorCode, string>> = {
 
 export const translate: Translator = _;
 
-export function localizedError(code: ClaudelandErrorCode | null, fallback: string | null): string {
+export function localizedError(code: VibecheckErrorCode | null, fallback: string | null): string {
   const message = code ? ERROR_MESSAGES[code] : null;
   return _(message ?? fallback ?? 'Unknown error');
 }

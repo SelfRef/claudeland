@@ -2,7 +2,7 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
 import type { ClaudeCredential } from '../domain/credential.js';
-import { ClaudelandError } from './errors.js';
+import { VibecheckError } from './errors.js';
 
 export interface ClaudeAuthStatus {
   installed: boolean;
@@ -77,7 +77,7 @@ export class ClaudeAuth {
    * Asks the Claude Code CLI to exchange its refresh token for a fresh access
    * token, using the CLI's documented non-interactive login environment.
    *
-   * Claudeland deliberately does not speak the OAuth token protocol itself:
+   * Vibecheck deliberately does not speak the OAuth token protocol itself:
    * the CLI owns the client identity, the rotation, and the credential file
    * format. The refresh token is passed through the child environment, never
    * through argv, and is not retained afterwards.
@@ -90,7 +90,7 @@ export class ClaudeAuth {
       return false;
     }
     if (!GLib.find_program_in_path('claude')) {
-      throw new ClaudelandError(
+      throw new VibecheckError(
         'claude-cli-missing',
         'Claude Code is not installed or is not available in PATH.',
       );
@@ -109,7 +109,7 @@ export class ClaudeAuth {
 
   launchLogin(): void {
     if (!GLib.find_program_in_path('claude')) {
-      throw new ClaudelandError(
+      throw new VibecheckError(
         'claude-cli-missing',
         'Claude Code is not installed or is not available in PATH.',
       );
@@ -129,7 +129,7 @@ export class ClaudeAuth {
       }
     }
 
-    throw new ClaudelandError(
+    throw new VibecheckError(
       'claude-cli-missing',
       'No compatible terminal was found to start Claude sign-in.',
     );

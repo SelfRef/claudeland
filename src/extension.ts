@@ -7,7 +7,7 @@ import { UsageController } from './services/usage-controller.js';
 import { DesktopCard } from './ui/desktop-card.js';
 import { UsageIndicator } from './ui/usage-indicator.js';
 
-export default class ClaudelandExtension extends Extension {
+export default class VibecheckExtension extends Extension {
   private settings: Gio.Settings | null = null;
   private controller: UsageController | null = null;
   private indicator: InstanceType<typeof UsageIndicator> | null = null;
@@ -77,10 +77,10 @@ export default class ClaudelandExtension extends Extension {
       } catch (error) {
         logError(
           error instanceof Error ? error : new Error(String(error)),
-          'Claudeland could not create the desktop card',
+          'Vibecheck could not create the desktop card',
         );
         Main.notifyError(
-          _('Claudeland'),
+          _('Vibecheck'),
           _('The desktop card is unavailable on this GNOME version.'),
         );
       }

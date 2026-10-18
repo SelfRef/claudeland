@@ -9,8 +9,8 @@
 # the module path, so a second copy of the same actors collides on
 # registration.
 set -e
-UUID=claudeland@fabiosm46.dev
-PROBE=uicheck@claudeland.test
+UUID=vibecheck@selfref.dev
+PROBE=uicheck@vibecheck.test
 EXT_DIR="$HOME/.local/share/gnome-shell/extensions"
 STATUS=0
 
@@ -152,15 +152,15 @@ sleep 3
 open_window after
 i=0
 while [ $i -lt 40 ]; do
-  grep -qE "CLAUDELAND UI CHECK" /tmp/shell.log && break
+  grep -qE "VIBECHECK UI CHECK" /tmp/shell.log && break
   i=$((i + 1))
   sleep 1
 done
-if grep -q "CLAUDELAND UI CHECK OK" /tmp/shell.log; then
+if grep -q "VIBECHECK UI CHECK OK" /tmp/shell.log; then
   echo "ui probe: OK"
 else
   echo "ui probe: FAILED"
-  grep -iE "CLAUDELAND UI CHECK|CLAUDELAND UI LAYERS|JS ERROR|claudeland" /tmp/shell.log || echo "(no probe output)"
+  grep -iE "VIBECHECK UI CHECK|VIBECHECK UI LAYERS|JS ERROR|vibecheck" /tmp/shell.log || echo "(no probe output)"
   STATUS=1
 fi
 stop_shell

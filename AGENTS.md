@@ -2,7 +2,7 @@
 
 ## Project
 
-Claudeland is a GNOME Shell extension. It runs on any distribution shipping a
+Vibecheck is a GNOME Shell extension. It runs on any distribution shipping a
 supported GNOME Shell, under X11 and Wayland alike, and shows the remaining
 Claude subscription capacity for the current five-hour window, weekly limits,
 and dynamically discovered model-scoped limits.
@@ -35,7 +35,7 @@ and dynamically discovered model-scoped limits.
 - Do not hard-code Fable or other future models into the parser. Scoped limits
   must be discovered dynamically.
 - Write source and fallback strings in English. Wrap every user-facing string
-  with gettext and update `po/claudeland.pot`; never hard-code Italian in code.
+  with gettext and update `po/vibecheck.pot`; never hard-code Italian in code.
 - Clean up every GNOME signal, timeout, file monitor, and actor in `disable()`
   or `destroy()`.
 - Do not reach into underscore-prefixed GNOME Shell fields. Where a private

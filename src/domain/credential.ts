@@ -1,7 +1,7 @@
 /**
  * Parsing of the Claude Code credential file.
  *
- * The file is owned, written, and rotated by the Claude Code CLI. Claudeland
+ * The file is owned, written, and rotated by the Claude Code CLI. Vibecheck
  * only reads it, so every field is treated as untrusted and optional.
  */
 
@@ -23,7 +23,7 @@ export interface ClaudeCredential extends SessionTiming {
   accessToken: string;
   /**
    * Held in memory only, and only to hand it back to the Claude Code CLI.
-   * It is never persisted, logged, or sent anywhere by Claudeland.
+   * It is never persisted, logged, or sent anywhere by Vibecheck.
    */
   refreshToken: string | null;
   scopes: string[];

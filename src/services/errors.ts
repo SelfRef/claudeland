@@ -1,4 +1,4 @@
-export type ClaudelandErrorCode =
+export type VibecheckErrorCode =
   | 'claude-cli-missing'
   | 'not-authenticated'
   | 'credentials-missing'
@@ -11,19 +11,19 @@ export type ClaudelandErrorCode =
   | 'network-error'
   | 'invalid-response';
 
-export class ClaudelandError extends Error {
+export class VibecheckError extends Error {
   constructor(
-    public readonly code: ClaudelandErrorCode,
+    public readonly code: VibecheckErrorCode,
     message: string,
     public readonly retryAfterSeconds: number | null = null,
   ) {
     super(message);
-    this.name = 'ClaudelandError';
+    this.name = 'VibecheckError';
   }
 }
 
 export function errorMessage(error: unknown): string {
-  if (error instanceof ClaudelandError) {
+  if (error instanceof VibecheckError) {
     return error.message;
   }
   if (error instanceof Error) {

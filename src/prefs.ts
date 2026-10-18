@@ -11,11 +11,11 @@ const POSITIONS = ['top-right', 'top-left', 'bottom-right', 'bottom-left'] as co
 const PANEL_ICONS = ['none', 'color', 'symbolic'] as const;
 const PANEL_LIMITS = ['five_hour', 'seven_day', 'model', 'lowest', 'none'] as const;
 
-export default class ClaudelandPreferences extends ExtensionPreferences {
+export default class VibecheckPreferences extends ExtensionPreferences {
   async fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
     const settings = this.getSettings();
     const page = new Adw.PreferencesPage({
-      title: _('Claudeland'),
+      title: _('Vibecheck'),
       icon_name: 'network-transmit-receive-symbolic',
     });
     window.add(page);
@@ -169,12 +169,12 @@ export default class ClaudelandPreferences extends ExtensionPreferences {
     page.add(about);
     const sourceRow = new Adw.ActionRow({
       title: _('Source code and issue tracker'),
-      subtitle: 'github.com/FabioSM46/claudeland',
+      subtitle: 'github.com/SelfRef/vibecheck',
       activatable: true,
     });
     sourceRow.add_suffix(new Gtk.Image({ icon_name: 'go-next-symbolic' }));
     sourceRow.connect('activated', () => {
-      Gtk.show_uri(window, 'https://github.com/FabioSM46/claudeland', 0);
+      Gtk.show_uri(window, 'https://github.com/SelfRef/vibecheck', 0);
     });
     about.add(sourceRow);
   }

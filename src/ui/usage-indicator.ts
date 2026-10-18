@@ -34,14 +34,14 @@ class UsageIndicatorImpl extends PanelMenu.Button {
     private readonly extensionPath: string,
     openPreferences: () => void,
   ) {
-    super(0, 'Claudeland', false);
+    super(0, 'Vibecheck', false);
     this.popupMenu = this.menu as PopupMenu.PopupMenu;
 
     const box = new St.BoxLayout({
-      style_class: 'panel-status-menu-box claudeland-panel',
+      style_class: 'panel-status-menu-box vibecheck-panel',
       y_align: Clutter.ActorAlign.CENTER,
     });
-    this.panelIcon = new St.Icon({ style_class: 'system-status-icon claudeland-panel-icon' });
+    this.panelIcon = new St.Icon({ style_class: 'system-status-icon vibecheck-panel-icon' });
     box.add_child(this.panelIcon);
     this.panelLabel = new St.Label({
       text: formatMessage(_('Claude %s'), '--'),
@@ -54,7 +54,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
       reactive: false,
       can_focus: false,
     });
-    this.statusItem.add_style_class_name('claudeland-status');
+    this.statusItem.add_style_class_name('vibecheck-status');
     this.popupMenu.addMenuItem(this.statusItem);
     this.popupMenu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
@@ -70,7 +70,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
           this.controller.launchLogin();
         } catch (error) {
           Main.notifyError(
-            _('Claudeland'),
+            _('Vibecheck'),
             _(error instanceof Error ? error.message : String(error)),
           );
         }
@@ -109,7 +109,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
     this.panelIcon.visible = icon !== 'none';
     if (this.panelIcon.visible) {
       // St recolors file icons whose name ends in -symbolic with the panel foreground.
-      const name = icon === 'symbolic' ? 'claudeland-symbolic.svg' : 'claudeland.svg';
+      const name = icon === 'symbolic' ? 'vibecheck-symbolic.svg' : 'vibecheck.svg';
       this.panelIcon.gicon = Gio.icon_new_for_string(`${this.extensionPath}/icons/${name}`);
     }
 
@@ -181,11 +181,11 @@ function createLimitRow(limit: UsageLimit): PopupMenu.PopupBaseMenuItem {
     reactive: false,
     can_focus: false,
   });
-  item.add_style_class_name('claudeland-limit-item');
+  item.add_style_class_name('vibecheck-limit-item');
 
   const content = new St.BoxLayout({
     x_expand: true,
-    style_class: 'claudeland-limit-content',
+    style_class: 'vibecheck-limit-content',
   });
   setBoxLayoutVertical(content);
   const header = new St.BoxLayout({ x_expand: true });
@@ -193,19 +193,19 @@ function createLimitRow(limit: UsageLimit): PopupMenu.PopupBaseMenuItem {
     new St.Label({
       text: localizedLimitLabel(limit, _),
       x_expand: true,
-      style_class: 'claudeland-limit-label',
+      style_class: 'vibecheck-limit-label',
     }),
   );
   const value = new St.Label({
     text: formatMessage(_('%s remaining'), formatPercent(limit.remainingPercent)),
-    style_class: `claudeland-limit-value claudeland-${limit.severity}`,
+    style_class: `vibecheck-limit-value vibecheck-${limit.severity}`,
   });
   header.add_child(value);
   content.add_child(header);
 
-  const track = new St.BoxLayout({ style_class: 'claudeland-progress-track' });
+  const track = new St.BoxLayout({ style_class: 'vibecheck-progress-track' });
   const fill = new St.Widget({
-    style_class: `claudeland-progress-fill claudeland-${limit.severity}`,
+    style_class: `vibecheck-progress-fill vibecheck-${limit.severity}`,
   });
   track.add_child(fill);
   const fraction = Math.min(100, Math.max(0, limit.remainingPercent)) / 100;
@@ -221,7 +221,7 @@ function createLimitRow(limit: UsageLimit): PopupMenu.PopupBaseMenuItem {
   content.add_child(
     new St.Label({
       text: formatTimeRemaining(limit.resetsAt, new Date(), _),
-      style_class: 'claudeland-reset-label',
+      style_class: 'vibecheck-reset-label',
     }),
   );
 

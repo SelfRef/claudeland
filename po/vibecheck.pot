@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Claudeland 0.2.0\n"
-"Report-Msgid-Bugs-To: https://github.com/FabioSM46/claudeland/issues\n"
+"Project-Id-Version: Vibecheck 0.2.0\n"
+"Report-Msgid-Bugs-To: https://github.com/SelfRef/vibecheck/issues\n"
 "POT-Creation-Date: 2026-08-28 21:46+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +64,7 @@ msgstr ""
 msgid "Claude plan"
 msgstr ""
 
-msgid "Claudeland"
+msgid "Vibecheck"
 msgstr ""
 
 msgid "Color"
