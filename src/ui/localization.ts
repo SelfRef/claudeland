@@ -1,3 +1,6 @@
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import type { Translator } from '../domain/usage.js';
@@ -27,4 +30,13 @@ export function localizedError(code: ClaudelandErrorCode | null, fallback: strin
 export function formatMessage(template: string, ...values: Array<string | number>): string {
   let index = 0;
   return template.replace(/%[sd]/g, () => String(values[index++] ?? ''));
+}
+
+/** Time of day in the 12h or 24h format the GNOME clock is set to. */
+export function formatClockTime(isoTime: string): string {
+  const clockFormat = new Gio.Settings({ schema_id: 'org.gnome.desktop.interface' }).get_string(
+    'clock-format',
+  );
+  const time = GLib.DateTime.new_from_unix_local(Math.floor(Date.parse(isoTime) / 1000));
+  return time?.format(clockFormat === '12h' ? '%l:%M %p' : '%H:%M')?.trim() ?? '--';
 }

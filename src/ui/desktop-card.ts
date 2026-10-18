@@ -9,7 +9,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { formatPercent, localizedLimitLabel } from '../domain/usage.js';
 import type { UsageController, UsageState } from '../services/usage-controller.js';
 import { setBoxLayoutVertical } from './compat.js';
-import { formatMessage, localizedError, translate as _ } from './localization.js';
+import { formatClockTime, formatMessage, localizedError, translate as _ } from './localization.js';
 
 export class DesktopCard {
   private readonly actor: St.BoxLayout;
@@ -85,10 +85,7 @@ export class DesktopCard {
   private render(state: Readonly<UsageState>): void {
     this.content.destroy_all_children();
     if (state.snapshot) {
-      const updated = new Date(state.snapshot.fetchedAt).toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
+      const updated = formatClockTime(state.snapshot.fetchedAt);
       const title = formatMessage(
         _('%s · updated %s'),
         state.planLabel ?? _('Claude plan'),

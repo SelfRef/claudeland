@@ -17,7 +17,7 @@ import {
 } from '../domain/usage.js';
 import type { UsageController, UsageState } from '../services/usage-controller.js';
 import { setBoxLayoutVertical } from './compat.js';
-import { formatMessage, localizedError, translate as _ } from './localization.js';
+import { formatClockTime, formatMessage, localizedError, translate as _ } from './localization.js';
 
 class UsageIndicatorImpl extends PanelMenu.Button {
   private readonly panelIcon: St.Icon;
@@ -144,10 +144,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
       const error = localizedError(state.errorCode, state.error);
       this.statusItem.label.text = state.stale ? formatMessage(_('Stale data · %s'), error) : error;
     } else if (state.snapshot) {
-      const updated = new Date(state.snapshot.fetchedAt).toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
+      const updated = formatClockTime(state.snapshot.fetchedAt);
       const title = formatMessage(
         _('%s · updated %s'),
         state.planLabel ?? _('Claude plan'),
