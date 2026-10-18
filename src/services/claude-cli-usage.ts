@@ -1,28 +1,33 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
-import { parseUsageInsights, type UsageInsightPeriod } from '../domain/usage-insights.js';
-import { isRecord } from '../domain/usage.js';
+import { parseUsageCommandStream, type CliUsageReport } from '../domain/usage-insights.js';
 import { communicateUtf8 } from './claude-auth.js';
 
 /** A report that has not finished by then is abandoned. */
 const TIMEOUT_SECONDS = 30;
 
 /**
- * Reads the "What's contributing to your limits usage?" report that Claude
- * Code's `/usage` command builds from the transcripts on this machine. The CLI
- * prints it only as text, so the text is parsed in the domain layer.
+ * Runs Claude Code's `/usage` command. Claude Code then reads its own
+ * credentials, renews its session when needed, and queries the usage endpoint
+ * itself. Its structured report carries the rate limits; the contributing-usage
+ * section, which it builds from the transcripts on this machine, exists only in
+ * the printed text and is parsed in the domain layer.
  *
- * The command runs locally and makes no model request. It loads no settings,
- * so the user's hooks and plugins do not run, and it saves no session, so it
- * does not add itself to the transcripts it reports on.
+ * The command makes no model request. It loads no settings, so the user's
+ * hooks and plugins do not run, and it saves no session, so it does not add
+ * itself to the transcripts it reports on.
  */
-export class ClaudeUsageInsights {
+export class ClaudeCliUsage {
 	private process: Gio.Subprocess | null = null;
 
-	/** Resolves with the report's periods, or null when it is unavailable. */
-	async fetch(): Promise<UsageInsightPeriod[] | null> {
-		if (this.process || !GLib.find_program_in_path('claude')) {
+	static isInstalled(): boolean {
+		return GLib.find_program_in_path('claude') !== null;
+	}
+
+	/** Resolves with the report, or null when the command failed or is busy. */
+	async run(): Promise<CliUsageReport | null> {
+		if (this.process || !ClaudeCliUsage.isInstalled()) {
 			return null;
 		}
 
@@ -42,7 +47,8 @@ export class ClaudeUsageInsights {
 				'',
 				'--no-session-persistence',
 				'--output-format',
-				'json',
+				'stream-json',
+				'--verbose',
 			]);
 		} catch {
 			return null;
@@ -61,11 +67,7 @@ export class ClaudeUsageInsights {
 
 		try {
 			const [, stdout] = await communicateUtf8(process);
-			const parsed = JSON.parse(stdout ?? '') as unknown;
-			if (!isRecord(parsed) || parsed.is_error === true || typeof parsed.result !== 'string') {
-				return null;
-			}
-			return parseUsageInsights(parsed.result);
+			return parseUsageCommandStream(stdout ?? '');
 		} catch {
 			return null;
 		} finally {

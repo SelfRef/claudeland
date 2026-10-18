@@ -47,14 +47,20 @@ msgstr "Solo card"
 msgid "Card position"
 msgstr "Posizione della card"
 
+msgid "Checking…"
+msgstr "Verifica in corso…"
+
 msgid "Choose where to show remaining Claude capacity."
 msgstr "Scegli dove mostrare la capacità Claude rimanente."
 
 msgid "Claude %s"
 msgstr "Claude %s"
 
-msgid "Claude account"
-msgstr "Account Claude"
+msgid "Claude Code"
+msgstr "Claude Code"
+
+msgid "Claude Code could not report usage. Retrying later."
+msgstr "Claude Code non è riuscito a riportare l'utilizzo. Nuovo tentativo più tardi."
 
 msgid "Claude Code credentials were not found. Sign in to continue."
 msgstr "Credenziali Claude Code non trovate. Accedi per continuare."
@@ -83,6 +89,9 @@ msgstr "Capacità critica rimanente"
 msgid "Current session"
 msgstr "Sessione corrente"
 
+msgid "Data source"
+msgstr "Origine dei dati"
+
 msgid "Data unavailable"
 msgstr "Dati non disponibili"
 
@@ -100,6 +109,12 @@ msgstr "Nascosto"
 
 msgid "Install Claude Code to authenticate."
 msgstr "Installa Claude Code per autenticarti."
+
+msgid "Installed and signed in."
+msgstr "Installato e connesso."
+
+msgid "Installed, not signed in."
+msgstr "Installato, accesso non effettuato."
 
 msgid "Loading Claude usage…"
 msgstr "Caricamento utilizzo Claude…"
@@ -125,6 +140,9 @@ msgstr "Nessun terminale compatibile trovato per avviare il login Claude."
 msgid "None"
 msgstr "Nessuno"
 
+msgid "Not installed. Usage is requested directly."
+msgstr "Non installato. L'utilizzo viene richiesto direttamente."
+
 msgid "Open Claude browser sign-in through Claude Code."
 msgstr "Apre il login Claude nel browser tramite Claude Code."
 
@@ -136,6 +154,9 @@ msgstr "Indicatore nel pannello"
 
 msgid "Preferences"
 msgstr "Preferenze"
+
+msgid "Query Anthropic's usage endpoint with Claude Code's credentials instead of running Claude Code."
+msgstr "Interroga l'endpoint di utilizzo di Anthropic con le credenziali di Claude Code invece di eseguire Claude Code."
 
 msgid "Refresh interval"
 msgstr "Intervallo di aggiornamento"
@@ -151,6 +172,9 @@ msgstr "Avviso capacità rimanente"
 
 msgid "Renewing the Claude session…"
 msgstr "Rinnovo della sessione Claude…"
+
+msgid "Request usage directly"
+msgstr "Richiedi l'utilizzo direttamente"
 
 msgid "reset imminent"
 msgstr "reset imminente"

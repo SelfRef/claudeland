@@ -9,6 +9,8 @@ export function localizedError(code: VibecheckErrorCode): string {
 	switch (code) {
 		case 'claude-cli-missing':
 			return _('Install Claude Code to authenticate.');
+		case 'claude-cli-failed':
+			return _('Claude Code could not report usage. Retrying later.');
 		case 'terminal-missing':
 			return _('No compatible terminal was found to start Claude sign-in.');
 		case 'not-authenticated':

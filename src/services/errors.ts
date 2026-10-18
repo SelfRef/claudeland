@@ -1,5 +1,6 @@
 export type VibecheckErrorCode =
 	| 'claude-cli-missing'
+	| 'claude-cli-failed'
 	| 'terminal-missing'
 	| 'not-authenticated'
 	| 'credentials-missing'

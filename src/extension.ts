@@ -37,6 +37,12 @@ export default class VibecheckExtension extends Extension {
 		]) {
 			this.settings.connectObject(`changed::${key}`, () => this.controller?.redraw(), this);
 		}
+		// A new source is a deliberate switch, so it is fetched from right away.
+		this.settings.connectObject(
+			'changed::direct-requests',
+			() => void this.controller?.refresh(),
+			this,
+		);
 		this.settings.connectObject(
 			'changed::show-insights',
 			() => {

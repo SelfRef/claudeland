@@ -183,6 +183,22 @@ journalctl --user -f -o cat /usr/bin/gnome-shell
 
 ## Authentication and data flow
 
+By default, and whenever Claude Code is installed, Vibecheck runs Claude Code's
+own `/usage` command and reads its report (ADR 004):
+
+```text
+claude -p /usage ──> rate limits + "What's contributing" report
+          │           (Claude Code reads and renews its own session)
+          ▼
+normalizeUsage() ──> UsageSnapshot ──> panel + desktop card
+```
+
+The command makes no model request. It runs without your settings, so your
+hooks and plugins stay idle, and without saving a session.
+
+With **Request usage directly** turned on in the preferences, or without
+Claude Code installed, Vibecheck queries the usage endpoint itself:
+
 ```text
 Claude Code browser login
           │
@@ -203,8 +219,9 @@ last valid snapshot and backs off.
 
 ### Session renewal
 
-Claude Code issues a short-lived access token alongside a long-lived refresh
-token, so an access token that expires overnight does not end the session.
+With direct requests, Vibecheck handles an expired access token itself. Claude
+Code issues a short-lived access token alongside a long-lived refresh token,
+so an access token that expires overnight does not end the session.
 
 When the access token has expired, or a request comes back `401`, Vibecheck
 asks the Claude Code CLI to renew the session non-interactively and retries the

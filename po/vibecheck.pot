@@ -46,13 +46,19 @@ msgstr ""
 msgid "Card position"
 msgstr ""
 
+msgid "Checking…"
+msgstr ""
+
 msgid "Choose where to show remaining Claude capacity."
 msgstr ""
 
 msgid "Claude %s"
 msgstr ""
 
-msgid "Claude account"
+msgid "Claude Code"
+msgstr ""
+
+msgid "Claude Code could not report usage. Retrying later."
 msgstr ""
 
 msgid "Claude Code credentials were not found. Sign in to continue."
@@ -82,6 +88,9 @@ msgstr ""
 msgid "Current session"
 msgstr ""
 
+msgid "Data source"
+msgstr ""
+
 msgid "Data unavailable"
 msgstr ""
 
@@ -98,6 +107,12 @@ msgid "Hidden"
 msgstr ""
 
 msgid "Install Claude Code to authenticate."
+msgstr ""
+
+msgid "Installed and signed in."
+msgstr ""
+
+msgid "Installed, not signed in."
 msgstr ""
 
 msgid "Loading Claude usage…"
@@ -124,6 +139,9 @@ msgstr ""
 msgid "None"
 msgstr ""
 
+msgid "Not installed. Usage is requested directly."
+msgstr ""
+
 msgid "Open Claude browser sign-in through Claude Code."
 msgstr ""
 
@@ -134,6 +152,9 @@ msgid "Panel indicator"
 msgstr ""
 
 msgid "Preferences"
+msgstr ""
+
+msgid "Query Anthropic's usage endpoint with Claude Code's credentials instead of running Claude Code."
 msgstr ""
 
 msgid "Refresh interval"
@@ -149,6 +170,9 @@ msgid "Remaining capacity warning"
 msgstr ""
 
 msgid "Renewing the Claude session…"
+msgstr ""
+
+msgid "Request usage directly"
 msgstr ""
 
 msgid "reset imminent"

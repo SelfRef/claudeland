@@ -1,3 +1,5 @@
+import { isRecord } from './usage.js';
+
 /**
  * One period of Claude Code's "What's contributing to your limits usage?"
  * report, such as the last 24 hours: a title line and its findings.
@@ -5,6 +7,48 @@
 export interface UsageInsightPeriod {
 	title: string;
 	lines: string[];
+}
+
+export interface CliUsageReport {
+	/**
+	 * The rate limits Claude Code fetched for its own `/usage` screen, in the
+	 * usage endpoint's shape, or null when it reported none, such as while
+	 * signed out.
+	 */
+	rateLimits: unknown;
+	/** What contributes to usage on this machine, from the printed report. */
+	insights: UsageInsightPeriod[];
+}
+
+/**
+ * Reads the JSON lines `claude -p /usage --output-format stream-json --verbose`
+ * prints: the structured report on the command's message, and the printed text
+ * on the final result. Returns null when the command reported an error or
+ * never finished.
+ */
+export function parseUsageCommandStream(stdout: string): CliUsageReport | null {
+	let rateLimits: unknown = null;
+	let text: string | null = null;
+	for (const line of stdout.split('\n')) {
+		let event: unknown;
+		try {
+			event = JSON.parse(line);
+		} catch {
+			continue;
+		}
+		if (!isRecord(event)) {
+			continue;
+		}
+		if (event.type === 'assistant' && isRecord(event.usage_report)) {
+			rateLimits = event.usage_report.rate_limits ?? null;
+		} else if (event.type === 'result') {
+			if (event.is_error === true || typeof event.result !== 'string') {
+				return null;
+			}
+			text = event.result;
+		}
+	}
+	return text === null ? null : { rateLimits, insights: parseUsageInsights(text) };
 }
 
 /** Bounds on untrusted CLI output, so a runaway report cannot flood the menu. */

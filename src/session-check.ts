@@ -175,6 +175,8 @@ async function main(): Promise<void> {
 		{
 			get_uint: (key: string) => (key === 'refresh-interval' ? 5 : 20),
 			get_string: () => 'both',
+			// The renewal path under test belongs to direct requests.
+			get_boolean: (key: string) => key === 'direct-requests',
 		} as unknown as Gio.Settings,
 		{
 			credentials: {
@@ -208,8 +210,8 @@ async function main(): Promise<void> {
 				},
 				destroy() {},
 			},
-			insights: {
-				fetch: async () => null,
+			cli: {
+				run: async () => null,
 				destroy() {},
 			},
 		},

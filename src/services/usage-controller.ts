@@ -4,11 +4,17 @@ import GLib from 'gi://GLib';
 import type { ClaudeCredential } from '../domain/credential.js';
 import { canRenew, evaluateSession, isAccessTokenUsable } from '../domain/session.js';
 import type { UsageInsightPeriod } from '../domain/usage-insights.js';
-import { severityFor, type UsageSnapshot } from '../domain/usage.js';
+import {
+	formatPlanLabel,
+	normalizeUsage,
+	severityFor,
+	type NormalizeOptions,
+	type UsageSnapshot,
+} from '../domain/usage.js';
 import { ClaudeAuth, launchLogin } from './claude-auth.js';
+import { ClaudeCliUsage } from './claude-cli-usage.js';
 import { ClaudeCredentials } from './claude-credentials.js';
 import { ClaudeUsageClient } from './claude-usage-client.js';
-import { ClaudeUsageInsights } from './claude-usage-insights.js';
 import { VibecheckError } from './errors.js';
 
 export interface UsageState {
@@ -27,13 +33,20 @@ type StateListener = (state: Readonly<UsageState>) => void;
 type UsageClient = Pick<ClaudeUsageClient, 'fetch' | 'destroy'>;
 type UsageAuth = Pick<ClaudeAuth, 'status' | 'renew' | 'destroy'>;
 type UsageCredentials = Pick<ClaudeCredentials, 'read'>;
-type UsageInsights = Pick<ClaudeUsageInsights, 'fetch' | 'destroy'>;
+type UsageCli = Pick<ClaudeCliUsage, 'run' | 'destroy'>;
 
 export interface UsageControllerDependencies {
 	client?: UsageClient;
 	auth?: UsageAuth;
 	credentials?: UsageCredentials;
-	insights?: UsageInsights;
+	cli?: UsageCli;
+}
+
+interface UsageResult {
+	snapshot: UsageSnapshot;
+	planLabel: string | null;
+	/** Present when the same source also reported what contributes to usage. */
+	insights?: UsageInsightPeriod[];
 }
 
 /**
@@ -43,8 +56,9 @@ export interface UsageControllerDependencies {
 const RENEWAL_COOLDOWN_MS = 15 * 60 * 1000;
 
 /**
- * The contributing-usage report covers the last day and week, so it changes
- * slowly, and each report is a CLI run that also queries the usage endpoint.
+ * With direct requests, the contributing-usage report still comes from the
+ * CLI. It covers the last day and week, so it changes slowly, and each report
+ * is a CLI run that also queries the usage endpoint.
  */
 const INSIGHTS_INTERVAL_MS = 15 * 60 * 1000;
 
@@ -53,7 +67,7 @@ export class UsageController {
 	private client: UsageClient | null;
 	private auth: UsageAuth | null;
 	private credentials: UsageCredentials | null;
-	private insights: UsageInsights | null;
+	private cli: UsageCli | null;
 	private timeoutId: number | null = null;
 	private renewalBlockedUntil = 0;
 	private insightsRequestedAt = 0;
@@ -74,7 +88,7 @@ export class UsageController {
 		this.client = dependencies.client ?? new ClaudeUsageClient();
 		this.auth = dependencies.auth ?? new ClaudeAuth();
 		this.credentials = dependencies.credentials ?? new ClaudeCredentials();
-		this.insights = dependencies.insights ?? new ClaudeUsageInsights();
+		this.cli = dependencies.cli ?? new ClaudeCliUsage();
 	}
 
 	start(): void {
@@ -113,62 +127,29 @@ export class UsageController {
 		let nextDelay = this.baseIntervalSeconds();
 
 		try {
-			let credential = await this.readCredential();
-			if (this.client !== client) {
-				return;
-			}
-
-			// An expired access token is not a lost session: the CLI can still
-			// exchange its refresh token for a new one.
-			let renewed = false;
-			if (evaluateSession(credential) !== 'valid') {
-				credential = await this.renewCredential(credential);
-				renewed = true;
-				if (this.client !== client) {
-					return;
-				}
-			}
-
 			const options = {
 				warningRemaining: this.settings.get_uint('warning-remaining'),
 				criticalRemaining: this.settings.get_uint('critical-remaining'),
 			};
-
-			let result;
-			try {
-				result = await client.fetch(credential, options);
-			} catch (error) {
-				// The server is the authority on token validity: honour a 401 even
-				// when the recorded expiry still looked fine.
-				if (
-					!renewed &&
-					error instanceof VibecheckError &&
-					error.code === 'unauthorized' &&
-					canRenew(credential)
-				) {
-					credential = await this.renewCredential(credential);
-					if (this.client !== client) {
-						return;
-					}
-					result = await client.fetch(credential, options);
-				} else {
-					throw error;
-				}
-			}
-
-			if (this.client !== client) {
+			const result = this.usesCli()
+				? await this.fetchFromCli(options)
+				: await this.fetchDirectly(client, options);
+			if (this.client !== client || !result) {
 				return;
 			}
-			this.renewalBlockedUntil = 0;
+
 			this.setState({
 				snapshot: result.snapshot,
 				planLabel: result.planLabel,
+				insights: result.insights ?? this.state.insights,
 				loading: false,
 				renewing: false,
 				stale: false,
 				errorCode: null,
 			});
-			void this.refreshInsights();
+			if (!result.insights) {
+				void this.refreshInsights();
+			}
 		} catch (error) {
 			if (this.client !== client) {
 				return;
@@ -190,13 +171,15 @@ export class UsageController {
 	}
 
 	/**
-	 * Asks Claude Code for its contributing-usage report while the report is
-	 * shown somewhere, at most once per interval whether or not it succeeds.
+	 * With direct requests, asks Claude Code for its contributing-usage report
+	 * while the report is shown somewhere, at most once per interval whether or
+	 * not it succeeds. Through the CLI, every refresh already includes it.
 	 */
 	async refreshInsights(): Promise<void> {
-		const insights = this.insights;
+		const cli = this.cli;
 		if (
-			!insights ||
+			!cli ||
+			this.usesCli() ||
 			this.settings.get_string('show-insights') === 'none' ||
 			Date.now() - this.insightsRequestedAt < INSIGHTS_INTERVAL_MS
 		) {
@@ -204,9 +187,105 @@ export class UsageController {
 		}
 
 		this.insightsRequestedAt = Date.now();
-		const periods = await insights.fetch();
-		if (this.insights === insights && periods !== null) {
-			this.setState({ insights: periods });
+		const report = await cli.run();
+		if (this.cli === cli && report) {
+			this.setState({ insights: report.insights });
+		}
+	}
+
+	/** Claude Code is the default source; direct requests are the fallback. */
+	private usesCli(): boolean {
+		return !this.settings.get_boolean('direct-requests') && ClaudeCliUsage.isInstalled();
+	}
+
+	/**
+	 * Asks Claude Code for usage. It reads and renews its own session, so this
+	 * path needs no credential handling beyond naming the plan.
+	 */
+	private async fetchFromCli(options: NormalizeOptions): Promise<UsageResult | null> {
+		const cli = this.cli;
+		if (!cli) {
+			return null;
+		}
+		const report = await cli.run();
+		if (this.cli !== cli) {
+			return null;
+		}
+		if (!report) {
+			throw new VibecheckError('claude-cli-failed');
+		}
+		if (!report.rateLimits) {
+			// Claude Code reports no limits while signed out, and says nothing else.
+			const status = await this.auth?.status();
+			throw new VibecheckError(
+				status && !status.loggedIn ? 'not-authenticated' : 'claude-cli-failed',
+			);
+		}
+
+		let snapshot: UsageSnapshot;
+		try {
+			snapshot = normalizeUsage(report.rateLimits, options);
+		} catch {
+			throw new VibecheckError('invalid-response');
+		}
+		return { snapshot, planLabel: await this.readPlanLabel(), insights: report.insights };
+	}
+
+	/** Queries the usage endpoint with Claude Code's credential, renewing it first if needed. */
+	private async fetchDirectly(
+		client: UsageClient,
+		options: NormalizeOptions,
+	): Promise<UsageResult | null> {
+		let credential = await this.readCredential();
+		if (this.client !== client) {
+			return null;
+		}
+
+		// An expired access token is not a lost session: the CLI can still
+		// exchange its refresh token for a new one.
+		let renewed = false;
+		if (evaluateSession(credential) !== 'valid') {
+			credential = await this.renewCredential(credential);
+			renewed = true;
+			if (this.client !== client) {
+				return null;
+			}
+		}
+
+		let result;
+		try {
+			result = await client.fetch(credential, options);
+		} catch (error) {
+			// The server is the authority on token validity: honour a 401 even
+			// when the recorded expiry still looked fine.
+			if (
+				!renewed &&
+				error instanceof VibecheckError &&
+				error.code === 'unauthorized' &&
+				canRenew(credential)
+			) {
+				credential = await this.renewCredential(credential);
+				if (this.client !== client) {
+					return null;
+				}
+				result = await client.fetch(credential, options);
+			} else {
+				throw error;
+			}
+		}
+		this.renewalBlockedUntil = 0;
+		return result;
+	}
+
+	/** The plan named in Claude Code's credential file, which only the CLI writes. */
+	private async readPlanLabel(): Promise<string | null> {
+		try {
+			const credential = await this.credentials?.read();
+			return credential
+				? formatPlanLabel(credential.subscriptionType, credential.rateLimitTier)
+				: null;
+		} catch {
+			return null;
 		}
 	}
 
@@ -219,11 +298,11 @@ export class UsageController {
 	destroy(): void {
 		const client = this.client;
 		const auth = this.auth;
-		const insights = this.insights;
+		const cli = this.cli;
 		this.client = null;
 		this.auth = null;
 		this.credentials = null;
-		this.insights = null;
+		this.cli = null;
 		if (this.timeoutId !== null) {
 			GLib.Source.remove(this.timeoutId);
 			this.timeoutId = null;
@@ -231,7 +310,7 @@ export class UsageController {
 		this.listeners.clear();
 		auth?.destroy();
 		client?.destroy();
-		insights?.destroy();
+		cli?.destroy();
 	}
 
 	/**

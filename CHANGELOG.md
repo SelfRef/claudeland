@@ -21,9 +21,18 @@ the project follows [Semantic Versioning](https://semver.org/).
   Claude Code's `/usage` report: request and session counts, behaviors such as
   long context or subagent-heavy sessions, and top subagents and MCP servers.
   Shown in the menu and on the card by default; a setting limits it to one of
-  them or hides it. Refreshed at most every 15 minutes.
+  them or hides it. Refreshed with every poll through Claude Code, otherwise
+  at most every 15 minutes.
 
 ### Changed
+
+- Usage is read through Claude Code's `/usage` command whenever Claude Code is
+  installed, so Claude Code handles the session and the usage endpoint. A
+  "Request usage directly" setting restores direct requests, which are also
+  used without Claude Code.
+- The Claude account preferences are now Data source: they show whether
+  Claude Code is installed and signed in, and offer sign-in only when it is
+  needed.
 
 - The project is renamed to Vibecheck, with the extension UUID
   `vibecheck@selfref.dev` and settings schema

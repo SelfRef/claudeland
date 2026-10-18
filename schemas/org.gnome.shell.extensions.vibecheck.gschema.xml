@@ -55,6 +55,11 @@
 			<default>'top-right'</default>
 			<summary>Desktop card position</summary>
 		</key>
+		<key name="direct-requests" type="b">
+			<default>false</default>
+			<summary>Query the usage endpoint directly instead of through Claude Code</summary>
+			<description>Claude Code is used whenever it is installed unless this is set. Without Claude Code, usage is always requested directly.</description>
+		</key>
 		<key name="refresh-interval" type="u">
 			<range min="1" max="60"/>
 			<default>5</default>

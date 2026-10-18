@@ -3,12 +3,46 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { parseUsageInsights } from '../src/domain/usage-insights.js';
+import { parseUsageCommandStream, parseUsageInsights } from '../src/domain/usage-insights.js';
+import { normalizeUsage } from '../src/domain/usage.js';
 
-const usageCommand = readFileSync(
-	fileURLToPath(new URL('./fixtures/usage-command.txt', import.meta.url)),
-	'utf8',
-);
+function fixture(name: string): string {
+	return readFileSync(fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url)), 'utf8');
+}
+
+const usageCommand = fixture('usage-command.txt');
+
+describe('parseUsageCommandStream', () => {
+	it('reads the rate limits and the contributing-usage report from one run', () => {
+		const report = parseUsageCommandStream(fixture('usage-command-stream.jsonl'));
+
+		expect(report?.insights).toEqual([
+			{
+				title: 'Last 24h · 387 requests · 10 sessions',
+				lines: ['32% of your usage was at >150k context', 'Top subagents: general-purpose 5%'],
+			},
+		]);
+		expect(normalizeUsage(report?.rateLimits).limits.map((limit) => limit.id)).toEqual([
+			'five_hour',
+			'seven_day',
+			'seven_day_fable',
+		]);
+	});
+
+	it('reports no limits while signed out', () => {
+		const signedOut = [
+			'{"type":"assistant","usage_report":null,"message":{"content":[]}}',
+			'{"type":"result","is_error":false,"result":"Total cost: $0.0000"}',
+		].join('\n');
+		expect(parseUsageCommandStream(signedOut)).toEqual({ rateLimits: null, insights: [] });
+	});
+
+	it('rejects failed or unfinished runs', () => {
+		expect(parseUsageCommandStream('{"type":"result","is_error":true,"result":"x"}')).toBeNull();
+		expect(parseUsageCommandStream('{"type":"system","subtype":"init"}\nnot json')).toBeNull();
+		expect(parseUsageCommandStream('')).toBeNull();
+	});
+});
 
 describe('parseUsageInsights', () => {
 	it('reads each period of the contributing-usage section', () => {

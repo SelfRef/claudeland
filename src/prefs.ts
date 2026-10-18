@@ -7,7 +7,7 @@ import {
 	gettext as _,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-import { launchLogin } from './services/claude-auth.js';
+import { ClaudeAuth, launchLogin } from './services/claude-auth.js';
 import { VibecheckError } from './services/errors.js';
 
 const POSITIONS = ['top-right', 'top-left', 'bottom-right', 'bottom-left'] as const;
@@ -158,15 +158,32 @@ export default class VibecheckPreferences extends ExtensionPreferences {
 			),
 		);
 
-		const account = new Adw.PreferencesGroup({
-			title: _('Claude account'),
+		const source = new Adw.PreferencesGroup({
+			title: _('Data source'),
 			description: _('Sign-in is handled by the official Claude Code CLI.'),
 		});
-		page.add(account);
+		page.add(source);
+
+		const cliRow = new Adw.ActionRow({
+			title: _('Claude Code'),
+			subtitle: _('Checking…'),
+		});
+		source.add(cliRow);
+
+		const directRow = boundSwitch(
+			settings,
+			'direct-requests',
+			_('Request usage directly'),
+			_(
+				"Query Anthropic's usage endpoint with Claude Code's credentials instead of running Claude Code.",
+			),
+		);
+		source.add(directRow);
 
 		const loginRow = new Adw.ActionRow({
 			title: _('Sign in or renew the session'),
 			subtitle: _('Open Claude browser sign-in through Claude Code.'),
+			visible: false,
 		});
 		const loginButton = new Gtk.Button({
 			label: _('Sign in'),
@@ -192,7 +209,40 @@ export default class VibecheckPreferences extends ExtensionPreferences {
 		});
 		loginRow.add_suffix(loginButton);
 		loginRow.activatable_widget = loginButton;
-		account.add(loginRow);
+		source.add(loginRow);
+
+		const auth = new ClaudeAuth();
+		let checking = false;
+		const updateStatus = async () => {
+			if (checking) {
+				return;
+			}
+			checking = true;
+			try {
+				const status = await auth.status();
+				cliRow.subtitle = !status.installed
+					? _('Not installed. Usage is requested directly.')
+					: status.loggedIn
+						? _('Installed and signed in.')
+						: _('Installed, not signed in.');
+				// Without Claude Code there is nothing to choose and no one to sign in with.
+				directRow.sensitive = status.installed;
+				loginRow.visible = status.installed && !status.loggedIn;
+			} finally {
+				checking = false;
+			}
+		};
+		void updateStatus();
+		// Sign-in happens in a terminal, so check again when the user comes back.
+		window.connect('notify::is-active', () => {
+			if (window.is_active) {
+				void updateStatus();
+			}
+		});
+		window.connect('close-request', () => {
+			auth.destroy();
+			return false;
+		});
 	}
 }
 

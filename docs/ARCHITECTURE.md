@@ -45,17 +45,20 @@ header. It performs one request with the credential it is given, converts
 transport failures into typed errors, and hands untrusted JSON to the domain
 normalizer.
 
-`ClaudeUsageInsights` runs `claude -p /usage` for the contributing-usage
-report, which Claude Code builds from local transcripts and only prints as
-text. The command makes no model request; it loads no settings, so user hooks
-and plugins stay idle, and saves no session, so it is not counted in its own
-report.
+`ClaudeCliUsage` runs `claude -p /usage` and returns its structured rate
+limits and its contributing-usage report, which Claude Code builds from local
+transcripts and only prints as text. The command makes no model request; it
+loads no settings, so user hooks and plugins stay idle, and saves no session,
+so it is not counted in its own report.
 
-`UsageController` owns the polling loop and the session state machine: read the
-credential, renew it when the access token is expired or expiring, request
-usage, and retry once after a renewal triggered by an HTTP 401. Usage polling
-spawns no subprocess. The contributing-usage report is requested after a
-successful poll, at most every 15 minutes, and only while it is shown.
+`UsageController` owns the polling loop and picks the source on every poll
+(ADR 004). With Claude Code installed and direct requests off, it runs
+`ClaudeCliUsage`, and Claude Code handles the session. Otherwise it runs the
+session state machine: read the credential, renew it when the access token is
+expired or expiring, request usage, and retry once after a renewal triggered by
+an HTTP 401. Direct polling spawns no subprocess, except for the
+contributing-usage report, requested after a successful poll at most every 15
+minutes and only while it is shown.
 
 ### UI
 
