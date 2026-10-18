@@ -1,6 +1,7 @@
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
+import Pango from 'gi://Pango';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -99,18 +100,20 @@ export class DesktopCard {
     }
 
     if (!state.snapshot) {
-      this.content.add_child(
-        new St.Label({
-          text: state.renewing
-            ? _('Renewing the Claude session…')
-            : state.loading
-              ? _('Loading…')
-              : state.error
-                ? localizedError(state.errorCode, state.error)
-                : _('Data unavailable'),
-          style_class: 'claudeland-desktop-empty',
-        }),
-      );
+      const message = new St.Label({
+        text: state.renewing
+          ? _('Renewing the Claude session…')
+          : state.loading
+            ? _('Loading…')
+            : state.error
+              ? localizedError(state.errorCode, state.error)
+              : _('Data unavailable'),
+        style_class: 'claudeland-desktop-empty',
+      });
+      // Error messages run longer than the card is wide; wrap them in full.
+      message.clutter_text.line_wrap = true;
+      message.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
+      this.content.add_child(message);
       this.queuePosition();
       return;
     }

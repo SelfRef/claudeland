@@ -221,8 +221,8 @@ msgstr "La card desktop non è disponibile su questa versione di GNOME."
 msgid "Time until reset"
 msgstr "Tempo al reset"
 
-msgid "Too many requests. Claudeland will try again later."
-msgstr "Troppe richieste. Claudeland riproverà più tardi."
+msgid "Too many requests. Retrying later."
+msgstr "Troppe richieste. Nuovo tentativo più tardi."
 
 msgid "Top left"
 msgstr "In alto a sinistra"

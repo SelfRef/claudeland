@@ -53,7 +53,7 @@ export class ClaudeUsageClient {
     if (status === 429) {
       throw new ClaudelandError(
         'rate-limited',
-        'Too many requests. Claudeland will try again later.',
+        'Too many requests. Retrying later.',
         parseRetryAfter(message),
       );
     }

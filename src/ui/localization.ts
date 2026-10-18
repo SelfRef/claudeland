@@ -11,7 +11,7 @@ const ERROR_MESSAGES: Partial<Record<ClaudelandErrorCode, string>> = {
   'credentials-expired': 'The Claude session has expired. Sign in again.',
   'renewal-failed': 'The Claude session could not be renewed automatically. Retrying later.',
   unauthorized: 'The Claude session is no longer valid. Sign in again.',
-  'rate-limited': 'Too many requests. Claudeland will try again later.',
+  'rate-limited': 'Too many requests. Retrying later.',
   'server-error': 'Anthropic is currently unavailable.',
   'network-error': 'Could not reach Anthropic. Check your connection.',
   'invalid-response': 'Anthropic returned an invalid response.',

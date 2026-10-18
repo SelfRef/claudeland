@@ -101,5 +101,6 @@
 }
 
 .claudeland-desktop-empty {
+  max-width: 260px;
   color: #aaa7a2;
 }

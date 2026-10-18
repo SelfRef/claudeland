@@ -220,7 +220,7 @@ msgstr ""
 msgid "Time until reset"
 msgstr ""
 
-msgid "Too many requests. Claudeland will try again later."
+msgid "Too many requests. Retrying later."
 msgstr ""
 
 msgid "Top left"
