@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. The
 format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 the project follows [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## Unreleased
 
 ### Changed
 
@@ -15,7 +15,7 @@ the project follows [Semantic Versioning](https://semver.org/).
 - Polling no longer stops for good when `claude auth status` hangs; the check
   now gives up after 15 seconds.
 
-## [1.0.0] - 2026-10-18
+## 1.0.0 - 2026-10-18
 
 ### Added
 
@@ -44,7 +44,6 @@ the project follows [Semantic Versioning](https://semver.org/).
 - The Claude account preferences are now Data source: they show whether
   Claude Code is installed and signed in, and offer sign-in only when it is
   needed.
-
 - The project is renamed to Vibecheck, with the extension UUID
   `vibecheck@selfref.dev` and settings schema
   `org.gnome.shell.extensions.vibecheck`. Settings from Claudeland do not carry
@@ -73,7 +72,7 @@ the project follows [Semantic Versioning](https://semver.org/).
 - The compact panel switch, replaced by the panel value choices.
 - The source code link in Preferences; the Extensions app already links to it.
 
-## [0.3.1] - 2026-09-28
+## 0.3.1 - 2026-09-28
 
 ### Changed
 
@@ -88,7 +87,7 @@ the project follows [Semantic Versioning](https://semver.org/).
 - The rejected GNOME Shell 42 through 44 package, its build shims, compatibility
   UI fallbacks, and legacy container definitions.
 
-## [0.3.0] - 2026-09-03
+## 0.3.0 - 2026-09-03
 
 ### Added
 
@@ -116,7 +115,7 @@ the project follows [Semantic Versioning](https://semver.org/).
   It runs on any distribution shipping a supported GNOME Shell, under X11 and
   Wayland alike.
 
-## [0.2.0] - 2026-08-30
+## 0.2.0 - 2026-08-30
 
 ### Added
 
@@ -164,7 +163,7 @@ the project follows [Semantic Versioning](https://semver.org/).
 - Keep bottom-positioned desktop cards inside the monitor after their content
   changes height.
 
-## [0.1.0] - 2026-08-28
+## 0.1.0 - 2026-08-28
 
 ### Added
 
