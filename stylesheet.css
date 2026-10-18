@@ -8,7 +8,6 @@
 
 .vibecheck-status {
 	max-width: 420px;
-	color: #c9c6c1;
 }
 
 .vibecheck-limit-item {
@@ -34,7 +33,7 @@
 .vibecheck-progress-track {
 	height: 5px;
 	border-radius: 3px;
-	background-color: rgba(255, 255, 255, 0.14);
+	background-color: rgba(128, 128, 128, 0.3);
 }
 
 .vibecheck-progress-fill {
@@ -44,7 +43,6 @@
 }
 
 .vibecheck-reset-label {
-	color: #9b9893;
 	font-size: 0.85em;
 }
 

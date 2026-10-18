@@ -35,6 +35,8 @@ the project follows [Semantic Versioning](https://semver.org/).
   remaining, and the weekly limit no longer appears twice.
 - The Sign in button in Preferences reports a missing Claude Code or terminal
   instead of doing nothing.
+- Menu text and the progress track follow the Shell style instead of assuming
+  a dark menu.
 
 ### Removed
 

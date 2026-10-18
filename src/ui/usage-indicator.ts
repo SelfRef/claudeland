@@ -215,6 +215,8 @@ function createLimitRow(limit: UsageLimit): PopupMenu.PopupBaseMenuItem {
 		new St.Label({
 			text: formatTimeRemaining(limit.resetsAt, new Date(), _),
 			style_class: 'vibecheck-reset-label',
+			// Dimmed rather than recolored, so it follows a light or dark menu.
+			opacity: 180,
 		}),
 	);
 
