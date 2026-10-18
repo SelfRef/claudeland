@@ -6,6 +6,7 @@
  */
 
 import type { SessionTiming } from './session.js';
+import { isRecord } from './usage.js';
 
 export type CredentialProblem = 'missing' | 'invalid';
 
@@ -64,23 +65,6 @@ export function parseCredential(payload: unknown): ClaudeCredential {
 		subscriptionType: readString(oauth.subscriptionType),
 		rateLimitTier: readString(oauth.rateLimitTier),
 	};
-}
-
-/**
- * A view of a credential that is safe to log or include in an error.
- */
-export function redactCredential(credential: ClaudeCredential): Record<string, unknown> {
-	return {
-		accessToken: '<redacted>',
-		refreshToken: credential.refreshToken ? '<redacted>' : null,
-		accessTokenExpiresAt: credential.accessTokenExpiresAt,
-		refreshTokenExpiresAt: credential.refreshTokenExpiresAt,
-		scopeCount: credential.scopes.length,
-	};
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function readString(value: unknown): string | null {

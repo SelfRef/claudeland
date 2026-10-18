@@ -337,7 +337,7 @@ function firstString(...values: unknown[]): string | null {
 	return null;
 }
 
-function isRecord(value: unknown): value is UnknownRecord {
+export function isRecord(value: unknown): value is UnknownRecord {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 

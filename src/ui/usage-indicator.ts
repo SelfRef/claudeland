@@ -27,7 +27,6 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 	private readonly statusItem: PopupMenu.PopupMenuItem;
 	private readonly limitsSection: PopupMenu.PopupMenuSection;
 	private readonly loginItem: PopupMenu.PopupMenuItem;
-	private readonly popupMenu: PopupMenu.PopupMenu;
 	private readonly unsubscribe: () => void;
 
 	constructor(
@@ -37,8 +36,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 		openPreferences: () => void,
 	) {
 		super(0, 'Vibecheck', false);
-		this.popupMenu = this.menu as PopupMenu.PopupMenu;
-
+		const menu = this.menu as PopupMenu.PopupMenu;
 		const box = new St.BoxLayout({
 			style_class: 'panel-status-menu-box vibecheck-panel',
 			y_align: Clutter.ActorAlign.CENTER,
@@ -57,12 +55,12 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 			can_focus: false,
 		});
 		this.statusItem.add_style_class_name('vibecheck-status');
-		this.popupMenu.addMenuItem(this.statusItem);
-		this.popupMenu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+		menu.addMenuItem(this.statusItem);
+		menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
 		this.limitsSection = new PopupMenu.PopupMenuSection();
-		this.popupMenu.addMenuItem(this.limitsSection);
-		this.popupMenu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+		menu.addMenuItem(this.limitsSection);
+		menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
 		this.loginItem = new PopupMenu.PopupMenuItem(_('Sign in / renew session'));
 		this.loginItem.connectObject(
@@ -79,7 +77,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 			},
 			this,
 		);
-		this.popupMenu.addMenuItem(this.loginItem);
+		menu.addMenuItem(this.loginItem);
 
 		const refreshItem = new PopupMenu.PopupMenuItem(_('Refresh now'));
 		// PopupBaseMenuItem.activate() emits the menu action and closes its parent.
@@ -87,11 +85,11 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 		refreshItem.activate = (_event: Clutter.Event) => {
 			void this.controller.refresh();
 		};
-		this.popupMenu.addMenuItem(refreshItem);
+		menu.addMenuItem(refreshItem);
 
 		const settingsItem = new PopupMenu.PopupMenuItem(_('Preferences'));
 		settingsItem.connectObject('activate', openPreferences, this);
-		this.popupMenu.addMenuItem(settingsItem);
+		menu.addMenuItem(settingsItem);
 
 		this.unsubscribe = controller.subscribe((state) => this.render(state));
 	}

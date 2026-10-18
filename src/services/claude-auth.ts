@@ -7,14 +7,6 @@ import { VibecheckError } from './errors.js';
 export interface ClaudeAuthStatus {
 	installed: boolean;
 	loggedIn: boolean;
-	authMethod: string | null;
-	subscriptionType: string | null;
-}
-
-interface RawAuthStatus {
-	loggedIn?: unknown;
-	authMethod?: unknown;
-	subscriptionType?: unknown;
 }
 
 /**
@@ -38,12 +30,7 @@ export class ClaudeAuth {
 
 	async status(): Promise<ClaudeAuthStatus> {
 		if (!GLib.find_program_in_path('claude')) {
-			return {
-				installed: false,
-				loggedIn: false,
-				authMethod: null,
-				subscriptionType: null,
-			};
+			return { installed: false, loggedIn: false };
 		}
 
 		try {
@@ -53,21 +40,10 @@ export class ClaudeAuth {
 			);
 			this.process = process;
 			const [, stdout] = await communicateUtf8(process);
-			const parsed = JSON.parse(stdout ?? '{}') as RawAuthStatus;
-			return {
-				installed: true,
-				loggedIn: parsed.loggedIn === true,
-				authMethod: typeof parsed.authMethod === 'string' ? parsed.authMethod : null,
-				subscriptionType:
-					typeof parsed.subscriptionType === 'string' ? parsed.subscriptionType : null,
-			};
+			const parsed = JSON.parse(stdout ?? '{}') as { loggedIn?: unknown };
+			return { installed: true, loggedIn: parsed.loggedIn === true };
 		} catch {
-			return {
-				installed: true,
-				loggedIn: false,
-				authMethod: null,
-				subscriptionType: null,
-			};
+			return { installed: true, loggedIn: false };
 		} finally {
 			this.process = null;
 		}

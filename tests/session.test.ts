@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-	InvalidCredentialError,
-	parseCredential,
-	redactCredential,
-} from '../src/domain/credential.js';
+import { InvalidCredentialError, parseCredential } from '../src/domain/credential.js';
 import {
 	ACCESS_TOKEN_SKEW_MS,
 	canRenew,
@@ -124,13 +120,5 @@ describe('parseCredential', () => {
 		} catch (error) {
 			expect((error as InvalidCredentialError).problem).toBe('invalid');
 		}
-	});
-
-	it('never exposes token material in its loggable view', () => {
-		const view = JSON.stringify(redactCredential(parseCredential(file)));
-
-		expect(view).not.toContain('access-token-placeholder');
-		expect(view).not.toContain('refresh-token-placeholder');
-		expect(view).toContain('<redacted>');
 	});
 });

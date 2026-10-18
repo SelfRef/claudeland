@@ -193,12 +193,7 @@ async function main(): Promise<void> {
 				},
 			},
 			auth: {
-				status: async () => ({
-					installed: true,
-					loggedIn: true,
-					authMethod: 'claude.ai',
-					subscriptionType: 'max',
-				}),
+				status: async () => ({ installed: true, loggedIn: true }),
 				renew: async () => false,
 				destroy() {},
 			},
