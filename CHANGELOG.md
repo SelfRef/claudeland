@@ -6,6 +6,10 @@ the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- The desktop card is shown by default.
+
 ## [1.0.0] - 2026-10-18
 
 ### Added

@@ -52,7 +52,7 @@ Open them from the top bar menu, the desktop card's right-click menu, or
   weekly limit, or both reset, and a color, symbolic, or hidden icon.
 - **Usage contributors:** in the menu (default), on the card, in both, or
   hidden.
-- **Desktop card:** off by default, placed in any corner of the primary
+- **Desktop card:** on by default, placed in any corner of the primary
   monitor.
 - **Updates and thresholds:** refresh interval, and the remaining percentages
   that turn a limit yellow or red.

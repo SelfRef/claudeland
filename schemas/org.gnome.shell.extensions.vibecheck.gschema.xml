@@ -55,7 +55,7 @@
 			<summary>Where to show what contributes to usage over the last day and week</summary>
 		</key>
 		<key name="show-desktop-widget" type="b">
-			<default>false</default>
+			<default>true</default>
 			<summary>Show a desktop card</summary>
 		</key>
 		<key name="desktop-position" type="s">
