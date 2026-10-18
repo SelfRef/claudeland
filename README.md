@@ -19,7 +19,7 @@ It displays remaining capacity for:
 
 ## Status
 
-The project is at `0.3.1` and targets the maintained GNOME Shell releases, 50 and 51, under X11
+The project targets the maintained GNOME Shell releases, 50 and 51, under X11
 and Wayland alike. Compatibility is checked against GNOME Shell 50 type
 definitions, and every declared release is exercised by a runtime verification
 run against a real headless Shell.

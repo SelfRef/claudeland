@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to release, such as 0.4.0
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency: release
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Set the version and close the changelog section
+        run: node scripts/release.mjs "$VERSION" > "$RUNNER_TEMP/notes.md"
+      - run: pnpm check
+      - run: pnpm package
+      - name: Commit and tag the release
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -am "chore(release): $VERSION"
+          git tag "v$VERSION"
+          git push origin "HEAD:$GITHUB_REF_NAME" "v$VERSION"
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "v$VERSION"
+          build/*.shell-extension.zip build/*.shell-extension.zip.sha256
+          --title "$VERSION" --notes-file "$RUNNER_TEMP/notes.md"

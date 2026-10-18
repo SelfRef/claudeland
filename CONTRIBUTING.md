@@ -1,12 +1,14 @@
-# Contribution policy
+# Contributing
 
-Vibecheck does not accept external code contributions or pull requests.
-External pull requests will be closed without review. Bug reports may still be
-submitted through the issue tracker, while vulnerabilities must be reported
-privately as described in [SECURITY.md](SECURITY.md).
+Bug reports, ideas, and pull requests are welcome.
 
-You are free to fork, modify, and redistribute Vibecheck under the MIT
-License. Forks and redistributions must retain the original `LICENSE` file and
-its copyright notice identifying FabioSM46 as the original author. A fork is an
-independent project and must not imply that it is an official Vibecheck
-release or endorsed by the original author.
+- Open an issue first for larger changes, so we can agree on the approach.
+- Run `pnpm check` before pushing; changes to the UI or Shell integration
+  should also pass `pnpm verify:shell`.
+- Write commit messages as [Conventional Commits](https://www.conventionalcommits.org/),
+  such as `fix(panel): keep the icon size stable`.
+- Add user-visible changes to the `Unreleased` section of `CHANGELOG.md`.
+- Never include real tokens, email addresses, organization IDs, or raw API
+  responses in code, fixtures, or logs.
+
+Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).

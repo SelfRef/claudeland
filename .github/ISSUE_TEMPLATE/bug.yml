@@ -1,39 +1,37 @@
 name: Bug report
-description: Report a reproducible Vibecheck problem
-title: 'bug: '
+description: Something in Vibecheck does not work as expected
 labels: [bug]
 body:
   - type: markdown
     attributes:
-      value: Do not include credentials, account identifiers, or raw API responses.
+      value: Do not include tokens, email addresses, organization IDs, or raw API responses.
+  - type: input
+    id: version
+    attributes:
+      label: Vibecheck version
+      placeholder: '0.4.0'
+    validations:
+      required: true
   - type: input
     id: shell
     attributes:
-      label: GNOME Shell version
-      placeholder: '46.0'
+      label: GNOME Shell version and distribution
+      placeholder: '51.1, Fedora 45'
     validations:
       required: true
-  - type: dropdown
-    id: session
+  - type: textarea
+    id: problem
     attributes:
-      label: Session type
-      options: [Wayland, X11]
+      label: What happened, and what did you expect?
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
-      label: Reproduction steps
-    validations:
-      required: true
-  - type: textarea
-    id: expected
-    attributes:
-      label: Expected behavior
-    validations:
-      required: true
+      label: Steps to reproduce
   - type: textarea
     id: logs
     attributes:
       label: Redacted logs
-      description: Remove tokens, email addresses, organization IDs, and raw responses.
+      description: 'From `journalctl --user -o cat /usr/bin/gnome-shell`, with secrets removed.'
+      render: text

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { basename, resolve } from 'node:path';
 
@@ -19,23 +19,15 @@ if (metadata['version-name'] !== packageMetadata.version) {
 await rm(build, { recursive: true, force: true });
 await mkdir(build, { recursive: true });
 
-const staging = resolve(build, 'staging');
-await mkdir(staging, { recursive: true });
-
-run('gnome-extensions', [
-  'pack',
-  '--force',
-  '--out-dir',
-  staging,
-  ...['LICENSE', 'domain', 'icons', 'locale', 'services', 'ui'].map(
-    (source) => `--extra-source=${source}`,
-  ),
-  resolve(root, 'dist'),
-]);
-
+// A plain zip of the build is what `gnome-extensions pack` produces, without
+// needing GNOME Shell installed. Developer-only checks stay out of the package.
 const archive = resolve(build, `${metadata.uuid}.shell-extension.zip`);
-await rename(resolve(staging, `${metadata.uuid}.shell-extension.zip`), archive);
-await rm(staging, { recursive: true, force: true });
+run(
+  'zip',
+  ['-qr', archive, '.', '-x', 'session-check.js', 'smoke-test.js', 'schemas/gschemas.compiled'],
+  false,
+  resolve(root, 'dist'),
+);
 
 verifyArchive(archive);
 
@@ -49,11 +41,7 @@ console.log(`Packed and verified extension in ${archive}`);
 console.log(`Wrote SHA-256 checksum to ${checksumPath}`);
 
 function verifyArchive(archive) {
-  let listing = run('unzip', ['-Z1', archive], true).stdout.trim().split('\n');
-  if (listing.includes('schemas/gschemas.compiled')) {
-    run('zip', ['-d', archive, 'schemas/gschemas.compiled']);
-    listing = run('unzip', ['-Z1', archive], true).stdout.trim().split('\n');
-  }
+  const listing = run('unzip', ['-Z1', archive], true).stdout.trim().split('\n');
   const forbidden = ['domain/index.js', 'schemas/gschemas.compiled'];
   for (const path of forbidden) {
     if (listing.includes(path)) {
@@ -67,9 +55,9 @@ function verifyArchive(archive) {
   }
 }
 
-function run(command, args, capture = false) {
+function run(command, args, capture = false, cwd = root) {
   const commandResult = spawnSync(command, args, {
-    cwd: root,
+    cwd,
     encoding: capture ? 'utf8' : undefined,
     stdio: capture ? 'pipe' : 'inherit',
   });
