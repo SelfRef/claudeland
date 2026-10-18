@@ -16,17 +16,17 @@ await cp(resolve(root, 'LICENSE'), resolve(dist, 'LICENSE'));
 await cp(resolve(root, 'stylesheet.css'), resolve(dist, 'stylesheet.css'));
 await cp(resolve(root, 'icons'), resolve(dist, 'icons'), { recursive: true });
 await cp(
-  resolve(root, 'schemas/org.gnome.shell.extensions.vibecheck.gschema.xml'),
-  resolve(dist, 'schemas/org.gnome.shell.extensions.vibecheck.gschema.xml'),
+	resolve(root, 'schemas/org.gnome.shell.extensions.vibecheck.gschema.xml'),
+	resolve(dist, 'schemas/org.gnome.shell.extensions.vibecheck.gschema.xml'),
 );
 
 run('glib-compile-schemas', [resolve(dist, 'schemas')]);
 
 for (const language of ['it']) {
-  const po = gettextParser.po.parse(await readFile(resolve(root, `po/${language}.po`)));
-  const localeDirectory = resolve(dist, `locale/${language}/LC_MESSAGES`);
-  await mkdir(localeDirectory, { recursive: true });
-  await writeFile(resolve(localeDirectory, 'vibecheck.mo'), gettextParser.mo.compile(po));
+	const po = gettextParser.po.parse(await readFile(resolve(root, `po/${language}.po`)));
+	const localeDirectory = resolve(dist, `locale/${language}/LC_MESSAGES`);
+	await mkdir(localeDirectory, { recursive: true });
+	await writeFile(resolve(localeDirectory, 'vibecheck.mo'), gettextParser.mo.compile(po));
 }
 
 const metadataPath = resolve(dist, 'metadata.json');
@@ -40,8 +40,8 @@ console.log(`Built extension in ${dist}`);
 run('node', [resolve(root, 'scripts/format-output.mjs')]);
 
 function run(command, args) {
-  const result = spawnSync(command, args, { cwd: root, stdio: 'inherit' });
-  if (result.status !== 0) {
-    process.exit(result.status ?? 1);
-  }
+	const result = spawnSync(command, args, { cwd: root, stdio: 'inherit' });
+	if (result.status !== 0) {
+		process.exit(result.status ?? 1);
+	}
 }

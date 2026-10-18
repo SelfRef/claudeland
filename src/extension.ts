@@ -8,91 +8,91 @@ import { DesktopCard } from './ui/desktop-card.js';
 import { UsageIndicator } from './ui/usage-indicator.js';
 
 export default class VibecheckExtension extends Extension {
-  private settings: Gio.Settings | null = null;
-  private controller: UsageController | null = null;
-  private indicator: InstanceType<typeof UsageIndicator> | null = null;
-  private desktopCard: DesktopCard | null = null;
+	private settings: Gio.Settings | null = null;
+	private controller: UsageController | null = null;
+	private indicator: InstanceType<typeof UsageIndicator> | null = null;
+	private desktopCard: DesktopCard | null = null;
 
-  enable(): void {
-    this.settings = this.getSettings();
-    this.controller = new UsageController(this.settings);
+	enable(): void {
+		this.settings = this.getSettings();
+		this.controller = new UsageController(this.settings);
 
-    this.settings.connectObject('changed::show-panel', () => this.syncSurfaces(), this);
-    this.settings.connectObject('changed::show-desktop-widget', () => this.syncSurfaces(), this);
-    this.settings.connectObject(
-      'changed::desktop-position',
-      () => this.recreateDesktopCard(),
-      this,
-    );
-    // Display-only keys redraw the cached snapshot; refetching on every change
-    // runs into the usage endpoint's rate limit. A new refresh interval takes
-    // effect after the next poll.
-    for (const key of [
-      'panel-primary',
-      'panel-secondary',
-      'show-panel-reset',
-      'panel-icon',
-      'warning-remaining',
-      'critical-remaining',
-    ]) {
-      this.settings.connectObject(`changed::${key}`, () => this.controller?.redraw(), this);
-    }
+		this.settings.connectObject('changed::show-panel', () => this.syncSurfaces(), this);
+		this.settings.connectObject('changed::show-desktop-widget', () => this.syncSurfaces(), this);
+		this.settings.connectObject(
+			'changed::desktop-position',
+			() => this.recreateDesktopCard(),
+			this,
+		);
+		// Display-only keys redraw the cached snapshot; refetching on every change
+		// runs into the usage endpoint's rate limit. A new refresh interval takes
+		// effect after the next poll.
+		for (const key of [
+			'panel-primary',
+			'panel-secondary',
+			'show-panel-reset',
+			'panel-icon',
+			'warning-remaining',
+			'critical-remaining',
+		]) {
+			this.settings.connectObject(`changed::${key}`, () => this.controller?.redraw(), this);
+		}
 
-    this.syncSurfaces();
-    this.controller.start();
-  }
+		this.syncSurfaces();
+		this.controller.start();
+	}
 
-  disable(): void {
-    this.indicator?.destroy();
-    this.indicator = null;
-    this.desktopCard?.destroy();
-    this.desktopCard = null;
-    this.controller?.destroy();
-    this.controller = null;
+	disable(): void {
+		this.indicator?.destroy();
+		this.indicator = null;
+		this.desktopCard?.destroy();
+		this.desktopCard = null;
+		this.controller?.destroy();
+		this.controller = null;
 
-    this.settings?.disconnectObject(this);
-    this.settings = null;
-  }
+		this.settings?.disconnectObject(this);
+		this.settings = null;
+	}
 
-  private syncSurfaces(): void {
-    if (!this.settings || !this.controller) {
-      return;
-    }
+	private syncSurfaces(): void {
+		if (!this.settings || !this.controller) {
+			return;
+		}
 
-    const showPanel = this.settings.get_boolean('show-panel');
-    if (showPanel && !this.indicator) {
-      this.indicator = new UsageIndicator(this.controller, this.settings, this.path, () =>
-        this.openPreferences(),
-      );
-      Main.panel.addToStatusArea(this.uuid, this.indicator);
-    } else if (!showPanel && this.indicator) {
-      this.indicator.destroy();
-      this.indicator = null;
-    }
+		const showPanel = this.settings.get_boolean('show-panel');
+		if (showPanel && !this.indicator) {
+			this.indicator = new UsageIndicator(this.controller, this.settings, this.path, () =>
+				this.openPreferences(),
+			);
+			Main.panel.addToStatusArea(this.uuid, this.indicator);
+		} else if (!showPanel && this.indicator) {
+			this.indicator.destroy();
+			this.indicator = null;
+		}
 
-    const showDesktop = this.settings.get_boolean('show-desktop-widget');
-    if (showDesktop && !this.desktopCard) {
-      try {
-        this.desktopCard = new DesktopCard(this.controller, this.settings);
-      } catch (error) {
-        logError(
-          error instanceof Error ? error : new Error(String(error)),
-          'Vibecheck could not create the desktop card',
-        );
-        Main.notifyError(
-          _('Vibecheck'),
-          _('The desktop card is unavailable on this GNOME version.'),
-        );
-      }
-    } else if (!showDesktop && this.desktopCard) {
-      this.desktopCard.destroy();
-      this.desktopCard = null;
-    }
-  }
+		const showDesktop = this.settings.get_boolean('show-desktop-widget');
+		if (showDesktop && !this.desktopCard) {
+			try {
+				this.desktopCard = new DesktopCard(this.controller, this.settings);
+			} catch (error) {
+				logError(
+					error instanceof Error ? error : new Error(String(error)),
+					'Vibecheck could not create the desktop card',
+				);
+				Main.notifyError(
+					_('Vibecheck'),
+					_('The desktop card is unavailable on this GNOME version.'),
+				);
+			}
+		} else if (!showDesktop && this.desktopCard) {
+			this.desktopCard.destroy();
+			this.desktopCard = null;
+		}
+	}
 
-  private recreateDesktopCard(): void {
-    this.desktopCard?.destroy();
-    this.desktopCard = null;
-    this.syncSurfaces();
-  }
+	private recreateDesktopCard(): void {
+		this.desktopCard?.destroy();
+		this.desktopCard = null;
+		this.syncSurfaces();
+	}
 }

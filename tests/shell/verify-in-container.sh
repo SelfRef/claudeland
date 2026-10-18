@@ -18,8 +18,8 @@ STATUS=0
 # systemd and without touching the host session.
 DBUS_SYSTEM_BUS_ADDRESS=$(dbus-daemon --config-file=/usr/share/dbus-1/session.conf --print-address --fork 2>/dev/null || true)
 if [ -z "$DBUS_SYSTEM_BUS_ADDRESS" ]; then
-  echo "could not start the private system bus" >&2
-  exit 1
+	echo "could not start the private system bus" >&2
+	exit 1
 fi
 export DBUS_SYSTEM_BUS_ADDRESS
 python3 -m dbusmock --system --template logind > /tmp/logind.log 2>&1 &
@@ -41,50 +41,50 @@ gsettings set org.gnome.shell disable-user-extensions false
 
 # start_shell <uuid to enable, empty for none> [uuid to wait for]
 start_shell() {
-  if [ -n "$1" ]; then
-    gsettings set org.gnome.shell enabled-extensions "['$1']"
-  else
-    gsettings set org.gnome.shell enabled-extensions "[]"
-  fi
-  awaited=${2:-$1}
-  rm -f /tmp/shell.log
-  gnome-shell --headless --no-x11 --virtual-monitor 1280x720 > /tmp/shell.log 2>&1 &
-  SHELL_PID=$!
-  i=0
-  while [ $i -lt 45 ]; do
-    if gnome-extensions info "$awaited" 2>/dev/null | grep -q "^  State:"; then
-      break
-    fi
-    i=$((i + 1))
-    sleep 1
-  done
-  sleep 5
+	if [ -n "$1" ]; then
+		gsettings set org.gnome.shell enabled-extensions "['$1']"
+	else
+		gsettings set org.gnome.shell enabled-extensions "[]"
+	fi
+	awaited=${2:-$1}
+	rm -f /tmp/shell.log
+	gnome-shell --headless --no-x11 --virtual-monitor 1280x720 > /tmp/shell.log 2>&1 &
+	SHELL_PID=$!
+	i=0
+	while [ $i -lt 45 ]; do
+		if gnome-extensions info "$awaited" 2>/dev/null | grep -q "^  State:"; then
+			break
+		fi
+		i=$((i + 1))
+		sleep 1
+	done
+	sleep 5
 }
 
 # Errors GNOME Shell itself raises in a container, with no bearing on the
 # extension under test. Keep this list minimal and exact.
 #
 shell_errors() {
-  grep -iE "JS ERROR|JS WARNING" /tmp/shell.log || true
+	grep -iE "JS ERROR|JS WARNING" /tmp/shell.log || true
 }
 
 stop_shell() {
-  for pid in $WINDOW_PIDS; do
-    kill "$pid" 2>/dev/null || true
-  done
-  WINDOW_PIDS=""
-  kill "$SHELL_PID" 2>/dev/null || true
-  wait "$SHELL_PID" 2>/dev/null || true
-  sleep 1
+	for pid in $WINDOW_PIDS; do
+		kill "$pid" 2>/dev/null || true
+	done
+	WINDOW_PIDS=""
+	kill "$SHELL_PID" 2>/dev/null || true
+	wait "$SHELL_PID" 2>/dev/null || true
+	sleep 1
 }
 
 # open_window <name>: a real client window on the shell's Wayland socket.
 WINDOW_PIDS=""
 open_window() {
-  WAYLAND_DISPLAY=wayland-0 GDK_BACKEND=wayland gjs -m /home/tester/open-window.js "$1" \
-    >/dev/null 2>&1 &
-  WINDOW_PIDS="$WINDOW_PIDS $!"
-  sleep 4
+	WAYLAND_DISPLAY=wayland-0 GDK_BACKEND=wayland gjs -m /home/tester/open-window.js "$1" \
+		>/dev/null 2>&1 &
+	WINDOW_PIDS="$WINDOW_PIDS $!"
+	sleep 4
 }
 
 echo "### $(gnome-shell --version) · $(gjs --version | head -1)"
@@ -109,11 +109,11 @@ STATE=$(gnome-extensions info "$UUID" 2>/dev/null | sed -n 's/^  State: //p')
 echo "state after a disable/enable cycle: ${STATE:-unknown}"
 [ "$STATE" = "ACTIVE" ] || STATUS=1
 if shell_errors > /tmp/errors.log && [ -s /tmp/errors.log ]; then
-  echo "unexpected shell errors:"
-  cat /tmp/errors.log
-  STATUS=1
+	echo "unexpected shell errors:"
+	cat /tmp/errors.log
+	STATUS=1
 else
-  echo "no JS errors or warnings in the journal"
+	echo "no JS errors or warnings in the journal"
 fi
 
 # The preferences dialog runs in its own GTK process, against a different
@@ -122,14 +122,14 @@ fi
 WAYLAND_DISPLAY=wayland-0 GDK_BACKEND=wayland gnome-extensions prefs "$UUID" >/dev/null 2>&1 || true
 sleep 8
 if [ ! -f /tmp/all.log ]; then
-  echo "preferences: SKIPPED (stderr was not captured to /tmp/all.log)"
-  STATUS=1
+	echo "preferences: SKIPPED (stderr was not captured to /tmp/all.log)"
+	STATUS=1
 elif grep -q "Failed to open preferences" /tmp/all.log; then
-  echo "preferences: FAILED"
-  grep -A3 "Failed to open preferences" /tmp/all.log | head -8
-  STATUS=1
+	echo "preferences: FAILED"
+	grep -A3 "Failed to open preferences" /tmp/all.log | head -8
+	STATUS=1
 else
-  echo "preferences opened without error"
+	echo "preferences opened without error"
 fi
 stop_shell
 
@@ -146,23 +146,23 @@ sleep 3
 open_window after
 i=0
 while [ $i -lt 40 ]; do
-  grep -qE "VIBECHECK UI CHECK" /tmp/shell.log && break
-  i=$((i + 1))
-  sleep 1
+	grep -qE "VIBECHECK UI CHECK" /tmp/shell.log && break
+	i=$((i + 1))
+	sleep 1
 done
 if grep -q "VIBECHECK UI CHECK OK" /tmp/shell.log; then
-  echo "ui probe: OK"
+	echo "ui probe: OK"
 else
-  echo "ui probe: FAILED"
-  grep -iE "VIBECHECK UI CHECK|VIBECHECK UI LAYERS|JS ERROR|vibecheck" /tmp/shell.log || echo "(no probe output)"
-  STATUS=1
+	echo "ui probe: FAILED"
+	grep -iE "VIBECHECK UI CHECK|VIBECHECK UI LAYERS|JS ERROR|vibecheck" /tmp/shell.log || echo "(no probe output)"
+	STATUS=1
 fi
 stop_shell
 
 echo
 if [ $STATUS -eq 0 ]; then
-  echo "GNOME Shell verification passed"
+	echo "GNOME Shell verification passed"
 else
-  echo "GNOME Shell verification FAILED"
+	echo "GNOME Shell verification FAILED"
 fi
 exit $STATUS

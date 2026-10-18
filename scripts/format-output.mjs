@@ -14,11 +14,11 @@ import { PADDING_RULES } from './padding-rules.mjs';
 const root = resolve(import.meta.dirname, '..');
 
 const eslint = new ESLint({
-  fix: true,
-  // Generated output: use only the rules below, not the project lint config.
-  overrideConfigFile: true,
-  overrideConfig: { rules: PADDING_RULES },
-  ignore: false,
+	fix: true,
+	// Generated output: use only the rules below, not the project lint config.
+	overrideConfigFile: true,
+	overrideConfig: { rules: PADDING_RULES },
+	ignore: false,
 });
 
 const targets = await javascriptFiles(resolve(root, 'dist'));
@@ -28,18 +28,18 @@ await ESLint.outputFixes(results);
 
 const unfixed = results.flatMap((result) => result.messages.filter((message) => !message.fix));
 if (unfixed.length > 0) {
-  console.error('Could not add every required blank line:');
-  for (const message of unfixed) {
-    console.error(`  ${message.ruleId}: ${message.message}`);
-  }
-  process.exit(1);
+	console.error('Could not add every required blank line:');
+	for (const message of unfixed) {
+		console.error(`  ${message.ruleId}: ${message.message}`);
+	}
+	process.exit(1);
 }
 
 console.log(`Formatted ${targets.length} generated files`);
 
 async function javascriptFiles(directory) {
-  const entries = await readdir(directory, { recursive: true, withFileTypes: true });
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.js'))
-    .map((entry) => resolve(entry.parentPath, entry.name));
+	const entries = await readdir(directory, { recursive: true, withFileTypes: true });
+	return entries
+		.filter((entry) => entry.isFile() && entry.name.endsWith('.js'))
+		.map((entry) => resolve(entry.parentPath, entry.name));
 }

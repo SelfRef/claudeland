@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="org.gnome.shell.extensions.vibecheck" path="/org/gnome/shell/extensions/vibecheck/">
-    <key name="show-panel" type="b">
-      <default>true</default>
-      <summary>Show the GNOME panel indicator</summary>
-    </key>
-    <key name="panel-primary" type="s">
-      <choices>
-        <choice value="five_hour"/>
-        <choice value="seven_day"/>
-        <choice value="model"/>
-        <choice value="lowest"/>
-      </choices>
-      <default>'five_hour'</default>
-      <summary>First remaining percentage shown in the panel</summary>
-    </key>
-    <key name="panel-secondary" type="s">
-      <choices>
-        <choice value="five_hour"/>
-        <choice value="seven_day"/>
-        <choice value="model"/>
-        <choice value="lowest"/>
-        <choice value="none"/>
-      </choices>
-      <default>'seven_day'</default>
-      <summary>Second remaining percentage shown in the panel, or none</summary>
-    </key>
-    <key name="show-panel-reset" type="b">
-      <default>true</default>
-      <summary>Show the time until the first panel value resets</summary>
-    </key>
-    <key name="panel-icon" type="s">
-      <choices>
-        <choice value="none"/>
-        <choice value="color"/>
-        <choice value="symbolic"/>
-      </choices>
-      <default>'color'</default>
-      <summary>Claude icon style in the panel</summary>
-    </key>
-    <key name="show-desktop-widget" type="b">
-      <default>false</default>
-      <summary>Show a non-interactive desktop card</summary>
-    </key>
-    <key name="desktop-position" type="s">
-      <default>'top-right'</default>
-      <summary>Desktop card position</summary>
-    </key>
-    <key name="refresh-interval" type="u">
-      <range min="1" max="60"/>
-      <default>5</default>
-      <summary>Polling interval in minutes</summary>
-    </key>
-    <key name="warning-remaining" type="u">
-      <range min="1" max="99"/>
-      <default>25</default>
-      <summary>Remaining percentage warning threshold</summary>
-    </key>
-    <key name="critical-remaining" type="u">
-      <range min="0" max="98"/>
-      <default>10</default>
-      <summary>Remaining percentage critical threshold</summary>
-    </key>
-  </schema>
+	<schema id="org.gnome.shell.extensions.vibecheck" path="/org/gnome/shell/extensions/vibecheck/">
+		<key name="show-panel" type="b">
+			<default>true</default>
+			<summary>Show the GNOME panel indicator</summary>
+		</key>
+		<key name="panel-primary" type="s">
+			<choices>
+				<choice value="five_hour"/>
+				<choice value="seven_day"/>
+				<choice value="model"/>
+				<choice value="lowest"/>
+			</choices>
+			<default>'five_hour'</default>
+			<summary>First remaining percentage shown in the panel</summary>
+		</key>
+		<key name="panel-secondary" type="s">
+			<choices>
+				<choice value="five_hour"/>
+				<choice value="seven_day"/>
+				<choice value="model"/>
+				<choice value="lowest"/>
+				<choice value="none"/>
+			</choices>
+			<default>'seven_day'</default>
+			<summary>Second remaining percentage shown in the panel, or none</summary>
+		</key>
+		<key name="show-panel-reset" type="b">
+			<default>true</default>
+			<summary>Show the time until the first panel value resets</summary>
+		</key>
+		<key name="panel-icon" type="s">
+			<choices>
+				<choice value="none"/>
+				<choice value="color"/>
+				<choice value="symbolic"/>
+			</choices>
+			<default>'color'</default>
+			<summary>Claude icon style in the panel</summary>
+		</key>
+		<key name="show-desktop-widget" type="b">
+			<default>false</default>
+			<summary>Show a non-interactive desktop card</summary>
+		</key>
+		<key name="desktop-position" type="s">
+			<default>'top-right'</default>
+			<summary>Desktop card position</summary>
+		</key>
+		<key name="refresh-interval" type="u">
+			<range min="1" max="60"/>
+			<default>5</default>
+			<summary>Polling interval in minutes</summary>
+		</key>
+		<key name="warning-remaining" type="u">
+			<range min="1" max="99"/>
+			<default>25</default>
+			<summary>Remaining percentage warning threshold</summary>
+		</key>
+		<key name="critical-remaining" type="u">
+			<range min="0" max="98"/>
+			<default>10</default>
+			<summary>Remaining percentage critical threshold</summary>
+		</key>
+	</schema>
 </schemalist>

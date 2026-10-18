@@ -8,20 +8,20 @@
  */
 
 export type SessionState =
-  /** The access token can be used as is. */
-  | 'valid'
-  /** The access token is expired or about to expire, but renewal is possible. */
-  | 'renewable'
-  /** Interactive sign-in is the only way forward. */
-  | 'expired';
+	/** The access token can be used as is. */
+	| 'valid'
+	/** The access token is expired or about to expire, but renewal is possible. */
+	| 'renewable'
+	/** Interactive sign-in is the only way forward. */
+	| 'expired';
 
 export interface SessionTiming {
-  /** Access-token expiry in epoch milliseconds, or null when unknown. */
-  accessTokenExpiresAt: number | null;
-  /** Refresh-token expiry in epoch milliseconds, or null when unknown. */
-  refreshTokenExpiresAt: number | null;
-  /** Whether a refresh token is present at all. */
-  hasRefreshToken: boolean;
+	/** Access-token expiry in epoch milliseconds, or null when unknown. */
+	accessTokenExpiresAt: number | null;
+	/** Refresh-token expiry in epoch milliseconds, or null when unknown. */
+	refreshTokenExpiresAt: number | null;
+	/** Whether a refresh token is present at all. */
+	hasRefreshToken: boolean;
 }
 
 /**
@@ -30,10 +30,10 @@ export interface SessionTiming {
 export const ACCESS_TOKEN_SKEW_MS = 5 * 60 * 1000;
 
 export function evaluateSession(timing: SessionTiming, now: number = Date.now()): SessionState {
-  if (isAccessTokenUsable(timing, now)) {
-    return 'valid';
-  }
-  return canRenew(timing, now) ? 'renewable' : 'expired';
+	if (isAccessTokenUsable(timing, now)) {
+		return 'valid';
+	}
+	return canRenew(timing, now) ? 'renewable' : 'expired';
 }
 
 /**
@@ -41,10 +41,10 @@ export function evaluateSession(timing: SessionTiming, now: number = Date.now())
  * treated as usable: the server answer, not a guess, decides.
  */
 export function isAccessTokenUsable(timing: SessionTiming, now: number = Date.now()): boolean {
-  if (timing.accessTokenExpiresAt === null) {
-    return true;
-  }
-  return now < timing.accessTokenExpiresAt - ACCESS_TOKEN_SKEW_MS;
+	if (timing.accessTokenExpiresAt === null) {
+		return true;
+	}
+	return now < timing.accessTokenExpiresAt - ACCESS_TOKEN_SKEW_MS;
 }
 
 /**
@@ -53,11 +53,11 @@ export function isAccessTokenUsable(timing: SessionTiming, now: number = Date.no
  * the authority on whether the token still works.
  */
 export function canRenew(timing: SessionTiming, now: number = Date.now()): boolean {
-  if (!timing.hasRefreshToken) {
-    return false;
-  }
-  if (timing.refreshTokenExpiresAt === null) {
-    return true;
-  }
-  return now < timing.refreshTokenExpiresAt;
+	if (!timing.hasRefreshToken) {
+		return false;
+	}
+	if (timing.refreshTokenExpiresAt === null) {
+		return true;
+	}
+	return now < timing.refreshTokenExpiresAt;
 }

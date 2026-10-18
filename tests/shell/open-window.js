@@ -13,9 +13,9 @@ import Gtk from 'gi://Gtk?version=4.0';
 Gtk.init();
 
 const window = new Gtk.Window({
-  title: `vibecheck probe window ${ARGV[0] ?? ''}`.trim(),
-  default_width: 400,
-  default_height: 300,
+	title: `vibecheck probe window ${ARGV[0] ?? ''}`.trim(),
+	default_width: 400,
+	default_height: 300,
 });
 window.present();
 
