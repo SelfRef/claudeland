@@ -32,10 +32,13 @@ the project follows [Semantic Versioning](https://semver.org/).
 - The "updated" time follows the GNOME 12h/24h clock setting.
 - Extra usage is hidden while it is switched off, instead of showing as 100%
   remaining, and the weekly limit no longer appears twice.
+- The Sign in button in Preferences reports a missing Claude Code or terminal
+  instead of doing nothing.
 
 ### Removed
 
 - The compact panel switch, replaced by the panel value choices.
+- The source code link in Preferences; the Extensions app already links to it.
 
 ## [0.3.1] - 2026-09-28
 

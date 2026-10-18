@@ -25,9 +25,6 @@ msgstr ""
 msgid "%s · updated %s"
 msgstr ""
 
-msgid "About"
-msgstr ""
-
 msgid "Anthropic is currently unavailable."
 msgstr ""
 
@@ -185,9 +182,6 @@ msgid "Sign in to Claude Code to view usage."
 msgstr ""
 
 msgid "Sign-in is handled by the official Claude Code CLI."
-msgstr ""
-
-msgid "Source code and issue tracker"
 msgstr ""
 
 msgid "Stale data · %s"

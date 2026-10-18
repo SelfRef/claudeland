@@ -4,7 +4,7 @@ import GLib from 'gi://GLib';
 import type { ClaudeCredential } from '../domain/credential.js';
 import { canRenew, evaluateSession, isAccessTokenUsable } from '../domain/session.js';
 import { severityFor, type UsageSnapshot } from '../domain/usage.js';
-import { ClaudeAuth } from './claude-auth.js';
+import { ClaudeAuth, launchLogin } from './claude-auth.js';
 import { ClaudeCredentials } from './claude-credentials.js';
 import { ClaudeUsageClient } from './claude-usage-client.js';
 import { VibecheckError } from './errors.js';
@@ -21,7 +21,7 @@ export interface UsageState {
 type StateListener = (state: Readonly<UsageState>) => void;
 
 type UsageClient = Pick<ClaudeUsageClient, 'fetch' | 'destroy'>;
-type UsageAuth = Pick<ClaudeAuth, 'status' | 'renew' | 'launchLogin' | 'destroy'>;
+type UsageAuth = Pick<ClaudeAuth, 'status' | 'renew' | 'destroy'>;
 type UsageCredentials = Pick<ClaudeCredentials, 'read'>;
 
 export interface UsageControllerDependencies {
@@ -175,7 +175,7 @@ export class UsageController {
 	launchLogin(): void {
 		// A manual sign-in is an explicit fresh start for automatic renewal too.
 		this.renewalBlockedUntil = 0;
-		this.auth?.launchLogin();
+		launchLogin();
 	}
 
 	destroy(): void {

@@ -104,28 +104,6 @@ export class ClaudeAuth {
 		return this.renewal;
 	}
 
-	launchLogin(): void {
-		if (!GLib.find_program_in_path('claude')) {
-			throw new VibecheckError('claude-cli-missing');
-		}
-
-		const command = ['claude', 'auth', 'login', '--claudeai'];
-		const terminalCandidates: string[][] = [
-			['kgx', '--', ...command],
-			['gnome-terminal', '--', ...command],
-			['x-terminal-emulator', '-e', ...command],
-		];
-
-		for (const argv of terminalCandidates) {
-			if (GLib.find_program_in_path(argv[0])) {
-				Gio.Subprocess.new(argv, Gio.SubprocessFlags.NONE);
-				return;
-			}
-		}
-
-		throw new VibecheckError('terminal-missing');
-	}
-
 	destroy(): void {
 		this.process?.force_exit();
 		this.process = null;
@@ -171,6 +149,32 @@ export class ClaudeAuth {
 			}
 		}
 	}
+}
+
+/**
+ * Opens Claude Code's interactive browser sign-in in the user's terminal. Used
+ * by both the Shell menu and the preferences window.
+ */
+export function launchLogin(): void {
+	if (!GLib.find_program_in_path('claude')) {
+		throw new VibecheckError('claude-cli-missing');
+	}
+
+	const command = ['claude', 'auth', 'login', '--claudeai'];
+	const terminalCandidates: string[][] = [
+		['kgx', '--', ...command],
+		['gnome-terminal', '--', ...command],
+		['x-terminal-emulator', '-e', ...command],
+	];
+
+	for (const argv of terminalCandidates) {
+		if (GLib.find_program_in_path(argv[0])) {
+			Gio.Subprocess.new(argv, Gio.SubprocessFlags.NONE);
+			return;
+		}
+	}
+
+	throw new VibecheckError('terminal-missing');
 }
 
 function waitCheck(process: Gio.Subprocess): Promise<boolean> {

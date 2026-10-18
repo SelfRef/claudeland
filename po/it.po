@@ -26,9 +26,6 @@ msgstr "%s · non aggiornato"
 msgid "%s · updated %s"
 msgstr "%s · aggiornato %s"
 
-msgid "About"
-msgstr "Informazioni"
-
 msgid "Anthropic is currently unavailable."
 msgstr "Anthropic non è al momento disponibile."
 
@@ -187,9 +184,6 @@ msgstr "Accedi a Claude Code per vedere i consumi."
 
 msgid "Sign-in is handled by the official Claude Code CLI."
 msgstr "Il login viene gestito dalla CLI ufficiale Claude Code."
-
-msgid "Source code and issue tracker"
-msgstr "Codice sorgente e segnalazioni"
 
 msgid "Stale data · %s"
 msgstr "Dati non aggiornati · %s"

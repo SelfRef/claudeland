@@ -200,7 +200,6 @@ async function main(): Promise<void> {
 					subscriptionType: 'max',
 				}),
 				renew: async () => false,
-				launchLogin() {},
 				destroy() {},
 			},
 			client: {

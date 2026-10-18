@@ -7,6 +7,9 @@ import {
 	gettext as _,
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+import { launchLogin } from './services/claude-auth.js';
+import { VibecheckError } from './services/errors.js';
+
 const POSITIONS = ['top-right', 'top-left', 'bottom-right', 'bottom-left'] as const;
 const PANEL_ICONS = ['none', 'color', 'symbolic'] as const;
 const PANEL_LIMITS = ['five_hour', 'seven_day', 'model', 'lowest', 'none'] as const;
@@ -160,23 +163,26 @@ export default class VibecheckPreferences extends ExtensionPreferences {
 			valign: Gtk.Align.CENTER,
 			css_classes: ['suggested-action'],
 		});
-		loginButton.connect('clicked', () => launchLogin());
+		loginButton.connect('clicked', () => {
+			try {
+				launchLogin();
+			} catch (error) {
+				if (!(error instanceof VibecheckError)) {
+					throw error;
+				}
+				window.add_toast(
+					new Adw.Toast({
+						title:
+							error.code === 'terminal-missing'
+								? _('No compatible terminal was found to start Claude sign-in.')
+								: _('Install Claude Code to authenticate.'),
+					}),
+				);
+			}
+		});
 		loginRow.add_suffix(loginButton);
 		loginRow.activatable_widget = loginButton;
 		account.add(loginRow);
-
-		const about = new Adw.PreferencesGroup({ title: _('About') });
-		page.add(about);
-		const sourceRow = new Adw.ActionRow({
-			title: _('Source code and issue tracker'),
-			subtitle: 'github.com/SelfRef/vibecheck',
-			activatable: true,
-		});
-		sourceRow.add_suffix(new Gtk.Image({ icon_name: 'go-next-symbolic' }));
-		sourceRow.connect('activated', () => {
-			Gtk.show_uri(window, 'https://github.com/SelfRef/vibecheck', 0);
-		});
-		about.add(sourceRow);
 	}
 }
 
@@ -226,21 +232,4 @@ function boundSpin(
 	const row = new Adw.SpinRow({ title, subtitle, adjustment, digits: 0 });
 	settings.bind(key, adjustment, 'value', Gio.SettingsBindFlags.DEFAULT);
 	return row;
-}
-
-function launchLogin(): void {
-	const candidates: string[][] = [
-		['kgx', '--', 'claude', 'auth', 'login', '--claudeai'],
-		['gnome-terminal', '--', 'claude', 'auth', 'login', '--claudeai'],
-		['x-terminal-emulator', '-e', 'claude', 'auth', 'login', '--claudeai'],
-	];
-
-	for (const argv of candidates) {
-		try {
-			Gio.Subprocess.new(argv, Gio.SubprocessFlags.NONE);
-			return;
-		} catch {
-			// Try the next terminal available in this desktop environment.
-		}
-	}
 }
