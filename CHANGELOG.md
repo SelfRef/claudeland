@@ -1,10 +1,11 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. The
-format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
-the project follows [Semantic Versioning](https://semver.org/).
+All notable changes to this project will be documented in this file.
 
-## Unreleased
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
 
 ### Added
 
@@ -12,7 +13,7 @@ the project follows [Semantic Versioning](https://semver.org/).
   it. The indicator keeps its position when other icons appear later, so 0
   keeps it before tray and other extension icons.
 
-## 1.0.0 - 2026-10-18
+## [1.0.0] - 2026-10-18
 
 ### Added
 
@@ -72,7 +73,7 @@ the project follows [Semantic Versioning](https://semver.org/).
 - The compact panel switch, replaced by the panel value choices.
 - The source code link in Preferences; the Extensions app already links to it.
 
-## 0.3.1 - 2026-09-28
+## [0.3.1] - 2026-09-28
 
 ### Changed
 
@@ -87,7 +88,7 @@ the project follows [Semantic Versioning](https://semver.org/).
 - The rejected GNOME Shell 42 through 44 package, its build shims, compatibility
   UI fallbacks, and legacy container definitions.
 
-## 0.3.0 - 2026-09-03
+## [0.3.0] - 2026-09-03
 
 ### Added
 
@@ -115,7 +116,7 @@ the project follows [Semantic Versioning](https://semver.org/).
   It runs on any distribution shipping a supported GNOME Shell, under X11 and
   Wayland alike.
 
-## 0.2.0 - 2026-08-30
+## [0.2.0] - 2026-08-30
 
 ### Added
 
@@ -163,7 +164,7 @@ the project follows [Semantic Versioning](https://semver.org/).
 - Keep bottom-positioned desktop cards inside the monitor after their content
   changes height.
 
-## 0.1.0 - 2026-08-28
+## [0.1.0] - 2026-08-28
 
 ### Added
 
@@ -178,3 +179,10 @@ the project follows [Semantic Versioning](https://semver.org/).
 ### Fixed
 
 - Keep the usage popup open when selecting “Refresh now”.
+
+[Unreleased]: https://github.com/SelfRef/vibecheck/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/SelfRef/vibecheck/releases/tag/v1.0.0
+[0.3.1]: https://github.com/FabioSM46/claudeland/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/FabioSM46/claudeland/compare/c62d96e...v0.3.0
+[0.2.0]: https://github.com/FabioSM46/claudeland/compare/v0.1.0...c62d96e
+[0.1.0]: https://github.com/FabioSM46/claudeland/releases/tag/v0.1.0

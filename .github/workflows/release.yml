@@ -26,7 +26,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Set the version and close the changelog section
+      - name: Set the version and move Unreleased changes and links under it
         run: node scripts/release.mjs "$VERSION" > "$RUNNER_TEMP/notes.md"
       - run: pnpm check
       - run: pnpm package
