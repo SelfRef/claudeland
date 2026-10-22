@@ -11,6 +11,7 @@ import { ClaudeAuth, launchLogin } from './services/claude-auth.js';
 import { VibecheckError } from './services/errors.js';
 
 const POSITIONS = ['top-right', 'top-left', 'bottom-right', 'bottom-left'] as const;
+const PANEL_BOXES = ['left', 'center', 'right'] as const;
 const PANEL_ICONS = ['none', 'color', 'symbolic'] as const;
 const PANEL_LIMITS = ['five_hour', 'seven_day', 'lowest', 'none'] as const;
 const PANEL_RESETS = ['five_hour', 'seven_day', 'both', 'none'] as const;
@@ -37,6 +38,27 @@ export default class VibecheckPreferences extends ExtensionPreferences {
 				'show-panel',
 				_('Panel indicator'),
 				_('Show percentages in the GNOME top bar.'),
+			),
+		);
+		appearance.add(
+			boundCombo(
+				settings,
+				'panel-box',
+				_('Panel area'),
+				_('Part of the top bar that holds the indicator.'),
+				PANEL_BOXES,
+				[_('Left'), _('Center'), _('Right')],
+			),
+		);
+		appearance.add(
+			boundSpin(
+				settings,
+				'panel-index',
+				_('Panel position'),
+				_('0 places it before the other icons in the area.'),
+				0,
+				99,
+				1,
 			),
 		);
 		const panelLimitLabels = [

@@ -6,6 +6,12 @@ the project follows [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+### Added
+
+- Choose the top bar area (left, center, or right) and the position within
+  it. The indicator keeps its position when other icons appear later, so 0
+  keeps it before tray and other extension icons.
+
 ## 1.0.0 - 2026-10-18
 
 ### Added

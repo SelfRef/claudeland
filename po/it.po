@@ -26,6 +26,9 @@ msgstr "%s · non aggiornato"
 msgid "%s · updated %s"
 msgstr "%s · aggiornato %s"
 
+msgid "0 places it before the other icons in the area."
+msgstr "0 lo mette prima delle altre icone dell'area."
+
 msgid "Anthropic is currently unavailable."
 msgstr "Anthropic non è al momento disponibile."
 
@@ -49,6 +52,9 @@ msgstr "Solo card"
 
 msgid "Card position"
 msgstr "Posizione della card"
+
+msgid "Center"
+msgstr "Centro"
 
 msgid "Checking…"
 msgstr "Verifica in corso…"
@@ -119,6 +125,9 @@ msgstr "Installato e connesso."
 msgid "Installed, not signed in."
 msgstr "Installato, accesso non effettuato."
 
+msgid "Left"
+msgstr "Sinistra"
+
 msgid "Loading Claude usage…"
 msgstr "Caricamento utilizzo Claude…"
 
@@ -149,11 +158,20 @@ msgstr "Non installato. L'utilizzo viene richiesto direttamente."
 msgid "Open Claude browser sign-in through Claude Code."
 msgstr "Apre il login Claude nel browser tramite Claude Code."
 
+msgid "Panel area"
+msgstr "Area del pannello"
+
 msgid "Panel icon"
 msgstr "Icona del pannello"
 
 msgid "Panel indicator"
 msgstr "Indicatore nel pannello"
+
+msgid "Panel position"
+msgstr "Posizione nel pannello"
+
+msgid "Part of the top bar that holds the indicator."
+msgstr "Parte della barra superiore che contiene l'indicatore."
 
 msgid "Preferences"
 msgstr "Preferenze"
@@ -193,6 +211,9 @@ msgstr "reset tra %dh %dm"
 
 msgid "resets in %dm"
 msgstr "reset tra %dm"
+
+msgid "Right"
+msgstr "Destra"
 
 msgid "Second panel value"
 msgstr "Secondo valore del pannello"

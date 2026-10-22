@@ -25,6 +25,9 @@ msgstr ""
 msgid "%s · updated %s"
 msgstr ""
 
+msgid "0 places it before the other icons in the area."
+msgstr ""
+
 msgid "Anthropic is currently unavailable."
 msgstr ""
 
@@ -47,6 +50,9 @@ msgid "Card only"
 msgstr ""
 
 msgid "Card position"
+msgstr ""
+
+msgid "Center"
 msgstr ""
 
 msgid "Checking…"
@@ -118,6 +124,9 @@ msgstr ""
 msgid "Installed, not signed in."
 msgstr ""
 
+msgid "Left"
+msgstr ""
+
 msgid "Loading Claude usage…"
 msgstr ""
 
@@ -148,10 +157,19 @@ msgstr ""
 msgid "Open Claude browser sign-in through Claude Code."
 msgstr ""
 
+msgid "Panel area"
+msgstr ""
+
 msgid "Panel icon"
 msgstr ""
 
 msgid "Panel indicator"
+msgstr ""
+
+msgid "Panel position"
+msgstr ""
+
+msgid "Part of the top bar that holds the indicator."
 msgstr ""
 
 msgid "Preferences"
@@ -191,6 +209,9 @@ msgid "resets in %dh %dm"
 msgstr ""
 
 msgid "resets in %dm"
+msgstr ""
+
+msgid "Right"
 msgstr ""
 
 msgid "Second panel value"

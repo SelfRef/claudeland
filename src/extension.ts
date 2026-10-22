@@ -25,6 +25,9 @@ export default class VibecheckExtension extends Extension {
 			() => this.recreateDesktopCard(),
 			this,
 		);
+		for (const key of ['panel-box', 'panel-index']) {
+			this.settings.connectObject(`changed::${key}`, () => this.recreateIndicator(), this);
+		}
 		// Display-only keys redraw the cached snapshot; refetching on every change
 		// runs into the usage endpoint's rate limit. A new refresh interval takes
 		// effect after the next poll.
@@ -81,7 +84,26 @@ export default class VibecheckExtension extends Extension {
 			this.indicator = new UsageIndicator(this.controller, this.settings, this.path, () =>
 				this.openPreferences(),
 			);
-			Main.panel.addToStatusArea(this.uuid, this.indicator);
+			const index = this.settings.get_uint('panel-index');
+			Main.panel.addToStatusArea(
+				this.uuid,
+				this.indicator,
+				index,
+				this.settings.get_string('panel-box') as 'left' | 'center' | 'right',
+			);
+			// Indicators added later, such as tray icons, take the slot; move back.
+			const container = this.indicator.container;
+			const box = container.get_parent();
+			box?.connectObject(
+				'child-added',
+				() => {
+					const target = Math.min(index, box.get_n_children() - 1);
+					if (box.get_children().indexOf(container) !== target) {
+						box.set_child_at_index(container, target);
+					}
+				},
+				this.indicator,
+			);
 		} else if (!showPanel && this.indicator) {
 			this.indicator.destroy();
 			this.indicator = null;
@@ -104,6 +126,12 @@ export default class VibecheckExtension extends Extension {
 			this.desktopCard.destroy();
 			this.desktopCard = null;
 		}
+	}
+
+	private recreateIndicator(): void {
+		this.indicator?.destroy();
+		this.indicator = null;
+		this.syncSurfaces();
 	}
 
 	private recreateDesktopCard(): void {
