@@ -11,6 +11,7 @@
 
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
+import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
@@ -199,6 +200,16 @@ function checkPanelLabel(controller, settings, indicator) {
 		if (indicator.panelIcon.visible !== iconShown) {
 			failures.push(`${name}: panel icon is ${indicator.panelIcon.visible ? 'shown' : 'hidden'}`);
 		}
+	}
+
+	// The theme pads status icons; only the box spacing should separate icon and text.
+	const node = indicator.panelIcon.get_theme_node();
+	const inset = [St.Side.LEFT, St.Side.RIGHT].reduce(
+		(sum, side) => sum + node.get_padding(side) + node.get_margin(side),
+		0,
+	);
+	if (inset !== 0) {
+		failures.push(`panel icon keeps ${inset}px of horizontal padding and margin`);
 	}
 	return failures;
 }

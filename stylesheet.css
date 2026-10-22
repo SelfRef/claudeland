@@ -2,8 +2,11 @@
 	spacing: 5px;
 }
 
-.vibecheck-panel-icon {
+/* Outranks the theme's #panel .panel-button .system-status-icon padding and margin. */
+#panel .panel-button .system-status-icon.vibecheck-panel-icon {
 	icon-size: 16px;
+	padding: 0;
+	margin: 0;
 }
 
 .vibecheck-panel-icon-color {
