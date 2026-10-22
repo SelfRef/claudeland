@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import gettextParser from 'gettext-parser';
@@ -22,8 +22,10 @@ await cp(
 
 run('glib-compile-schemas', [resolve(dist, 'schemas')]);
 
-for (const language of ['it']) {
-	const po = gettextParser.po.parse(await readFile(resolve(root, `po/${language}.po`)));
+const catalogs = (await readdir(resolve(root, 'po'))).filter((name) => name.endsWith('.po'));
+for (const catalog of catalogs) {
+	const language = catalog.slice(0, -'.po'.length);
+	const po = gettextParser.po.parse(await readFile(resolve(root, 'po', catalog)));
 	const localeDirectory = resolve(dist, `locale/${language}/LC_MESSAGES`);
 	await mkdir(localeDirectory, { recursive: true });
 	await writeFile(resolve(localeDirectory, 'vibecheck.mo'), gettextParser.mo.compile(po));

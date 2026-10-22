@@ -272,7 +272,8 @@ trying again.
 ## Languages
 
 English is the source and fallback language. Vibecheck follows the GNOME
-system locale through gettext; Italian is included in the initial release.
+system locale through gettext and includes Brazilian Portuguese, French,
+German, Italian, Polish, and Spanish.
 Translations live in `po/` and are compiled into the extension during build.
 Claude Code's own contributing-usage findings are shown as it words them, in
 English.

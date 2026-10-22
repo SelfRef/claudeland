@@ -1,0 +1,306 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Vibecheck 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/SelfRef/vibecheck/issues\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "%dd %dh"
+msgstr "%dd %dh"
+
+msgid "%dh %dm"
+msgstr "%dh %dm"
+
+msgid "%dm"
+msgstr "%dm"
+
+msgid "%s remaining"
+msgstr "%s restante"
+
+msgid "%s · stale"
+msgstr "%s · desactualizado"
+
+msgid "%s · updated %s"
+msgstr "%s · actualizado %s"
+
+msgid "0 places it before the other icons in the area."
+msgstr "0 lo coloca antes de los demás iconos del área."
+
+msgid "Anthropic is currently unavailable."
+msgstr "Anthropic no está disponible en este momento."
+
+msgid "Anthropic returned an invalid response."
+msgstr "Anthropic devolvió una respuesta no válida."
+
+msgid "Appearance"
+msgstr "Apariencia"
+
+msgid "Both"
+msgstr "Ambos"
+
+msgid "Bottom left"
+msgstr "Abajo a la izquierda"
+
+msgid "Bottom right"
+msgstr "Abajo a la derecha"
+
+msgid "Card only"
+msgstr "Solo tarjeta"
+
+msgid "Card position"
+msgstr "Posición de la tarjeta"
+
+msgid "Center"
+msgstr "Centro"
+
+msgid "Checking…"
+msgstr "Comprobando…"
+
+msgid "Choose where to show remaining Claude capacity."
+msgstr "Elige dónde mostrar la capacidad restante de Claude."
+
+msgid "Claude %s"
+msgstr "Claude %s"
+
+msgid "Claude Code"
+msgstr "Claude Code"
+
+msgid "Claude Code could not report usage. Retrying later."
+msgstr "Claude Code no pudo informar del uso. Se reintentará más tarde."
+
+msgid "Claude Code credentials were not found. Sign in to continue."
+msgstr "No se encontraron las credenciales de Claude Code. Inicia sesión para continuar."
+
+msgid "Claude plan"
+msgstr "Plan de Claude"
+
+msgid "Vibecheck"
+msgstr "Vibecheck"
+
+msgid "Color"
+msgstr "En color"
+
+msgid "Contributing to usage on this machine"
+msgstr "Qué influye en el uso en este equipo"
+
+msgid "Corner of the primary monitor."
+msgstr "Esquina del monitor principal."
+
+msgid "Could not reach Anthropic. Check your connection."
+msgstr "No se pudo conectar con Anthropic. Comprueba tu conexión."
+
+msgid "Critical remaining capacity"
+msgstr "Capacidad restante crítica"
+
+msgid "Current session"
+msgstr "Sesión actual"
+
+msgid "Data source"
+msgstr "Origen de los datos"
+
+msgid "Data unavailable"
+msgstr "Datos no disponibles"
+
+msgid "Desktop card"
+msgstr "Tarjeta en el escritorio"
+
+msgid "Extra usage"
+msgstr "Uso adicional"
+
+msgid "First panel value"
+msgstr "Primer valor del panel"
+
+msgid "Hidden"
+msgstr "Oculto"
+
+msgid "Install Claude Code to authenticate."
+msgstr "Instala Claude Code para autenticarte."
+
+msgid "Installed and signed in."
+msgstr "Instalado y con sesión iniciada."
+
+msgid "Installed, not signed in."
+msgstr "Instalado, sin sesión iniciada."
+
+msgid "Left"
+msgstr "Izquierda"
+
+msgid "Loading Claude usage…"
+msgstr "Cargando el uso de Claude…"
+
+msgid "Loading…"
+msgstr "Cargando…"
+
+msgid "Lowest remaining"
+msgstr "Menor restante"
+
+msgid "Menu and card"
+msgstr "Menú y tarjeta"
+
+msgid "Menu only"
+msgstr "Solo menú"
+
+msgid "Minutes between usage requests."
+msgstr "Minutos entre solicitudes de uso."
+
+msgid "No compatible terminal was found to start Claude sign-in."
+msgstr "No se encontró ningún terminal compatible para iniciar sesión en Claude."
+
+msgid "None"
+msgstr "Ninguno"
+
+msgid "Not installed. Usage is requested directly."
+msgstr "No instalado. El uso se solicita directamente."
+
+msgid "Open Claude browser sign-in through Claude Code."
+msgstr "Abre el inicio de sesión de Claude en el navegador mediante Claude Code."
+
+msgid "Panel area"
+msgstr "Área del panel"
+
+msgid "Panel icon"
+msgstr "Icono del panel"
+
+msgid "Panel indicator"
+msgstr "Indicador del panel"
+
+msgid "Panel position"
+msgstr "Posición en el panel"
+
+msgid "Part of the top bar that holds the indicator."
+msgstr "Parte de la barra superior que contiene el indicador."
+
+msgid "Preferences"
+msgstr "Preferencias"
+
+msgid "Query Anthropic's usage endpoint with Claude Code's credentials instead of running Claude Code."
+msgstr "Consulta el endpoint de uso de Anthropic con las credenciales de Claude Code en lugar de ejecutar Claude Code."
+
+msgid "Refresh interval"
+msgstr "Intervalo de actualización"
+
+msgid "Refresh now"
+msgstr "Actualizar ahora"
+
+msgid "Remaining capacity shown first in the top bar."
+msgstr "Capacidad restante que se muestra primero en la barra superior."
+
+msgid "Remaining capacity warning"
+msgstr "Aviso de capacidad restante"
+
+msgid "Renewing the Claude session…"
+msgstr "Renovando la sesión de Claude…"
+
+msgid "Request usage directly"
+msgstr "Solicitar el uso directamente"
+
+msgid "reset imminent"
+msgstr "reinicio inminente"
+
+msgid "reset unavailable"
+msgstr "reinicio no disponible"
+
+msgid "resets in %dd %dh"
+msgstr "se reinicia en %dd %dh"
+
+msgid "resets in %dh %dm"
+msgstr "se reinicia en %dh %dm"
+
+msgid "resets in %dm"
+msgstr "se reinicia en %dm"
+
+msgid "Right"
+msgstr "Derecha"
+
+msgid "Second panel value"
+msgstr "Segundo valor del panel"
+
+msgid "Session · %s"
+msgstr "Sesión · %s"
+
+msgid "Show a card below application windows. Right-click it to refresh."
+msgstr "Muestra una tarjeta debajo de las ventanas. Haz clic derecho para actualizarla."
+
+msgid "Show percentages in the GNOME top bar."
+msgstr "Muestra los porcentajes en la barra superior de GNOME."
+
+msgid "Shown after a slash, or None for a single value."
+msgstr "Se muestra tras una barra, o Ninguno para un solo valor."
+
+msgid "Shown after the percentages in the top bar."
+msgstr "Se muestra tras los porcentajes en la barra superior."
+
+msgid "Sign in"
+msgstr "Iniciar sesión"
+
+msgid "Sign in / renew session"
+msgstr "Iniciar sesión / renovar sesión"
+
+msgid "Sign in or renew the session"
+msgstr "Iniciar sesión o renovar la sesión"
+
+msgid "Sign in to Claude Code to view usage."
+msgstr "Inicia sesión en Claude Code para ver el uso."
+
+msgid "Sign-in is handled by the official Claude Code CLI."
+msgstr "El inicio de sesión lo gestiona la CLI oficial de Claude Code."
+
+msgid "Stale data · %s"
+msgstr "Datos desactualizados · %s"
+
+msgid "Symbolic"
+msgstr "Simbólico"
+
+msgid "Symbolic follows the top bar color."
+msgstr "Simbólico sigue el color de la barra superior."
+
+msgid "The Claude Code credentials file is invalid."
+msgstr "El archivo de credenciales de Claude Code no es válido."
+
+msgid "The Claude session could not be renewed automatically. Retrying later."
+msgstr "No se pudo renovar automáticamente la sesión de Claude. Se reintentará más tarde."
+
+msgid "The Claude session has expired. Sign in again."
+msgstr "La sesión de Claude ha caducado. Vuelve a iniciar sesión."
+
+msgid "The Claude session is no longer valid. Sign in again."
+msgstr "La sesión de Claude ya no es válida. Vuelve a iniciar sesión."
+
+msgid "The desktop card could not be shown."
+msgstr "No se pudo mostrar la tarjeta en el escritorio."
+
+msgid "Time until reset"
+msgstr "Tiempo hasta el reinicio"
+
+msgid "Too many requests. Retrying later."
+msgstr "Demasiadas solicitudes. Se reintentará más tarde."
+
+msgid "Top left"
+msgstr "Arriba a la izquierda"
+
+msgid "Top right"
+msgstr "Arriba a la derecha"
+
+msgid "Updates and thresholds"
+msgstr "Actualización y umbrales"
+
+msgid "Usage contributors"
+msgstr "Qué influye en el uso"
+
+msgid "Use the critical color below this percentage."
+msgstr "Usa el color crítico por debajo de este porcentaje."
+
+msgid "Use the warning color below this percentage."
+msgstr "Usa el color de aviso por debajo de este porcentaje."
+
+msgid "Weekly · %s"
+msgstr "Semanal · %s"
+
+msgid "Weekly · all models"
+msgstr "Semanal · todos los modelos"
+
+msgid "What drove usage on this machine over the last day and week, from Claude Code."
+msgstr "Qué influyó en el uso en este equipo durante el último día y la última semana, según Claude Code."

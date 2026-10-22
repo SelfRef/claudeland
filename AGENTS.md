@@ -36,8 +36,8 @@ discovered at runtime, and what contributed to usage on this machine.
 - Discover model-scoped limits dynamically; never hard-code model names.
 - New response shapes get a fixture and a parser test.
 - User-facing percentages are remaining capacity, not consumed.
-- Wrap user-facing strings in gettext and update `po/vibecheck.pot` and
-  `po/it.po`.
+- Wrap user-facing strings in gettext and update `po/vibecheck.pot` and every
+  `po/*.po` catalog.
 
 ## GNOME Shell rules
 
