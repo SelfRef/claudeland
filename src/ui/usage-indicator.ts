@@ -131,7 +131,7 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 		this.panelLabel.visible = this.panelLabel.text !== '';
 		// With no values, no countdown, and no icon, the indicator would vanish.
 		if (!this.panelLabel.visible && !this.panelIcon.visible) {
-			this.showPanelIcon('color');
+			this.showPanelIcon('mono');
 		}
 	}
 

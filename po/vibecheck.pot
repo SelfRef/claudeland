@@ -250,10 +250,10 @@ msgstr ""
 msgid "Stale data · %s"
 msgstr ""
 
-msgid "Symbolic"
+msgid "Mono"
 msgstr ""
 
-msgid "Symbolic follows the top bar color."
+msgid "Mono follows the top bar color."
 msgstr ""
 
 msgid "The Claude Code credentials file is invalid."

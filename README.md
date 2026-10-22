@@ -53,7 +53,7 @@ Open them from the top bar menu, the desktop card's right-click menu, or
 
 - **Top bar:** up to two remaining percentages (current session, weekly for
   all models, or the lowest remaining limit), the time until the session, the
-  weekly limit, or both reset, and an orange, top-bar-colored, or hidden icon.
+  weekly limit, or both reset, and a mono (default), orange, or hidden icon.
 - **Usage contributors:** in the menu (default), on the card, in both, or
   hidden.
 - **Desktop card:** on by default, placed in any corner of the primary

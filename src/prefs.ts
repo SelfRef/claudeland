@@ -12,7 +12,7 @@ import { VibecheckError } from './services/errors.js';
 
 const POSITIONS = ['top-right', 'top-left', 'bottom-right', 'bottom-left'] as const;
 const PANEL_BOXES = ['left', 'center', 'right'] as const;
-const PANEL_ICONS = ['none', 'color', 'symbolic'] as const;
+const PANEL_ICONS = ['none', 'color', 'mono'] as const;
 const PANEL_LIMITS = ['five_hour', 'seven_day', 'lowest', 'none'] as const;
 const PANEL_RESETS = ['five_hour', 'seven_day', 'both', 'none'] as const;
 const INSIGHT_PLACES = ['both', 'menu', 'card', 'none'] as const;
@@ -102,9 +102,9 @@ export default class VibecheckPreferences extends ExtensionPreferences {
 				settings,
 				'panel-icon',
 				_('Panel icon'),
-				_('Symbolic follows the top bar color.'),
+				_('Mono follows the top bar color.'),
 				PANEL_ICONS,
-				[_('None'), _('Color'), _('Symbolic')],
+				[_('None'), _('Color'), _('Mono')],
 			),
 		);
 		appearance.add(

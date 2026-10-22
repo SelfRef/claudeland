@@ -182,7 +182,7 @@ function checkPanelLabel(controller, settings, indicator) {
 		['five_hour', 'seven_day', 'both', 'color', /^80%\/18% · \d+h \d+m\/\d+d \d+h$/, true],
 		['none', 'seven_day', 'none', 'color', /^18%$/, true],
 		['none', 'none', 'five_hour', 'none', /^\d+h \d+m$/, false],
-		['none', 'none', 'none', 'symbolic', null, true],
+		['none', 'none', 'none', 'mono', null, true],
 		['none', 'none', 'none', 'none', null, true],
 	]) {
 		settings.set_string('panel-primary', primary);
@@ -359,7 +359,7 @@ export default class VibecheckUiCheck extends Extension {
 
 			for (const [secondary, icon] of [
 				['seven_day', 'color'],
-				['none', 'symbolic'],
+				['none', 'mono'],
 				['seven_day', 'none'],
 			]) {
 				settings.set_string('panel-secondary', secondary);

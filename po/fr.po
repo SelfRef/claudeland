@@ -251,11 +251,11 @@ msgstr "La connexion est gérée par la CLI officielle de Claude Code."
 msgid "Stale data · %s"
 msgstr "Données obsolètes · %s"
 
-msgid "Symbolic"
-msgstr "Symbolique"
+msgid "Mono"
+msgstr "Monochrome"
 
-msgid "Symbolic follows the top bar color."
-msgstr "Symbolique suit la couleur de la barre supérieure."
+msgid "Mono follows the top bar color."
+msgstr "Monochrome suit la couleur de la barre supérieure."
 
 msgid "The Claude Code credentials file is invalid."
 msgstr "Le fichier d’identifiants de Claude Code n’est pas valide."

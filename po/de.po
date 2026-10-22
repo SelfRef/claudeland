@@ -251,11 +251,11 @@ msgstr "Die Anmeldung übernimmt die offizielle Claude Code CLI."
 msgid "Stale data · %s"
 msgstr "Veraltete Daten · %s"
 
-msgid "Symbolic"
-msgstr "Symbolisch"
+msgid "Mono"
+msgstr "Einfarbig"
 
-msgid "Symbolic follows the top bar color."
-msgstr "Symbolisch übernimmt die Farbe der oberen Leiste."
+msgid "Mono follows the top bar color."
+msgstr "Einfarbig übernimmt die Farbe der oberen Leiste."
 
 msgid "The Claude Code credentials file is invalid."
 msgstr "Die Anmeldedatei von Claude Code ist ungültig."

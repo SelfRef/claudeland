@@ -251,11 +251,11 @@ msgstr "El inicio de sesión lo gestiona la CLI oficial de Claude Code."
 msgid "Stale data · %s"
 msgstr "Datos desactualizados · %s"
 
-msgid "Symbolic"
-msgstr "Simbólico"
+msgid "Mono"
+msgstr "Monocromo"
 
-msgid "Symbolic follows the top bar color."
-msgstr "Simbólico sigue el color de la barra superior."
+msgid "Mono follows the top bar color."
+msgstr "Monocromo sigue el color de la barra superior."
 
 msgid "The Claude Code credentials file is invalid."
 msgstr "El archivo de credenciales de Claude Code no es válido."
