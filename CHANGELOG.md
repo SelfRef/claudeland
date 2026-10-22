@@ -11,8 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - A Vibecheck logo, half asterisk and half meter, replaces the Claude icon in
   the top bar. The color icon is now the same shape in Claude orange.
-- The top bar icon is mono by default, following the top bar color. The
-  `symbolic` setting value is renamed to `mono`.
+- The symbolic top bar icon is now called mono. A saved `symbolic` setting
+  falls back to the default color icon.
+
+### Fixed
+
+- The top bar icon sits closer to the percentages.
 
 ## [1.1.0] - 2026-10-22
 

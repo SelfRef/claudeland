@@ -56,7 +56,7 @@
 				<choice value="color"/>
 				<choice value="mono"/>
 			</choices>
-			<default>'mono'</default>
+			<default>'color'</default>
 			<summary>Panel icon color: Claude orange, the panel foreground, or hidden</summary>
 		</key>
 		<key name="show-insights" type="s">
