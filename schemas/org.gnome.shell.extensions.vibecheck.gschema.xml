@@ -57,7 +57,7 @@
 				<choice value="symbolic"/>
 			</choices>
 			<default>'color'</default>
-			<summary>Claude icon style in the panel</summary>
+			<summary>Panel icon color: Claude orange, the panel foreground, or hidden</summary>
 		</key>
 		<key name="show-insights" type="s">
 			<choices>

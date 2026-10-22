@@ -41,7 +41,11 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 			style_class: 'panel-status-menu-box vibecheck-panel',
 			y_align: Clutter.ActorAlign.CENTER,
 		});
-		this.panelIcon = new St.Icon({ style_class: 'system-status-icon vibecheck-panel-icon' });
+		// St recolors file icons whose name ends in -symbolic with the CSS color.
+		this.panelIcon = new St.Icon({
+			style_class: 'system-status-icon vibecheck-panel-icon',
+			gicon: Gio.icon_new_for_string(`${this.extensionPath}/icons/vibecheck-symbolic.svg`),
+		});
 		box.add_child(this.panelIcon);
 		this.panelLabel = new St.Label({
 			text: formatMessage(_('Claude %s'), '--'),
@@ -133,10 +137,10 @@ class UsageIndicatorImpl extends PanelMenu.Button {
 
 	private showPanelIcon(style: string): void {
 		this.panelIcon.visible = style !== 'none';
-		if (this.panelIcon.visible) {
-			// St recolors file icons whose name ends in -symbolic with the panel foreground.
-			const name = style === 'symbolic' ? 'vibecheck-symbolic.svg' : 'vibecheck.svg';
-			this.panelIcon.gicon = Gio.icon_new_for_string(`${this.extensionPath}/icons/${name}`);
+		if (style === 'color') {
+			this.panelIcon.add_style_class_name('vibecheck-panel-icon-color');
+		} else {
+			this.panelIcon.remove_style_class_name('vibecheck-panel-icon-color');
 		}
 	}
 

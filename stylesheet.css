@@ -6,6 +6,10 @@
 	icon-size: 14px;
 }
 
+.vibecheck-panel-icon-color {
+	color: #d97757;
+}
+
 .vibecheck-status {
 	max-width: 420px;
 }
